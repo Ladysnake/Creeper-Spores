@@ -1,10 +1,13 @@
 package io.github.ladysnake.plantcreepers.common;
 
+import net.minecraft.block.Material;
+import net.minecraft.block.PlantBlock;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LightningEntity;
 import net.minecraft.entity.ai.goal.FleeEntityGoal;
 import net.minecraft.entity.ai.goal.LookAtEntityGoal;
 import net.minecraft.entity.ai.goal.SwimGoal;
+import net.minecraft.entity.ai.goal.WanderAroundFarGoal;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
@@ -14,7 +17,11 @@ import net.minecraft.entity.passive.CatEntity;
 import net.minecraft.entity.passive.OcelotEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.tag.BlockTags;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Difficulty;
+import net.minecraft.world.LightType;
+import net.minecraft.world.ViewableWorld;
 import net.minecraft.world.World;
 
 public class CreeperlingEntity extends MobEntityWithAi {
@@ -31,7 +38,27 @@ public class CreeperlingEntity extends MobEntityWithAi {
         this.goalSelector.add(3, new FleeEntityGoal<>(this, OcelotEntity.class, 6.0F, 1.0D, 1.2D));
         this.goalSelector.add(3, new FleeEntityGoal<>(this, CatEntity.class, 6.0F, 1.0D, 1.2D));
         this.goalSelector.add(3, new FleeEntityGoal<>(this, PlayerEntity.class, 6.0F, 1.0D, 1.2D));
+        this.goalSelector.add(5, new WanderAroundFarGoal(this, 1.0));
         this.goalSelector.add(6, new LookAtEntityGoal(this, PlayerEntity.class, 8.0F));
+    }
+
+    @Override
+    public float getPathfindingFavor(BlockPos pos, ViewableWorld worldView) {
+        // Creeperlings like sunlight
+        int skyLightLevel = worldView.getLightLevel(LightType.SKY, pos);
+        float skyFavor = worldView.getDimension().getLightLevelToBrightness()[skyLightLevel] * 3.0F;
+        // But they can do with artificial light if there is not anything better
+        float favor = Math.max(worldView.getBrightness(pos) - 0.5F, skyFavor);
+        // They like good soils too
+        if (BlockTags.DIRT_LIKE.contains(worldView.getBlockState(pos.down()).getBlock())) {
+            favor += 3.0F;
+        }
+        // What they really want is camouflage
+        Material material = worldView.getBlockState(pos).getMaterial();
+        if (material == Material.PLANT || material == Material.REPLACEABLE_PLANT) {
+            favor += 4.0F;
+        }
+        return favor;
     }
 
     public boolean isCharged() {

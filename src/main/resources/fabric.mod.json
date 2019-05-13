@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "id": "plant-creepers",
+  "name": "${mod_name}",
+  "description": "Plant Creepers !",
+  "version": "${version}",
+  "license": "${license}",
+
+  "environment": "*",
+  "entrypoints": {
+    "client": [
+      "io.github.ladysnake.plantcreepers.client.PlantCreepersClient"
+    ],
+    "main": [
+      "io.github.ladysnake.plantcreepers.PlantCreepers"
+    ]
+  },
+  "mixins": [
+    {
+      "environment": "client",
+      "config": "mixins.base_mod.client.json"
+    },
+    {
+      "environment": "*",
+      "config": "mixins.base_mod.common.json"
+    }
+  ],
+
+  "depends": {
+    "fabric": "*",
+    "mesh": "*"
+  }
+}

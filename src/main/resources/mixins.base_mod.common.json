@@ -1,0 +1,12 @@
+{
+  "required": true,
+  "package": "io.github.ladysnake.plantcreepers.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "CatEntitiesMixin",
+    "CreeperEntityMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

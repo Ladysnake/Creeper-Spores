@@ -1,4 +1,3 @@
-import java.nio.charset.StandardCharsets
 import java.time.Year
 
 plugins {
@@ -16,12 +15,7 @@ version = System.getenv("TRAVIS_TAG") ?: project.mod_version
 println("Setting version: " + version)
 
 apply from: "https://raw.githubusercontent.com/NerdHubMC/Gradle-Scripts/master/scripts/fabric/basic_project.gradle"
-try {
-    apply from: "https://raw.githubusercontent.com/NerdHubMC/Gradle-Scripts/master/scripts/fabric/dependencies/${minecraft_version}/development_suite.gradle"
-} catch (MissingResourceException e) {
-    System.err.println(e.message)
-}
-
+ 
 processResources {
     // this will ensure that this task is redone when there"s a change
     inputs.property "version", project.version
@@ -35,9 +29,6 @@ processResources {
                 "curseforge_id": project.curseforge_id, "license": project.license_header,
                 "mod_name": project.mod_name
 
-        filter { String line ->
-            line.replace("\"fabric\": \"*\"", "\"fabric\": \"[${project.fabric_version},)\"")
-        }
     }
 
     // copy everything else, that"s not the fabric.mod.json

@@ -18,10 +18,12 @@ public class CreeperlingEntityRenderer extends MobEntityRenderer<CreeperlingEnti
     }
 
     @Override
-    protected void render(CreeperlingEntity creeper, float float_1, float float_2, float float_3, float float_4, float float_5, float float_6) {
-        GlStateManager.scalef(0.2f, 0.2f, 0.2f);
-        super.render(creeper, float_1, float_2, float_3, float_4, float_5, float_6);
-        GlStateManager.scalef(1f, 1f, 1f);
+    protected void render(CreeperlingEntity creeper, float x, float y, float z, float yaw, float pitch, float tickDelta) {
+        GlStateManager.pushMatrix();
+        GlStateManager.scalef(0.5F, 0.5F, 0.5F);
+        GlStateManager.translatef(0.0F, 24.0F * tickDelta, 0.0F);
+        super.render(creeper, x, y, z, yaw, pitch, tickDelta);
+        GlStateManager.popMatrix();
     }
 
     @Nullable

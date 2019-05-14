@@ -1,9 +1,9 @@
 package io.github.ladysnake.plantcreepers.common;
 
 import net.minecraft.block.Material;
-import net.minecraft.block.PlantBlock;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LightningEntity;
+import net.minecraft.entity.SpawnType;
 import net.minecraft.entity.ai.goal.FleeEntityGoal;
 import net.minecraft.entity.ai.goal.LookAtEntityGoal;
 import net.minecraft.entity.ai.goal.SwimGoal;
@@ -19,10 +19,9 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.tag.BlockTags;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.Difficulty;
-import net.minecraft.world.LightType;
-import net.minecraft.world.ViewableWorld;
-import net.minecraft.world.World;
+import net.minecraft.world.*;
+
+import java.util.UUID;
 
 public class CreeperlingEntity extends MobEntityWithAi {
     private static final TrackedData<Boolean> CHARGED = DataTracker.registerData(CreeperEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
@@ -40,6 +39,11 @@ public class CreeperlingEntity extends MobEntityWithAi {
         this.goalSelector.add(3, new FleeEntityGoal<>(this, PlayerEntity.class, 6.0F, 1.0D, 1.2D));
         this.goalSelector.add(5, new WanderAroundFarGoal(this, 1.0));
         this.goalSelector.add(6, new LookAtEntityGoal(this, PlayerEntity.class, 8.0F));
+    }
+
+    @Override
+    public boolean canSpawn(IWorld iWorld_1, SpawnType spawnType_1) {
+        return super.canSpawn(iWorld_1, spawnType_1) && world.getLightLevel(LightType.SKY, this.getBlockPos()) > 0;
     }
 
     @Override
@@ -93,7 +97,9 @@ public class CreeperlingEntity extends MobEntityWithAi {
         super.tickMovement();
         if (!this.world.isClient && this.age >= MATURATION_TIME && this.world.getDifficulty() != Difficulty.PEACEFUL) {
             CreeperEntity adult = new CreeperEntity(EntityType.CREEPER, world);
-            adult.copyPositionAndRotation(this);
+            UUID adultUuid = adult.getUuid();
+            adult.fromTag(this.toTag(new CompoundTag()));
+            adult.setUuid(adultUuid);
             world.spawnEntity(adult);
             this.remove();
         }

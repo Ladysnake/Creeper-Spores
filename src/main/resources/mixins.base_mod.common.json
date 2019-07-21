@@ -1,6 +1,6 @@
 {
   "required": true,
-  "package": "io.github.ladysnake.plantcreepers.mixin",
+  "package": "io.github.ladysnake.creeperspores.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
     "CatEntitiesMixin",

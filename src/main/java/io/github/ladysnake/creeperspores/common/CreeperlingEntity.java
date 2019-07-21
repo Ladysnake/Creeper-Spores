@@ -1,4 +1,4 @@
-package io.github.ladysnake.plantcreepers.common;
+package io.github.ladysnake.creeperspores.common;
 
 import net.minecraft.block.Material;
 import net.minecraft.entity.EntityType;

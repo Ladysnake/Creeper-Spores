@@ -9,10 +9,10 @@
   "environment": "*",
   "entrypoints": {
     "client": [
-      "io.github.ladysnake.plantcreepers.client.PlantCreepersClient"
+      "io.github.ladysnake.creeperspores.client.CreeperSporesClient"
     ],
     "main": [
-      "io.github.ladysnake.plantcreepers.PlantCreepers"
+      "io.github.ladysnake.creeperspores.CreeperSpores"
     ]
   },
   "mixins": [

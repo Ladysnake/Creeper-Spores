@@ -1,11 +1,10 @@
-package io.github.ladysnake.plantcreepers.mixin;
+package io.github.ladysnake.creeperspores.mixin;
 
-import io.github.ladysnake.plantcreepers.common.CreeperlingEntity;
+import io.github.ladysnake.creeperspores.common.CreeperlingEntity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.goal.FollowTargetGoal;
 import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.passive.CatEntity;
-import net.minecraft.entity.passive.ChickenEntity;
 import net.minecraft.entity.passive.OcelotEntity;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;

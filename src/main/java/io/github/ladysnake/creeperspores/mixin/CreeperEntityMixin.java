@@ -1,13 +1,11 @@
-package io.github.ladysnake.plantcreepers.mixin;
+package io.github.ladysnake.creeperspores.mixin;
 
-import io.github.ladysnake.plantcreepers.PlantCreepers;
-import net.minecraft.entity.Entity;
+import io.github.ladysnake.creeperspores.CreeperSpores;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.mob.CreeperEntity;
 import net.minecraft.entity.mob.HostileEntity;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.explosion.Explosion;
 import org.spongepowered.asm.mixin.Mixin;
@@ -46,7 +44,7 @@ public abstract class CreeperEntityMixin extends HostileEntity {
         float radius = this.explosionRadius * radiusModifier;
         List<LivingEntity> affectedEntities = this.world.getEntities(LivingEntity.class, this.getBoundingBox().expand(radius), entity -> this.distanceTo(entity) < radius && entity != this);
         for (LivingEntity affectedEntity : affectedEntities) {
-             affectedEntity.addPotionEffect(new StatusEffectInstance(PlantCreepers.CREEPER_SPORES_EFFECT,  Math.round(MIN_SPORE_TIME * affectedEntity.distanceTo(this) / radiusModifier)));
+             affectedEntity.addPotionEffect(new StatusEffectInstance(CreeperSpores.CREEPER_SPORES_EFFECT,  Math.round(MIN_SPORE_TIME * affectedEntity.distanceTo(this) / radiusModifier)));
         }
     }
 }

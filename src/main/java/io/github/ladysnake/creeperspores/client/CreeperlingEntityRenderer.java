@@ -1,7 +1,7 @@
-package io.github.ladysnake.plantcreepers.client;
+package io.github.ladysnake.creeperspores.client;
 
 import com.mojang.blaze3d.platform.GlStateManager;
-import io.github.ladysnake.plantcreepers.common.CreeperlingEntity;
+import io.github.ladysnake.creeperspores.common.CreeperlingEntity;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.render.entity.MobEntityRenderer;
 import net.minecraft.client.render.entity.model.CreeperEntityModel;

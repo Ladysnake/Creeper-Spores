@@ -1,10 +1,10 @@
-package io.github.ladysnake.plantcreepers.client;
+package io.github.ladysnake.creeperspores.client;
 
-import io.github.ladysnake.plantcreepers.common.CreeperlingEntity;
+import io.github.ladysnake.creeperspores.common.CreeperlingEntity;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.render.EntityRendererRegistry;
 
-public class PlantCreepersClient implements ClientModInitializer {
+public class CreeperSporesClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         EntityRendererRegistry.INSTANCE.register(CreeperlingEntity.class, (r, it) -> new CreeperlingEntityRenderer(r));

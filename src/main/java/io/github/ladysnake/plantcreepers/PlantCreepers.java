@@ -5,7 +5,7 @@ import io.github.ladysnake.plantcreepers.common.CreeperlingEntity;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.entity.FabricEntityTypeBuilder;
 import net.minecraft.entity.EntityCategory;
-import net.minecraft.entity.EntitySize;
+import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectType;
@@ -26,7 +26,7 @@ public class PlantCreepers implements ModInitializer {
                 Registry.ENTITY_TYPE,
                 PlantCreepers.id("creeperling"),
                 FabricEntityTypeBuilder.create(EntityCategory.MONSTER, CreeperlingEntity::new)
-                        .size(EntitySize.resizeable(EntityType.CREEPER.getWidth() / 4f, EntityType.CREEPER.getHeight() / 4f))
+                        .size(EntityDimensions.changing(EntityType.CREEPER.getWidth() / 4f, EntityType.CREEPER.getHeight() / 4f))
                         .trackable(64, 1, true)
                         .build()
         );

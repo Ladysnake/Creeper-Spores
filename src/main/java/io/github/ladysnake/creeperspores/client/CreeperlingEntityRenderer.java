@@ -13,7 +13,7 @@ public class CreeperlingEntityRenderer extends MobEntityRenderer<CreeperlingEnti
     private static final Identifier SKIN = new Identifier("textures/entity/creeper/creeper.png");
 
     public CreeperlingEntityRenderer(EntityRenderDispatcher dispatcher) {
-        super(dispatcher, new CreeperEntityModel<>(), 0.5F);
+        super(dispatcher, new CreeperEntityModel<>(), 0.25F);
         this.addFeature(new CreeperlingChargeFeatureRenderer(this));
     }
 

@@ -26,7 +26,7 @@ public class CreeperSpores implements ModInitializer {
                 Registry.ENTITY_TYPE,
                 CreeperSpores.id("creeperling"),
                 FabricEntityTypeBuilder.create(EntityCategory.MONSTER, CreeperlingEntity::new)
-                        .size(EntityDimensions.changing(EntityType.CREEPER.getWidth() / 4f, EntityType.CREEPER.getHeight() / 4f))
+                        .size(EntityDimensions.changing(EntityType.CREEPER.getWidth() / 2f, EntityType.CREEPER.getHeight() / 2f))
                         .trackable(64, 1, true)
                         .build()
         );

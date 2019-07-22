@@ -66,6 +66,7 @@ public class CreeperlingEntity extends MobEntityWithAi {
     @Override
     protected void initAttributes() {
         super.initAttributes();
+        this.getAttributeInstance(EntityAttributes.MAX_HEALTH).setBaseValue(10.0D);
         this.getAttributeInstance(EntityAttributes.MOVEMENT_SPEED).setBaseValue(0.2D);
     }
 

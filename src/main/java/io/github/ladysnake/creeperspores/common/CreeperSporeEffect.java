@@ -18,6 +18,7 @@
 package io.github.ladysnake.creeperspores.common;
 
 import io.github.ladysnake.creeperspores.CreeperSpores;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectType;
@@ -29,13 +30,24 @@ public class CreeperSporeEffect extends StatusEffect {
 
     @Override
     public boolean canApplyUpdateEffect(int duration, int amplifier) {
-        return duration == 1;
+        int frequency = 500 >> amplifier;
+        if (frequency > 0) {
+            return duration % frequency == 0 && Math.random() > 0.5;
+        } else {
+            return true;
+        }
     }
 
     @Override
     public void applyUpdateEffect(LivingEntity affected, int amplifier) {
-        CreeperlingEntity spawn = new CreeperlingEntity(CreeperSpores.CREEPERLING, affected.world);
-        spawn.setPosition(affected.x, affected.y, affected.z);
-        affected.world.spawnEntity(spawn);
+        spawnCreeperling(affected);
+    }
+
+    public static void spawnCreeperling(Entity affected) {
+        if (!affected.world.isClient) {
+            CreeperlingEntity spawn = new CreeperlingEntity(CreeperSpores.CREEPERLING, affected.world);
+            spawn.setPosition(affected.x, affected.y, affected.z);
+            affected.world.spawnEntity(spawn);
+        }
     }
 }

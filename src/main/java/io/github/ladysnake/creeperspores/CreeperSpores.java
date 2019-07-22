@@ -21,17 +21,28 @@ import io.github.ladysnake.creeperspores.common.CreeperSporeEffect;
 import io.github.ladysnake.creeperspores.common.CreeperlingEntity;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.entity.FabricEntityTypeBuilder;
+import net.fabricmc.fabric.api.network.ClientSidePacketRegistry;
+import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
+import net.fabricmc.fabric.api.tag.TagRegistry;
 import net.minecraft.entity.EntityCategory;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectType;
+import net.minecraft.item.Item;
+import net.minecraft.tag.Tag;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
 public class CreeperSpores implements ModInitializer {
-    public static EntityType<CreeperlingEntity> CREEPERLING;
-    public static StatusEffect CREEPER_SPORES_EFFECT;
+    public static final EntityType<CreeperlingEntity> CREEPERLING = FabricEntityTypeBuilder
+            .create(EntityCategory.MONSTER, CreeperlingEntity::new)
+            .size(EntityDimensions.changing(EntityType.CREEPER.getWidth() / 2f, EntityType.CREEPER.getHeight() / 2f))
+            .trackable(64, 1, true)
+            .build();
+    public static final StatusEffect CREEPER_SPORES_EFFECT = new CreeperSporeEffect(StatusEffectType.NEUTRAL, 0x22AA00);
+    public static final Tag<Item> FERTILIZERS = TagRegistry.item(new Identifier("fabric", "fertilizers"));
+    public static final Identifier CREEPERLING_FERTILIZATION = id("creeperling-fertilization");
 
     public static Identifier id(String path) {
         return new Identifier("creeperspores", path);
@@ -39,14 +50,8 @@ public class CreeperSpores implements ModInitializer {
 
     @Override
     public void onInitialize() {
-        CREEPERLING = Registry.register(
-                Registry.ENTITY_TYPE,
-                CreeperSpores.id("creeperling"),
-                FabricEntityTypeBuilder.create(EntityCategory.MONSTER, CreeperlingEntity::new)
-                        .size(EntityDimensions.changing(EntityType.CREEPER.getWidth() / 2f, EntityType.CREEPER.getHeight() / 2f))
-                        .trackable(64, 1, true)
-                        .build()
-        );
-        CREEPER_SPORES_EFFECT = Registry.register(Registry.STATUS_EFFECT, CreeperSpores.id("creeper_spore"), new CreeperSporeEffect(StatusEffectType.NEUTRAL, 0x22AA00));
+        Registry.register(Registry.ENTITY_TYPE, CreeperSpores.id("creeperling"), CREEPERLING);
+        Registry.register(Registry.STATUS_EFFECT, CreeperSpores.id("creeper_spore"), CREEPER_SPORES_EFFECT);
+        ClientSidePacketRegistry.INSTANCE.register(CREEPERLING_FERTILIZATION, CreeperlingEntity::createParticles);
     }
 }

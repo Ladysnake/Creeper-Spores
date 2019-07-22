@@ -3,6 +3,7 @@
   "package": "io.github.ladysnake.creeperspores.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
+    "BoneMealItemMixin",
     "CatEntitiesMixin",
     "CreeperEntityMixin",
     "HostileEntityMixin",

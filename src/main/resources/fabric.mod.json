@@ -18,11 +18,11 @@
   "mixins": [
     {
       "environment": "client",
-      "config": "mixins.base_mod.client.json"
+      "config": "mixins.creeperspores.client.json"
     },
     {
       "environment": "*",
-      "config": "mixins.base_mod.common.json"
+      "config": "mixins.creeperspores.common.json"
     }
   ],
 

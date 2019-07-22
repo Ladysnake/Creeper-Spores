@@ -18,6 +18,7 @@
 package io.github.ladysnake.creeperspores.common;
 
 import net.minecraft.block.Material;
+import net.minecraft.entity.EntityData;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LightningEntity;
 import net.minecraft.entity.SpawnType;
@@ -39,6 +40,7 @@ import net.minecraft.tag.BlockTags;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.*;
 
+import javax.annotation.Nullable;
 import java.util.UUID;
 
 public class CreeperlingEntity extends MobEntityWithAi {
@@ -70,6 +72,15 @@ public class CreeperlingEntity extends MobEntityWithAi {
     @Override
     public boolean canSpawn(IWorld iWorld_1, SpawnType spawnType_1) {
         return super.canSpawn(iWorld_1, spawnType_1) && world.getLightLevel(LightType.SKY, this.getBlockPos()) > 0;
+    }
+
+    @Nullable
+    @Override
+    public EntityData initialize(IWorld world, LocalDifficulty difficulty, SpawnType spawnType, @Nullable EntityData data, @Nullable CompoundTag tag) {
+        EntityData ret = super.initialize(world, difficulty, spawnType, data, tag);
+        float localDifficulty = difficulty.getClampedLocalDifficulty();
+        this.ticksInSunlight = (int) (MATURATION_TIME * this.random.nextFloat() * 0.9 * localDifficulty);
+        return ret;
     }
 
     @Override

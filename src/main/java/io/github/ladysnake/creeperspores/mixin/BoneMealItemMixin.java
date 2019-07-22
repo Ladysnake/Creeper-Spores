@@ -21,6 +21,7 @@ public abstract class BoneMealItemMixin {
             List<CreeperlingEntity> creeperlings = world.getEntities(CreeperlingEntity.class, new Box(pos));
             if (!creeperlings.isEmpty()) {
                 creeperlings.get(0).applyFertilizer();
+                boneMeal.decrement(1);
                 cir.setReturnValue(true);
             }
         }

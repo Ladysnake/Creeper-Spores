@@ -26,7 +26,9 @@ import java.util.UUID;
 
 public class CreeperlingEntity extends MobEntityWithAi {
     private static final TrackedData<Boolean> CHARGED = DataTracker.registerData(CreeperEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
-    public static final int MATURATION_TIME = 20 * 60 * 10;
+    public static final int MATURATION_TIME = 20 * 60 * 8;
+
+    private int ticksInSunlight = 0;
 
     public CreeperlingEntity(EntityType<? extends CreeperlingEntity> type, World world) {
         super(type, world);
@@ -87,11 +89,17 @@ public class CreeperlingEntity extends MobEntityWithAi {
         if (this.isCharged()) {
             tag.putBoolean("powered", true);
         }
+        tag.putInt("ticksInSunlight", this.ticksInSunlight);
     }
 
     public void readCustomDataFromTag(CompoundTag tag) {
         super.readCustomDataFromTag(tag);
-        this.dataTracker.set(CHARGED, tag.getBoolean("powered"));
+        if (tag.containsKey("powered")) {
+            this.dataTracker.set(CHARGED, tag.getBoolean("powered"));
+        }
+        if (tag.containsKey("ticksInSunlight")) {
+            this.ticksInSunlight = tag.getInt("ticksInSunlight");
+        }
     }
 
     public void onStruckByLightning(LightningEntity lightningEntity_1) {
@@ -102,13 +110,15 @@ public class CreeperlingEntity extends MobEntityWithAi {
     @Override
     public void tickMovement() {
         super.tickMovement();
-        if (!this.world.isClient && this.age >= MATURATION_TIME && this.world.getDifficulty() != Difficulty.PEACEFUL) {
-            CreeperEntity adult = new CreeperEntity(EntityType.CREEPER, world);
-            UUID adultUuid = adult.getUuid();
-            adult.fromTag(this.toTag(new CompoundTag()));
-            adult.setUuid(adultUuid);
-            world.spawnEntity(adult);
-            this.remove();
+        if (!this.world.isClient && this.world.getDifficulty() != Difficulty.PEACEFUL && this.isInDaylight()) {
+            if (this.ticksInSunlight++ >= MATURATION_TIME) {
+                CreeperEntity adult = new CreeperEntity(EntityType.CREEPER, world);
+                UUID adultUuid = adult.getUuid();
+                adult.fromTag(this.toTag(new CompoundTag()));
+                adult.setUuid(adultUuid);
+                world.spawnEntity(adult);
+                this.remove();
+            }
         }
     }
 }

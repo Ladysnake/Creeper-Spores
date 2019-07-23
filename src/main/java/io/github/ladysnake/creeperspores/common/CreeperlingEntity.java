@@ -85,8 +85,8 @@ public class CreeperlingEntity extends MobEntityWithAi {
     }
 
     @Override
-    public boolean canSpawn(IWorld iWorld_1, SpawnType spawnType_1) {
-        return super.canSpawn(iWorld_1, spawnType_1) && world.getLightLevel(LightType.SKY, this.getBlockPos()) > 0;
+    public boolean canSpawn(IWorld world, SpawnType spawnType) {
+        return super.canSpawn(world, spawnType) && this.world.getLightLevel(LightType.SKY, this.getBlockPos()) > 0;
     }
 
     @Override
@@ -152,6 +152,11 @@ public class CreeperlingEntity extends MobEntityWithAi {
     }
 
     @Override
+    protected int getCurrentExperience(PlayerEntity player) {
+        return 2 + this.world.random.nextInt(3);
+    }
+
+    @Override
     public float getPathfindingFavor(BlockPos pos, ViewableWorld worldView) {
         // Creeperlings like sunlight
         int skyLightLevel = worldView.getLightLevel(LightType.SKY, pos);
@@ -180,6 +185,7 @@ public class CreeperlingEntity extends MobEntityWithAi {
         this.dataTracker.startTracking(CHARGED, false);
     }
 
+    @Override
     public void writeCustomDataToTag(CompoundTag tag) {
         super.writeCustomDataToTag(tag);
         if (this.isCharged()) {
@@ -188,6 +194,7 @@ public class CreeperlingEntity extends MobEntityWithAi {
         tag.putInt("ticksInSunlight", this.ticksInSunlight);
     }
 
+    @Override
     public void readCustomDataFromTag(CompoundTag tag) {
         super.readCustomDataFromTag(tag);
         if (tag.containsKey("powered")) {
@@ -198,6 +205,7 @@ public class CreeperlingEntity extends MobEntityWithAi {
         }
     }
 
+    @Override
     public void onStruckByLightning(LightningEntity lightningEntity_1) {
         super.onStruckByLightning(lightningEntity_1);
         this.dataTracker.set(CHARGED, true);
@@ -236,10 +244,12 @@ public class CreeperlingEntity extends MobEntityWithAi {
         return (this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.5F;
     }
 
+    @Override
     protected SoundEvent getHurtSound(DamageSource cause) {
         return SoundEvents.ENTITY_CREEPER_HURT;
     }
 
+    @Override
     protected SoundEvent getDeathSound() {
         return SoundEvents.ENTITY_CREEPER_DEATH;
     }

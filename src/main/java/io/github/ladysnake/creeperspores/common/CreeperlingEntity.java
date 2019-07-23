@@ -30,6 +30,7 @@ import net.minecraft.entity.ai.goal.LookAtEntityGoal;
 import net.minecraft.entity.ai.goal.SwimGoal;
 import net.minecraft.entity.ai.goal.WanderAroundFarGoal;
 import net.minecraft.entity.attribute.EntityAttributes;
+import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
@@ -42,6 +43,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.sound.SoundEvent;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.tag.BlockTags;
 import net.minecraft.util.Hand;
 import net.minecraft.util.PacketByteBuf;
@@ -202,4 +205,18 @@ public class CreeperlingEntity extends MobEntityWithAi {
             }
         }
     }
+
+    @Override
+    protected float getSoundPitch() {
+        return (this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.5F;
+    }
+
+    protected SoundEvent getHurtSound(DamageSource cause) {
+        return SoundEvents.ENTITY_CREEPER_HURT;
+    }
+
+    protected SoundEvent getDeathSound() {
+        return SoundEvents.ENTITY_CREEPER_DEATH;
+    }
+
 }

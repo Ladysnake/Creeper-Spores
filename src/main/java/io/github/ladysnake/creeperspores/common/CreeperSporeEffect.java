@@ -30,12 +30,7 @@ public class CreeperSporeEffect extends StatusEffect {
 
     @Override
     public boolean canApplyUpdateEffect(int duration, int amplifier) {
-        int frequency = 500 >> amplifier;
-        if (frequency > 0) {
-            return duration % frequency == 0 && Math.random() > 0.5;
-        } else {
-            return true;
-        }
+        return duration == 1 && Math.random() < 0.6;
     }
 
     @Override

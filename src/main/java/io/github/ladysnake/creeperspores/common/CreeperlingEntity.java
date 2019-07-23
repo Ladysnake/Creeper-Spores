@@ -42,14 +42,13 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.particle.ParticleTypes;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.tag.BlockTags;
 import net.minecraft.util.Hand;
 import net.minecraft.util.PacketByteBuf;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
 import net.minecraft.world.*;
 
 import javax.annotation.Nullable;
@@ -125,6 +124,20 @@ public class CreeperlingEntity extends MobEntityWithAi {
                 }
             }
         });
+    }
+
+    @Override
+    public boolean damage(DamageSource cause, float amount) {
+        if (super.damage(cause, amount)) {
+            if (!world.isClient) {
+                Entity attacker = cause.getAttacker();
+                if (attacker instanceof OcelotEntity || attacker instanceof CatEntity) {
+                    ((ServerWorld)this.world).spawnParticles(ParticleTypes.HEART, attacker.x, attacker.y + attacker.getStandingEyeHeight(), attacker.z, 0, 0, 0.2f, 0, 0.1D);
+                }
+            }
+            return true;
+        }
+        return false;
     }
 
     @Nullable

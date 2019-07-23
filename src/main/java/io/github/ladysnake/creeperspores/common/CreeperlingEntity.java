@@ -18,6 +18,7 @@
 package io.github.ladysnake.creeperspores.common;
 
 import io.github.ladysnake.creeperspores.CreeperSpores;
+import io.github.ladysnake.creeperspores.mixin.EntityAccessor;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.network.PacketContext;
 import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
@@ -49,6 +50,7 @@ import net.minecraft.tag.BlockTags;
 import net.minecraft.util.Hand;
 import net.minecraft.util.PacketByteBuf;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Box;
 import net.minecraft.world.*;
 
 import javax.annotation.Nullable;
@@ -214,9 +216,19 @@ public class CreeperlingEntity extends MobEntityWithAi {
                 adult.fromTag(this.toTag(new CompoundTag()));
                 adult.setUuid(adultUuid);
                 world.spawnEntity(adult);
+                pushOutOfBlocks(adult);
                 this.remove();
             }
         }
+    }
+
+    private static void pushOutOfBlocks(Entity self) {
+        Box bb = self.getBoundingBox();
+        EntityAccessor access = ((EntityAccessor) self);
+        access.invokePushOutOfBlocks(self.x - (double)self.getWidth() * 0.35D, bb.minY + 0.5D, self.z + (double)self.getWidth() * 0.35D);
+        access.invokePushOutOfBlocks(self.x - (double)self.getWidth() * 0.35D, bb.minY + 0.5D, self.z - (double)self.getWidth() * 0.35D);
+        access.invokePushOutOfBlocks(self.x + (double)self.getWidth() * 0.35D, bb.minY + 0.5D, self.z - (double)self.getWidth() * 0.35D);
+        access.invokePushOutOfBlocks(self.x + (double)self.getWidth() * 0.35D, bb.minY + 0.5D, self.z + (double)self.getWidth() * 0.35D);
     }
 
     @Override

@@ -92,17 +92,17 @@ public class CreeperlingEntity extends MobEntityWithAi {
         ItemStack held = player.getStackInHand(hand);
         if (CreeperSpores.FERTILIZERS.contains(held.getItem())) {
             if (!world.isClient) {
-                this.applyFertilizer();
-                held.decrement(1);
+                this.applyFertilizer(held);
             }
             return true;
         }
         return super.interactMob(player, hand);
     }
 
-    public void applyFertilizer() {
-        if (!this.world.isClient) {
+    public void applyFertilizer(ItemStack boneMeal) {
+        if (!this.world.isClient && this.ticksInSunlight < MATURATION_TIME) {
             this.ticksInSunlight += (20 * (60 + 120 * this.random.nextFloat()));
+            boneMeal.decrement(1);
             PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
             buf.writeInt(this.getEntityId());
             CustomPayloadS2CPacket packet = new CustomPayloadS2CPacket(CreeperSpores.CREEPERLING_FERTILIZATION, buf);

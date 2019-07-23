@@ -1,8 +1,9 @@
 {
   "schemaVersion": 1,
-  "id": "plant-creepers",
+  "id": "creeperspores",
   "name": "${mod_name}",
-  "description": "Plant Creepers !",
+  "description": "Creepers Spores !",
+  "icon": "assets/creeperspores/textures/logo.png",
   "version": "${version}",
   "license": "${license}",
 

@@ -29,8 +29,6 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectType;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.SpawnEggItem;
 import net.minecraft.tag.Tag;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
@@ -41,7 +39,6 @@ public class CreeperSpores implements ModInitializer {
             .size(EntityDimensions.changing(EntityType.CREEPER.getWidth() / 2f, EntityType.CREEPER.getHeight() / 2f))
             .trackable(64, 1, true)
             .build();
-    public static final Item CREEPERLING_SPAWN_EGG = new SpawnEggItem(CREEPERLING, 0x0DA70B, 0x444444, (new Item.Settings()).group(ItemGroup.MISC));
     public static final StatusEffect CREEPER_SPORES_EFFECT = new CreeperSporeEffect(StatusEffectType.NEUTRAL, 0x22AA00);
     public static final Tag<Item> FERTILIZERS = TagRegistry.item(new Identifier("fabric", "fertilizers"));
     public static final Identifier CREEPERLING_FERTILIZATION = id("creeperling-fertilization");
@@ -53,7 +50,6 @@ public class CreeperSpores implements ModInitializer {
     @Override
     public void onInitialize() {
         Registry.register(Registry.ENTITY_TYPE, CreeperSpores.id("creeperling"), CREEPERLING);
-        Registry.register(Registry.ITEM, CreeperSpores.id("creeperling_spawn_egg"), CREEPERLING_SPAWN_EGG);
         Registry.register(Registry.STATUS_EFFECT, CreeperSpores.id("creeper_spore"), CREEPER_SPORES_EFFECT);
         ClientSidePacketRegistry.INSTANCE.register(CREEPERLING_FERTILIZATION, CreeperlingEntity::createParticles);
     }

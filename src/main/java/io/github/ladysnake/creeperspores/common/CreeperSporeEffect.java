@@ -38,11 +38,13 @@ public class CreeperSporeEffect extends StatusEffect {
         spawnCreeperling(affected);
     }
 
-    public static void spawnCreeperling(Entity affected) {
+    public static CreeperlingEntity spawnCreeperling(Entity affected) {
         if (!affected.world.isClient) {
             CreeperlingEntity spawn = new CreeperlingEntity(CreeperSpores.CREEPERLING, affected.world);
-            spawn.setPosition(affected.x, affected.y, affected.z);
+            spawn.setPositionAndAngles(affected.x, affected.y, affected.z, 0, 0);
             affected.world.spawnEntity(spawn);
+            return spawn;
         }
+        return null;
     }
 }

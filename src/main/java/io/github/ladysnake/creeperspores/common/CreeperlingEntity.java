@@ -40,7 +40,9 @@ import net.minecraft.entity.mob.MobEntityWithAi;
 import net.minecraft.entity.passive.CatEntity;
 import net.minecraft.entity.passive.OcelotEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.SpawnEggItem;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.world.ServerWorld;
@@ -97,8 +99,30 @@ public class CreeperlingEntity extends MobEntityWithAi {
                 this.applyFertilizer(held);
             }
             return true;
+        } else if (interactSpawnEgg(player, this, held)) {
+            return true;
         }
         return super.interactMob(player, hand);
+    }
+
+    public static boolean interactSpawnEgg(PlayerEntity player, Entity interacted, ItemStack stack) {
+        Item item = stack.getItem();
+        if (item instanceof SpawnEggItem && ((SpawnEggItem)item).getEntityType(stack.getTag()) == EntityType.CREEPER) {
+            if (!interacted.world.isClient) {
+                CreeperlingEntity creeperling = CreeperSporeEffect.spawnCreeperling(interacted);
+                if (creeperling != null) {
+                    if (stack.hasCustomName()) {
+                        creeperling.setCustomName(stack.getName());
+                    }
+
+                    if (!player.abilities.creativeMode) {
+                        stack.decrement(1);
+                    }
+                }
+            }
+            return true;
+        }
+        return false;
     }
 
     public void applyFertilizer(ItemStack boneMeal) {
@@ -117,7 +141,7 @@ public class CreeperlingEntity extends MobEntityWithAi {
         ctx.getTaskQueue().execute(() -> {
             Entity e = ctx.getPlayer().world.getEntityById(entityId);
             if (e instanceof CreeperlingEntity) {
-                for(int int_2 = 0; int_2 < 15; ++int_2) {
+                for(int i = 0; i < 15; ++i) {
                     Random random = e.world.random;
                     double speedX = random.nextGaussian() * 0.02D;
                     double speedY = random.nextGaussian() * 0.02D;

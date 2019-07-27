@@ -239,7 +239,7 @@ public class CreeperlingEntity extends MobEntityWithAi {
     public void tickMovement() {
         super.tickMovement();
         if (!this.world.isClient && this.world.getDifficulty() != Difficulty.PEACEFUL) {
-            if (this.isInDaylight()) {
+            if (this.random.nextFloat() < this.getGrowthChance()) {
                 ++this.ticksInSunlight;
             }
             if (this.ticksInSunlight >= MATURATION_TIME) {
@@ -252,6 +252,11 @@ public class CreeperlingEntity extends MobEntityWithAi {
                 this.remove();
             }
         }
+    }
+
+    private float getGrowthChance() {
+        float skyExposition = this.world.getLightLevel(LightType.SKY, new BlockPos(this)) / 15f;
+        return this.world.isDaylight() ? skyExposition : skyExposition * 0.5f * this.world.getMoonSize();
     }
 
     private static void pushOutOfBlocks(Entity self) {

@@ -35,14 +35,17 @@ public class CreeperlingChargeFeatureRenderer extends FeatureRenderer<Creeperlin
     }
 
     @Override
-    public void render(CreeperlingEntity creeper, float float_1, float float_2, float float_3, float float_4, float float_5, float float_6, float float_7) {
+    public void render(CreeperlingEntity creeper, float float_1, float float_2, float tickDelta, float float_4, float float_5, float float_6, float float_7) {
         if (creeper.isCharged()) {
             boolean boolean_1 = creeper.isInvisible();
+            GlStateManager.pushMatrix();
+            GlStateManager.scalef(0.5F, 0.5F, 0.5F);
+            GlStateManager.translatef(0.0F, 1.5f, 0.0F);
             GlStateManager.depthMask(!boolean_1);
             this.bindTexture(SKIN);
             GlStateManager.matrixMode(5890);
             GlStateManager.loadIdentity();
-            float age = (float)creeper.age + float_3;
+            float age = (float)creeper.age + tickDelta;
             GlStateManager.translatef(age * 0.01F, age * 0.01F, 0.0F);
             GlStateManager.matrixMode(5888);
             GlStateManager.enableBlend();
@@ -60,6 +63,7 @@ public class CreeperlingChargeFeatureRenderer extends FeatureRenderer<Creeperlin
             GlStateManager.enableLighting();
             GlStateManager.disableBlend();
             GlStateManager.depthMask(true);
+            GlStateManager.popMatrix();
         }
     }
 

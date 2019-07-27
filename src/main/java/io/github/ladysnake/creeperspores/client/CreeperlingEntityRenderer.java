@@ -45,7 +45,7 @@ public class CreeperlingEntityRenderer extends MobEntityRenderer<CreeperlingEnti
 
     @Nullable
     @Override
-    protected Identifier getTexture(CreeperlingEntity var1) {
+    protected Identifier getTexture(CreeperlingEntity creeperling) {
         return SKIN;
     }
 }

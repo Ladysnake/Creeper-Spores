@@ -1,5 +1,5 @@
 /*
- * Plant-Creepers
+ * Creeper-Spores
  * Copyright (C) 2019 Ladysnake
  *
  * This program is free software; you can redistribute it and/or
@@ -25,7 +25,6 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.mob.CreeperEntity;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;

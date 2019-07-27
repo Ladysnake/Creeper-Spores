@@ -269,6 +269,11 @@ public class CreeperlingEntity extends MobEntityWithAi {
     }
 
     @Override
+    public boolean canImmediatelyDespawn(double sqDistance) {
+        return sqDistance > (128*128);
+    }
+
+    @Override
     protected float getSoundPitch() {
         return (this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.5F;
     }

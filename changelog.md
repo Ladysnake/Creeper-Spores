@@ -1,11 +1,4 @@
 ------------------------------------------------------
-Version 1.0.0-SNAPSHOT
+Version 1.0.0
 ------------------------------------------------------
-Additions
-- None
-
-Changes
-- None
-
-Bug Fixes
-- None
+Initial release of Creeper Spores

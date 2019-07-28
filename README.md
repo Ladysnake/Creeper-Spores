@@ -1,7 +1,6 @@
 # Creeper Spores
 
 [![Curseforge](https://curse.nikky.moe/api/img/331636/files?logo)](https://www.curseforge.com/minecraft/mc-mods/creeper-spores)
-[![Download](https://curse.nikky.moe/api/img/331636)](https://curse.nikky.moe/api/url/331636)
 
 A Minecraft mod for the Fabric Mod Loader, adding new creeper mechanics based on them being plants.
 

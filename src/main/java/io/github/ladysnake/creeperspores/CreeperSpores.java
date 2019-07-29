@@ -21,7 +21,6 @@ import io.github.ladysnake.creeperspores.common.CreeperSporeEffect;
 import io.github.ladysnake.creeperspores.common.CreeperlingEntity;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.entity.FabricEntityTypeBuilder;
-import net.fabricmc.fabric.api.network.ClientSidePacketRegistry;
 import net.fabricmc.fabric.api.tag.TagRegistry;
 import net.minecraft.entity.EntityCategory;
 import net.minecraft.entity.EntityDimensions;
@@ -51,6 +50,5 @@ public class CreeperSpores implements ModInitializer {
     public void onInitialize() {
         Registry.register(Registry.ENTITY_TYPE, CreeperSpores.id("creeperling"), CREEPERLING);
         Registry.register(Registry.STATUS_EFFECT, CreeperSpores.id("creeper_spore"), CREEPER_SPORES_EFFECT);
-        ClientSidePacketRegistry.INSTANCE.register(CREEPERLING_FERTILIZATION, CreeperlingEntity::createParticles);
     }
 }

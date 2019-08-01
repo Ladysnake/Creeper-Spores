@@ -26,10 +26,7 @@ import net.fabricmc.fabric.api.server.PlayerStream;
 import net.minecraft.block.Material;
 import net.minecraft.client.network.packet.CustomPayloadS2CPacket;
 import net.minecraft.entity.*;
-import net.minecraft.entity.ai.goal.FleeEntityGoal;
-import net.minecraft.entity.ai.goal.LookAtEntityGoal;
-import net.minecraft.entity.ai.goal.SwimGoal;
-import net.minecraft.entity.ai.goal.WanderAroundFarGoal;
+import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
@@ -45,6 +42,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.SpawnEggItem;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.recipe.Ingredient;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
@@ -64,6 +62,8 @@ public class CreeperlingEntity extends MobEntityWithAi {
     public static final int MATURATION_TIME = 20 * 60 * 8;
 
     private int ticksInSunlight = 0;
+    private boolean trusting;
+    private FleeEntityGoal<PlayerEntity> fleeGoal;
 
     public CreeperlingEntity(EntityType<? extends CreeperlingEntity> type, World world) {
         super(type, world);
@@ -79,16 +79,33 @@ public class CreeperlingEntity extends MobEntityWithAi {
     @Override
     protected void initGoals() {
         this.goalSelector.add(1, new SwimGoal(this));
-        this.goalSelector.add(3, new FleeEntityGoal<>(this, OcelotEntity.class, 6.0F, 1.0D, 1.2D));
-        this.goalSelector.add(3, new FleeEntityGoal<>(this, CatEntity.class, 6.0F, 1.0D, 1.2D));
-        this.goalSelector.add(3, new FleeEntityGoal<>(this, PlayerEntity.class, 6.0F, 1.0D, 1.2D));
+        this.goalSelector.add(2, new FleeEntityGoal<>(this, OcelotEntity.class, 6.0F, 1.0D, 1.2D));
+        this.goalSelector.add(2, new FleeEntityGoal<>(this, CatEntity.class, 6.0F, 1.0D, 1.2D));
+        this.goalSelector.add(3, new TemptGoal(this, 0.3D, Ingredient.fromTag(CreeperSpores.FERTILIZERS), false));
         this.goalSelector.add(5, new WanderAroundFarGoal(this, 1.0));
         this.goalSelector.add(6, new LookAtEntityGoal(this, PlayerEntity.class, 8.0F));
+        this.setTrusting(false);
     }
 
     @Override
     public boolean canSpawn(IWorld world, SpawnType spawnType) {
         return super.canSpawn(world, spawnType) && this.world.getLightLevel(LightType.SKY, this.getBlockPos()) > 0;
+    }
+
+    public boolean isTrusting() {
+        return trusting;
+    }
+
+    public void setTrusting(boolean trusting) {
+        this.trusting = trusting;
+        if (this.fleeGoal == null) {
+            this.fleeGoal = new FleeEntityGoal<>(this, PlayerEntity.class, 6.0F, 1.0D, 1.2D);
+        }
+        if (trusting) {
+            this.goalSelector.remove(fleeGoal);
+        } else {
+            this.goalSelector.add(4, fleeGoal);
+        }
     }
 
     @Override
@@ -97,6 +114,7 @@ public class CreeperlingEntity extends MobEntityWithAi {
         if (CreeperSpores.FERTILIZERS.contains(held.getItem())) {
             if (!world.isClient) {
                 this.applyFertilizer(held);
+                this.setTrusting(true);
             }
             return true;
         } else if (interactSpawnEgg(player, this, held)) {
@@ -215,6 +233,7 @@ public class CreeperlingEntity extends MobEntityWithAi {
         if (this.isCharged()) {
             tag.putBoolean("powered", true);
         }
+        tag.putBoolean("trusting", this.isTrusting());
         tag.putInt("ticksInSunlight", this.ticksInSunlight);
     }
 
@@ -226,6 +245,9 @@ public class CreeperlingEntity extends MobEntityWithAi {
         }
         if (tag.containsKey("ticksInSunlight")) {
             this.ticksInSunlight = tag.getInt("ticksInSunlight");
+        }
+        if (tag.containsKey("trusting")) {
+            this.setTrusting(tag.getBoolean("trusting"));
         }
     }
 

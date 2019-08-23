@@ -22,6 +22,7 @@ import io.github.ladysnake.creeperspores.common.CreeperlingEntity;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.entity.FabricEntityTypeBuilder;
 import net.fabricmc.fabric.api.tag.TagRegistry;
+import net.minecraft.Bootstrap;
 import net.minecraft.entity.EntityCategory;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityType;
@@ -33,6 +34,11 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
 public class CreeperSpores implements ModInitializer {
+
+    static {
+        Bootstrap.initialize();
+    }
+
     public static final EntityType<CreeperlingEntity> CREEPERLING = FabricEntityTypeBuilder
             .create(EntityCategory.MONSTER, CreeperlingEntity::new)
             .size(EntityDimensions.changing(EntityType.CREEPER.getWidth() / 2f, EntityType.CREEPER.getHeight() / 2f))

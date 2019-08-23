@@ -52,7 +52,7 @@ public abstract class ExplosionMixin {
             LivingEntity victim = ((LivingEntity) affectedEntity);
             Vec3d center = new Vec3d(this.x, this.y, this.z);
             double exposure = getExposure(center, victim);
-            victim.addPotionEffect(new StatusEffectInstance(CreeperSpores.CREEPER_SPORES_EFFECT, (int) Math.round(MAX_SPORE_TIME * exposure)));
+            victim.addStatusEffect(new StatusEffectInstance(CreeperSpores.CREEPER_SPORES_EFFECT, (int) Math.round(MAX_SPORE_TIME * exposure)));
         }
         return affectedEntity;
     }

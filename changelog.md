@@ -32,7 +32,6 @@ Additions
 - Creeperlings are now tempted by bonemeal
 - Creeperlings that have been given bonemeal will stop fleeing from players
 
-
 ------------------------------------------------------
 Version 1.0.1
 ------------------------------------------------------

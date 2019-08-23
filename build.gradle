@@ -58,7 +58,7 @@ dependencies {
     mappings "net.fabricmc:yarn:${yarn_mappings}"
     modCompile "net.fabricmc:fabric-loader:${loader_version}"
 
-    modRuntime "io.github.prospector.modmenu:ModMenu:${modmenu_version}"
+    modRuntime "io.github.prospector:modmenu:${modmenu_version}"
 
     //optional dependency!
     modCompile "net.fabricmc.fabric-api:fabric-api:${fabric_version}"

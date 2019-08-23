@@ -17,7 +17,7 @@
  */
 package io.github.ladysnake.creeperspores.client;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import io.github.ladysnake.creeperspores.CreeperSpores;
 import io.github.ladysnake.creeperspores.common.CreeperlingEntity;
 import it.unimi.dsi.fastutil.Hash;
@@ -52,11 +52,11 @@ public class CreeperlingEntityRenderer extends MobEntityRenderer<CreeperlingEnti
 
     @Override
     protected void render(CreeperlingEntity creeper, float x, float y, float z, float yaw, float pitch, float tickDelta) {
-        GlStateManager.pushMatrix();
-        GlStateManager.scalef(0.5F, 0.5F, 0.5F);
-        GlStateManager.translatef(0.0F, 24.0F * tickDelta, 0.0F);
+        RenderSystem.pushMatrix();
+        RenderSystem.scalef(0.5F, 0.5F, 0.5F);
+        RenderSystem.translatef(0.0F, 24.0F * tickDelta, 0.0F);
         super.render(creeper, x, y, z, yaw, pitch, tickDelta);
-        GlStateManager.popMatrix();
+        RenderSystem.popMatrix();
     }
 
     @Nullable

@@ -27,6 +27,8 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.entity.FabricEntityTypeBuilder;
 import net.fabricmc.fabric.api.event.registry.RegistryEntryAddedCallback;
 import net.fabricmc.fabric.api.tag.TagRegistry;
+import net.minecraft.Bootstrap;
+import net.minecraft.entity.EntityCategory;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.effect.StatusEffectType;
@@ -34,15 +36,15 @@ import net.minecraft.item.Item;
 import net.minecraft.tag.Tag;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
-import net.minecraft.world.GameRules;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.util.*;
 import java.util.function.BiConsumer;
 
 public class CreeperSpores implements ModInitializer {
-    public static final Logger LOGGER = LogManager.getLogger("creeper-spores");
+
+    static {
+        Bootstrap.initialize();
+    }
 
     public static final Set<Identifier> CREEPER_LIKES = new HashSet<>(Arrays.asList(
             new Identifier("minecraft", "creeper"),

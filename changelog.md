@@ -1,4 +1,13 @@
 ------------------------------------------------------
+Version 1.2.0
+------------------------------------------------------
+Additions
+- Added a new `cspores_creeperGrief` gamerule with 3 values:
+    - CHARGED: Only charged creepers can destroy terrain. This is the default.
+    - NEVER: Creepers can never destroy terrain.
+    - VANILLA: All creepers can destroy terrain, just like in vanilla
+
+------------------------------------------------------
 Version 1.1.0
 ------------------------------------------------------
 Additions

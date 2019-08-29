@@ -24,6 +24,7 @@ import net.fabricmc.fabric.api.network.PacketContext;
 import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
 import net.fabricmc.fabric.api.server.PlayerStream;
 import net.minecraft.block.Material;
+import net.minecraft.class_4538;
 import net.minecraft.client.network.packet.CustomPayloadS2CPacket;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.*;
@@ -202,12 +203,13 @@ public class CreeperlingEntity extends MobEntityWithAi {
     }
 
     @Override
-    public float getPathfindingFavor(BlockPos pos, ViewableWorld worldView) {
+    public float getPathfindingFavor(BlockPos pos, class_4538 worldView) {
         // Creeperlings like sunlight
         int skyLightLevel = worldView.getLightLevel(LightType.SKY, pos);
         float skyFavor = worldView.getDimension().getLightLevelToBrightness()[skyLightLevel] * 3.0F;
         // But they can do with artificial light if there is not anything better
-        float favor = Math.max(worldView.getBrightness(pos) - 0.5F, skyFavor);
+        // method_22349 == getBrightness
+        float favor = Math.max(worldView.method_22349(pos) - 0.5F, skyFavor);
         // They like good soils too
         if (BlockTags.DIRT_LIKE.contains(worldView.getBlockState(pos.down()).getBlock())) {
             favor += 3.0F;

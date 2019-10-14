@@ -23,11 +23,13 @@ import io.github.ladysnake.creeperspores.gamerule.CSGamerules;
 import io.github.ladysnake.creeperspores.gamerule.CreeperGrief;
 import io.github.ladysnake.creeperspores.gamerule.EnumRule;
 import io.github.ladysnake.creeperspores.mixin.EntityTypeAccessor;
+import io.github.ladysnake.creeperspores.gamerule.CSGamerules;
+import io.github.ladysnake.creeperspores.gamerule.CreeperGrief;
+import io.github.ladysnake.creeperspores.gamerule.EnumRule;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.entity.FabricEntityTypeBuilder;
 import net.fabricmc.fabric.api.event.registry.RegistryEntryAddedCallback;
 import net.fabricmc.fabric.api.tag.TagRegistry;
-import net.minecraft.Bootstrap;
 import net.minecraft.entity.EntityCategory;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityType;
@@ -36,15 +38,15 @@ import net.minecraft.item.Item;
 import net.minecraft.tag.Tag;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
+import net.minecraft.world.GameRules;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.*;
 import java.util.function.BiConsumer;
 
 public class CreeperSpores implements ModInitializer {
-
-    static {
-        Bootstrap.initialize();
-    }
+    public static final Logger LOGGER = LogManager.getLogger("creeper-spores");
 
     public static final Set<Identifier> CREEPER_LIKES = new HashSet<>(Arrays.asList(
             new Identifier("minecraft", "creeper"),

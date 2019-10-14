@@ -35,7 +35,7 @@ public abstract class BoneMealItemMixin {
     @Inject(method = "useOnFertilizable", at = @At("RETURN"), cancellable = true)
     private static void fertilizeCreeperlings(ItemStack boneMeal, World world, BlockPos pos, CallbackInfoReturnable<Boolean> cir) {
         if (!cir.getReturnValueZ()) {
-            List<CreeperlingEntity> creeperlings = world.getEntities(CreeperlingEntity.class, new Box(pos));
+            List<CreeperlingEntity> creeperlings = world.getEntities(CreeperlingEntity.class, new Box(pos), null);
             if (!creeperlings.isEmpty()) {
                 creeperlings.get(0).applyFertilizer(boneMeal);
                 cir.setReturnValue(true);

@@ -26,6 +26,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.mob.CreeperEntity;
 import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -35,6 +36,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraft.world.explosion.Explosion;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -49,7 +51,7 @@ public abstract class CreeperEntityMixin extends HostileEntity implements SporeS
 
     @Unique private TriState giveSpores = TriState.DEFAULT;
 
-    @Shadow public abstract boolean isCharged();
+    @Shadow @Final private static TrackedData<Boolean> CHARGED;
 
     protected CreeperEntityMixin(EntityType<? extends HostileEntity> type, World world) {
         super(type, world);
@@ -85,7 +87,7 @@ public abstract class CreeperEntityMixin extends HostileEntity implements SporeS
     @ModifyVariable(method = "explode", ordinal = 0, at = @At(value = "STORE", ordinal = 0))
     private Explosion.DestructionType griefLessExplosion(Explosion.DestructionType explosionType) {
         CreeperGrief grief = world.getGameRules().get(CreeperSpores.CREEPER_GRIEF).get();
-        if (!grief.shouldGrief(this.isCharged())) {
+        if (!grief.shouldGrief(this.dataTracker.get(CHARGED))) {
             return Explosion.DestructionType.NONE;
         }
         return explosionType;

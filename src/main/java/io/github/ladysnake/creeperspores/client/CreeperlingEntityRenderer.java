@@ -27,6 +27,7 @@ import net.minecraft.client.render.entity.MobEntityRenderer;
 import net.minecraft.client.render.entity.model.CreeperEntityModel;
 import net.minecraft.entity.EntityType;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.MatrixStack;
 import net.minecraft.util.registry.Registry;
 
 import javax.annotation.Nullable;
@@ -51,17 +52,13 @@ public class CreeperlingEntityRenderer extends MobEntityRenderer<CreeperlingEnti
     }
 
     @Override
-    protected void render(CreeperlingEntity creeper, float x, float y, float z, float yaw, float pitch, float tickDelta) {
-        RenderSystem.pushMatrix();
-        RenderSystem.scalef(0.5F, 0.5F, 0.5F);
-        RenderSystem.translatef(0.0F, 24.0F * tickDelta, 0.0F);
-        super.render(creeper, x, y, z, yaw, pitch, tickDelta);
-        RenderSystem.popMatrix();
+    protected void scale(CreeperlingEntity entity, MatrixStack matrix, float tickDelta) {
+        matrix.scale(0.5f, 0.5f, 0.5f);
     }
 
     @Nullable
     @Override
-    protected Identifier getTexture(CreeperlingEntity creeperling) {
+    public Identifier getTexture(CreeperlingEntity creeperling) {
         // fast track for most common case
         if (creeperling.getType() == BASE_CREEPERLING) {
             return SKIN;

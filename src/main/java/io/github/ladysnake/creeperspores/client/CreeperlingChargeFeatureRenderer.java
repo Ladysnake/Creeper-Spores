@@ -17,18 +17,14 @@
  */
 package io.github.ladysnake.creeperspores.client;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import io.github.ladysnake.creeperspores.common.CreeperlingEntity;
-import net.minecraft.class_4493;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.GameRenderer;
-import net.minecraft.client.render.entity.feature.FeatureRenderer;
 import net.minecraft.client.render.entity.feature.FeatureRendererContext;
+import net.minecraft.client.render.entity.feature.SkinOverlayFeatureRenderer;
 import net.minecraft.client.render.entity.model.CreeperEntityModel;
+import net.minecraft.client.render.entity.model.EntityModel;
 import net.minecraft.util.Identifier;
-import org.lwjgl.opengl.GL11;
 
-public class CreeperlingChargeFeatureRenderer extends FeatureRenderer<CreeperlingEntity, CreeperEntityModel<CreeperlingEntity>> {
+public class CreeperlingChargeFeatureRenderer extends SkinOverlayFeatureRenderer<CreeperlingEntity, CreeperEntityModel<CreeperlingEntity>> {
     private static final Identifier SKIN = new Identifier("textures/entity/creeper/creeper_armor.png");
     private final CreeperEntityModel<CreeperlingEntity> creeperModel = new CreeperEntityModel<>(2.0F);
 
@@ -37,40 +33,18 @@ public class CreeperlingChargeFeatureRenderer extends FeatureRenderer<Creeperlin
     }
 
     @Override
-    public void render(CreeperlingEntity creeper, float f1, float f2, float tickDelta, float f4, float f5, float f6, float f7) {
-        if (creeper.isCharged()) {
-            boolean boolean_1 = creeper.isInvisible();
-            RenderSystem.pushMatrix();
-            RenderSystem.scalef(0.5F, 0.5F, 0.5F);
-            RenderSystem.translatef(0.0F, 1.5f, 0.0F);
-            RenderSystem.depthMask(!boolean_1);
-            this.bindTexture(SKIN);
-            RenderSystem.matrixMode(GL11.GL_TEXTURE);
-            RenderSystem.loadIdentity();
-            float age = (float)creeper.age + tickDelta;
-            RenderSystem.translatef(age * 0.01F, age * 0.01F, 0.0F);
-            RenderSystem.matrixMode(GL11.GL_MODELVIEW);
-            RenderSystem.enableBlend();
-            RenderSystem.color4f(0.5F, 0.5F, 0.5F, 1.0F);
-            RenderSystem.disableLighting();
-            RenderSystem.blendFunc(class_4493.class_4535.ONE, class_4493.class_4534.ONE);
-            this.getModel().copyStateTo(this.creeperModel);
-            GameRenderer gameRenderer = MinecraftClient.getInstance().gameRenderer;
-            gameRenderer.setFogBlack(true);
-            this.creeperModel.render(creeper, f1, f2, f4, f5, f6, f7);
-            gameRenderer.setFogBlack(false);
-            RenderSystem.matrixMode(GL11.GL_TEXTURE);
-            RenderSystem.loadIdentity();
-            RenderSystem.matrixMode(GL11.GL_MODELVIEW);
-            RenderSystem.enableLighting();
-            RenderSystem.disableBlend();
-            RenderSystem.depthMask(true);
-            RenderSystem.popMatrix();
-        }
+    protected float method_23202(float v) {
+        return v * 0.01F;
     }
 
     @Override
-    public boolean hasHurtOverlay() {
-        return false;
+    protected Identifier method_23201() {
+        return SKIN;
     }
+
+    @Override
+    protected EntityModel<CreeperlingEntity> method_23203() {
+        return this.creeperModel;
+    }
+
 }

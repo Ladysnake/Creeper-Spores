@@ -33,6 +33,7 @@ public final class EnumRule<E extends Enum<E>> extends GameRules.Rule<EnumRule<E
     public static <E extends Enum<E>> GameRules.RuleType<EnumRule<E>> of(Class<E> enumType, E value, BiConsumer<MinecraftServer, EnumRule<E>> notifier) {
         Preconditions.checkArgument(enumType.isInstance(value));
         Preconditions.checkArgument(enumType.isEnum());
+        Preconditions.checkArgument(enumType.getEnumConstants().length > 0);
         return CSGamerules.createRuleType(() -> new EnumArgumentType<>(enumType), (type) -> new EnumRule<>(type, enumType, value), notifier);
     }
 
@@ -63,7 +64,8 @@ public final class EnumRule<E extends Enum<E>> extends GameRules.Rule<EnumRule<E
             try {
                 this.value = Enum.valueOf(this.enumType, value);
             } catch (IllegalArgumentException e) {
-                CreeperSpores.LOGGER.warn("[Creeper Spores] Failed to parse enum {}", value);
+                CreeperSpores.LOGGER.warn("[Creeper Spores] Failed to parse enum {} for {}", value, this.enumType.getName());
+                this.value = this.enumType.getEnumConstants()[0];
             }
         }
     }

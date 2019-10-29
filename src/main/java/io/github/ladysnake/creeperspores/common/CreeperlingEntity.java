@@ -149,7 +149,7 @@ public class CreeperlingEntity extends MobEntityWithAi {
             boneMeal.decrement(1);
             PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
             buf.writeInt(this.getEntityId());
-            CustomPayloadS2CPacket packet = new CustomPayloadS2CPacket(CreeperSpores.CREEPERLING_FERTILIZATION, buf);
+            CustomPayloadS2CPacket packet = new CustomPayloadS2CPacket(CreeperSpores.CREEPERLING_FERTILIZATION_PACKET, buf);
             PlayerStream.watching(this).forEach(p -> ServerSidePacketRegistry.INSTANCE.sendToPlayer(p, packet));
         }
     }

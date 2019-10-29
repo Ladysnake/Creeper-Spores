@@ -46,10 +46,14 @@ public class CreeperSpores implements ModInitializer {
             .size(EntityDimensions.changing(EntityType.CREEPER.getWidth() / 2f, EntityType.CREEPER.getHeight() / 2f))
             .trackable(64, 1, true)
             .build();
+
     public static final StatusEffect CREEPER_SPORES_EFFECT = new CreeperSporeEffect(StatusEffectType.NEUTRAL, 0x22AA00);
     public static final Tag<Item> FERTILIZERS = TagRegistry.item(new Identifier("fabric", "fertilizers"));
-    public static final Identifier CREEPERLING_FERTILIZATION = id("creeperling-fertilization");
     public static final GameRules.RuleKey<EnumRule<CreeperGrief>> CREEPER_GRIEF = CSGamerules.register("cspores_creeperGrief", EnumRule.of(CreeperGrief.CHARGED));
+
+    public static final Identifier CREEPERLING_FERTILIZATION_PACKET = id("creeperling-fertilization");
+    public static final String GIVE_SPORES_TAG = "cspores:giveSpores";
+    public static final int MAX_SPORE_TIME = 20 * 180;
 
     public static Identifier id(String path) {
         return new Identifier("creeperspores", path);

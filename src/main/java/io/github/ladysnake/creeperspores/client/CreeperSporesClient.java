@@ -27,6 +27,6 @@ public class CreeperSporesClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         EntityRendererRegistry.INSTANCE.register(CreeperlingEntity.class, (r, it) -> new CreeperlingEntityRenderer(r));
-        ClientSidePacketRegistry.INSTANCE.register(CreeperSpores.CREEPERLING_FERTILIZATION, CreeperlingEntity::createParticles);
+        ClientSidePacketRegistry.INSTANCE.register(CreeperSpores.CREEPERLING_FERTILIZATION_PACKET, CreeperlingEntity::createParticles);
     }
 }

@@ -65,7 +65,7 @@ public abstract class CreeperEntityMixin extends HostileEntity implements SporeS
         if (affectedEntity instanceof LivingEntity && this.shouldSpreadSpores()) {
             LivingEntity victim = ((LivingEntity) affectedEntity);
             double exposure = Explosion.getExposure(center, victim);
-            victim.addPotionEffect(new StatusEffectInstance(CreeperSpores.CREEPER_SPORES_EFFECT, (int) Math.round(CreeperSpores.MAX_SPORE_TIME * exposure)));
+            victim.addPotionEffect(new StatusEffectInstance(CreeperSpores.CREEPER_SPORES_EFFECTS.get(this.getType()), (int) Math.round(CreeperSpores.MAX_SPORE_TIME * exposure)));
         }
     }
 
@@ -76,7 +76,8 @@ public abstract class CreeperEntityMixin extends HostileEntity implements SporeS
     )
     private void interactSpawnEgg(PlayerEntity player, Hand hand, CallbackInfoReturnable<Boolean> cir) {
         ItemStack stack = player.getStackInHand(hand);
-        if (CreeperlingEntity.interactSpawnEgg(player, this, stack)) {
+        EntityType<CreeperlingEntity> creeperlingType = CreeperSpores.CREEPERLINGS.get(this.getType());
+        if (creeperlingType != null && CreeperlingEntity.interactSpawnEgg(player, this, creeperlingType, stack)) {
             cir.setReturnValue(true);
         }
     }

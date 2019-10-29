@@ -19,13 +19,19 @@ package io.github.ladysnake.creeperspores.common;
 
 import io.github.ladysnake.creeperspores.CreeperSpores;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectType;
 
+import java.util.Objects;
+
 public class CreeperSporeEffect extends StatusEffect {
-    public CreeperSporeEffect(StatusEffectType type, int color) {
+    private final EntityType<?> creeperType;
+
+    public CreeperSporeEffect(StatusEffectType type, int color, EntityType<?> creeperType) {
         super(type, color);
+        this.creeperType = creeperType;
     }
 
     @Override
@@ -38,9 +44,13 @@ public class CreeperSporeEffect extends StatusEffect {
         spawnCreeperling(affected);
     }
 
-    public static CreeperlingEntity spawnCreeperling(Entity affected) {
+    public void spawnCreeperling(Entity affected) {
+        spawnCreeperling(affected, CreeperSpores.CREEPERLINGS.get(this.creeperType));
+    }
+
+    public static CreeperlingEntity spawnCreeperling(Entity affected, EntityType<? extends CreeperlingEntity> creeperlingType) {
         if (!affected.world.isClient) {
-            CreeperlingEntity spawn = new CreeperlingEntity(CreeperSpores.CREEPERLING, affected.world);
+            CreeperlingEntity spawn = Objects.requireNonNull(creeperlingType.create(affected.world));
             spawn.setPositionAndAngles(affected.x, affected.y, affected.z, 0, 0);
             affected.world.spawnEntity(spawn);
             return spawn;

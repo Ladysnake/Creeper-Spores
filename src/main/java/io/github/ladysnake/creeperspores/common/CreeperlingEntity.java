@@ -117,17 +117,17 @@ public class CreeperlingEntity extends MobEntityWithAi {
                 this.setTrusting(true);
             }
             return true;
-        } else if (interactSpawnEgg(player, this, held)) {
+        } else if (interactSpawnEgg(player, this, this.getType(), held)) {
             return true;
         }
         return super.interactMob(player, hand);
     }
 
-    public static boolean interactSpawnEgg(PlayerEntity player, Entity interacted, ItemStack stack) {
+    public static boolean interactSpawnEgg(PlayerEntity player, Entity interacted, EntityType<? extends CreeperlingEntity> creeperlingType, ItemStack stack) {
         Item item = stack.getItem();
         if (item instanceof SpawnEggItem && ((SpawnEggItem)item).getEntityType(stack.getTag()) == EntityType.CREEPER) {
             if (!interacted.world.isClient) {
-                CreeperlingEntity creeperling = CreeperSporeEffect.spawnCreeperling(interacted);
+                CreeperlingEntity creeperling = CreeperSporeEffect.spawnCreeperling(interacted, creeperlingType);
                 if (creeperling != null) {
                     if (stack.hasCustomName()) {
                         creeperling.setCustomName(stack.getName());
@@ -310,4 +310,9 @@ public class CreeperlingEntity extends MobEntityWithAi {
         return SoundEvents.ENTITY_CREEPER_DEATH;
     }
 
+    @SuppressWarnings("unchecked")
+    @Override
+    public EntityType<? extends CreeperlingEntity> getType() {
+        return (EntityType<? extends CreeperlingEntity>) super.getType();
+    }
 }

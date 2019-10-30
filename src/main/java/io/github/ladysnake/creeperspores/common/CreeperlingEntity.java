@@ -117,8 +117,11 @@ public class CreeperlingEntity extends MobEntityWithAi {
                 this.setTrusting(true);
             }
             return true;
-        } else if (interactSpawnEgg(player, this, this.getType(), held)) {
-            return true;
+        } else {
+            @SuppressWarnings("unchecked") EntityType<? extends CreeperlingEntity> thisType = (EntityType<? extends CreeperlingEntity>) this.getType();
+            if (interactSpawnEgg(player, this, thisType, held)) {
+                return true;
+            }
         }
         return super.interactMob(player, hand);
     }
@@ -308,11 +311,5 @@ public class CreeperlingEntity extends MobEntityWithAi {
     @Override
     protected SoundEvent getDeathSound() {
         return SoundEvents.ENTITY_CREEPER_DEATH;
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public EntityType<? extends CreeperlingEntity> getType() {
-        return (EntityType<? extends CreeperlingEntity>) super.getType();
     }
 }

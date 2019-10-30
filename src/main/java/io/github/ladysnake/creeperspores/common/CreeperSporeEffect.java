@@ -48,6 +48,11 @@ public class CreeperSporeEffect extends StatusEffect {
         spawnCreeperling(affected, CreeperSpores.CREEPERLINGS.get(this.creeperType));
     }
 
+    @Override
+    public String method_5559() {
+        return "effect.creeperspores.creeper_spore";
+    }
+
     public static CreeperlingEntity spawnCreeperling(Entity affected, EntityType<? extends CreeperlingEntity> creeperlingType) {
         if (!affected.world.isClient) {
             CreeperlingEntity spawn = Objects.requireNonNull(creeperlingType.create(affected.world));

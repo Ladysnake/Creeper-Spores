@@ -22,6 +22,7 @@ import io.github.ladysnake.creeperspores.common.CreeperlingEntity;
 import io.github.ladysnake.creeperspores.gamerule.CSGamerules;
 import io.github.ladysnake.creeperspores.gamerule.CreeperGrief;
 import io.github.ladysnake.creeperspores.gamerule.EnumRule;
+import io.github.ladysnake.creeperspores.mixin.EntityTypeAccessor;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.entity.FabricEntityTypeBuilder;
 import net.fabricmc.fabric.api.event.registry.RegistryEntryAddedCallback;
@@ -90,6 +91,7 @@ public class CreeperSpores implements ModInitializer {
                 .size(EntityDimensions.changing(creeperType.getWidth() / 2f, creeperType.getHeight() / 2f))
                 .trackable(64, 1, true)
                 .build();
+        ((EntityTypeAccessor) creeperlingType).setTranslationKey("entity.creeperspores.creeperling");
         CREEPERLINGS.put(creeperType, creeperlingType);
         return creeperlingType;
     }

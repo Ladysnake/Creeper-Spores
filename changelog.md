@@ -1,4 +1,17 @@
 ------------------------------------------------------
+Version 1.3.0
+------------------------------------------------------
+Additions
+- Support for modded creeper types (currently supporting mobZ)
+    - Modded creepers get their own spores effect and creeperlings that grow into the appropriate entity
+- Rudimentary API for modders who want to register modded creeper types
+
+Changes
+- Creepers with the `NoAI` property (like those used in datapacks) do not spread spores anymore
+    - Spore spreading can be forcefully enabled or disabled per creeper through the `cspores:giveSpores` NBT property
+- Updated French localization
+
+------------------------------------------------------
 Version 1.2.1
 ------------------------------------------------------
 - Added Japanese localization by FlashfireEX

@@ -40,8 +40,8 @@ public class CreeperlingEntityRenderer extends MobEntityRenderer<CreeperlingEnti
 
     static {
         if (FabricLoader.getInstance().isModLoaded("mobz")) {
-            CREEPER_TEXTURES.put(Registry.ENTITY_TYPE.get(new Identifier("mobz", "creep_entity")), new Identifier("mobz", "textures/entity/creep.png"));
-            CREEPER_TEXTURES.put(Registry.ENTITY_TYPE.get(new Identifier("mobz", "crip_entity")), new Identifier("mobz", "textures/entity/crip.png"));
+            CREEPER_TEXTURES.put(CreeperSpores.CREEPERLINGS.get(Registry.ENTITY_TYPE.get(new Identifier("mobz", "creep_entity"))), new Identifier("mobz", "textures/entity/creep.png"));
+            CREEPER_TEXTURES.put(CreeperSpores.CREEPERLINGS.get(Registry.ENTITY_TYPE.get(new Identifier("mobz", "crip_entity"))), new Identifier("mobz", "textures/entity/crip.png"));
         }
     }
 

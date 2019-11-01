@@ -72,11 +72,15 @@ public class CreeperSpores implements ModInitializer {
     public void onInitialize() {
         visitRegistry(Registry.ENTITY_TYPE, (id, type) -> {
             if (CREEPER_LIKES.contains(id)) {
-                String prefix = id.getNamespace().equals("minecraft") ? "" : (id.toString().replace(':', '_') + "_");
-                Registry.register(Registry.ENTITY_TYPE, CreeperSpores.id(prefix + "creeperling"), createCreeperlingType(type));
-                Registry.register(Registry.STATUS_EFFECT, CreeperSpores.id(prefix + "creeper_spore"), createCreeperSporesEffect(type));
+                registerCreeperLike(id, type);
             }
         });
+    }
+
+    public static void registerCreeperLike(Identifier id, EntityType<?> type) {
+        String prefix = id.getNamespace().equals("minecraft") ? "" : (id.toString().replace(':', '_') + "_");
+        Registry.register(Registry.ENTITY_TYPE, CreeperSpores.id(prefix + "creeperling"), createCreeperlingType(type));
+        Registry.register(Registry.STATUS_EFFECT, CreeperSpores.id(prefix + "creeper_spore"), createCreeperSporesEffect(type));
     }
 
     private static CreeperSporeEffect createCreeperSporesEffect(EntityType<?> creeperType) {

@@ -1,5 +1,7 @@
 {
+  "creeperspores:argument.enum.invalid": "Valeur d'énumération invalide",
   "effect.creeperspores.creeper_spore": "Spores de creeper",
+  "effect.creeperspores.generic_spore": "Spores de %s",
   "entity.creeperspores.creeperling": "Creepet",
   "item.creeperspores.creeperling_spawn_egg": "Œuf d'apparition de creepetit"
 }

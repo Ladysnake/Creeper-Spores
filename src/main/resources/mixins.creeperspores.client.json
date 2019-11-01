@@ -3,7 +3,8 @@
   "package": "io.github.ladysnake.creeperspores.mixin.client",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-
+    "AbstractInventoryScreenMixin",
+    "StatusEffectSpriteManagerMixin"
   ],
   "injectors": {
     "defaultRequire": 1

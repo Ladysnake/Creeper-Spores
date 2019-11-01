@@ -18,6 +18,7 @@
 package io.github.ladysnake.creeperspores.common;
 
 import io.github.ladysnake.creeperspores.CreeperSpores;
+import net.minecraft.client.resource.language.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -51,6 +52,10 @@ public class CreeperSporeEffect extends StatusEffect {
     @Override
     public String method_5559() {
         return "effect.creeperspores.creeper_spore";
+    }
+
+    public String getLocalizedName() {
+        return I18n.translate("effect.creeperspores.generic_spore", I18n.translate(this.creeperType.getTranslationKey()));
     }
 
     public static CreeperlingEntity spawnCreeperling(Entity affected, EntityType<? extends CreeperlingEntity> creeperlingType) {

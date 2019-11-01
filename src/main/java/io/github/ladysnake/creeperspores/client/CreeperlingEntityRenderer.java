@@ -18,16 +18,32 @@
 package io.github.ladysnake.creeperspores.client;
 
 import com.mojang.blaze3d.platform.GlStateManager;
+import io.github.ladysnake.creeperspores.CreeperSpores;
 import io.github.ladysnake.creeperspores.common.CreeperlingEntity;
+import it.unimi.dsi.fastutil.Hash;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.render.entity.MobEntityRenderer;
 import net.minecraft.client.render.entity.model.CreeperEntityModel;
+import net.minecraft.entity.EntityType;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.Registry;
 
 import javax.annotation.Nullable;
+import java.util.HashMap;
+import java.util.Map;
 
 public class CreeperlingEntityRenderer extends MobEntityRenderer<CreeperlingEntity, CreeperEntityModel<CreeperlingEntity>> {
     private static final Identifier SKIN = new Identifier("textures/entity/creeper/creeper.png");
+    private static final EntityType<? extends CreeperlingEntity> BASE_CREEPERLING = CreeperSpores.CREEPERLINGS.get(EntityType.CREEPER);
+    private static final Map<EntityType<?>, Identifier> CREEPER_TEXTURES = new HashMap<>(CreeperSpores.CREEPERLINGS.size(), Hash.VERY_FAST_LOAD_FACTOR);
+
+    static {
+        if (FabricLoader.getInstance().isModLoaded("mobz")) {
+            CREEPER_TEXTURES.put(CreeperSpores.CREEPERLINGS.get(Registry.ENTITY_TYPE.get(new Identifier("mobz", "creep_entity"))), new Identifier("mobz", "textures/entity/creep.png"));
+            CREEPER_TEXTURES.put(CreeperSpores.CREEPERLINGS.get(Registry.ENTITY_TYPE.get(new Identifier("mobz", "crip_entity"))), new Identifier("mobz", "textures/entity/crip.png"));
+        }
+    }
 
     public CreeperlingEntityRenderer(EntityRenderDispatcher dispatcher) {
         super(dispatcher, new CreeperEntityModel<>(), 0.25F);
@@ -46,6 +62,10 @@ public class CreeperlingEntityRenderer extends MobEntityRenderer<CreeperlingEnti
     @Nullable
     @Override
     protected Identifier getTexture(CreeperlingEntity creeperling) {
-        return SKIN;
+        // fast track for most common case
+        if (creeperling.getType() == BASE_CREEPERLING) {
+            return SKIN;
+        }
+        return CREEPER_TEXTURES.getOrDefault(creeperling.getType(), SKIN);
     }
 }

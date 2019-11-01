@@ -22,13 +22,13 @@ import io.github.ladysnake.creeperspores.common.CreeperlingEntity;
 import io.github.ladysnake.creeperspores.gamerule.CSGamerules;
 import io.github.ladysnake.creeperspores.gamerule.CreeperGrief;
 import io.github.ladysnake.creeperspores.gamerule.EnumRule;
+import io.github.ladysnake.creeperspores.mixin.EntityTypeAccessor;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.entity.FabricEntityTypeBuilder;
+import net.fabricmc.fabric.api.event.registry.RegistryEntryAddedCallback;
 import net.fabricmc.fabric.api.tag.TagRegistry;
-import net.minecraft.entity.EntityCategory;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectType;
 import net.minecraft.item.Item;
 import net.minecraft.tag.Tag;
@@ -38,16 +38,21 @@ import net.minecraft.world.GameRules;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.*;
+import java.util.function.BiConsumer;
+
 public class CreeperSpores implements ModInitializer {
     public static final Logger LOGGER = LogManager.getLogger("creeper-spores");
 
-    public static final EntityType<CreeperlingEntity> CREEPERLING = FabricEntityTypeBuilder
-            .create(EntityCategory.MONSTER, CreeperlingEntity::new)
-            .size(EntityDimensions.changing(EntityType.CREEPER.getWidth() / 2f, EntityType.CREEPER.getHeight() / 2f))
-            .trackable(64, 1, true)
-            .build();
+    public static final Set<Identifier> CREEPER_LIKES = new HashSet<>(Arrays.asList(
+            new Identifier("minecraft", "creeper"),
+            new Identifier("mobz", "creep_entity"),
+            new Identifier("mobz", "crip_entity")
+    ));
 
-    public static final StatusEffect CREEPER_SPORES_EFFECT = new CreeperSporeEffect(StatusEffectType.NEUTRAL, 0x22AA00);
+    public static final Map<EntityType<?>, EntityType<CreeperlingEntity>> CREEPERLINGS = new HashMap<>();
+    public static final Map<EntityType<?>, CreeperSporeEffect> CREEPER_SPORES_EFFECTS = new HashMap<>();
+
     public static final Tag<Item> FERTILIZERS = TagRegistry.item(new Identifier("fabric", "fertilizers"));
     public static final GameRules.RuleKey<EnumRule<CreeperGrief>> CREEPER_GRIEF = CSGamerules.register("cspores_creeperGrief", EnumRule.of(CreeperGrief.CHARGED));
 
@@ -59,9 +64,39 @@ public class CreeperSpores implements ModInitializer {
         return new Identifier("creeperspores", path);
     }
 
+    public static <T> void visitRegistry(Registry<T> registry, BiConsumer<Identifier, T> visitor) {
+        registry.getIds().forEach(id -> visitor.accept(id, registry.get(id))); RegistryEntryAddedCallback.event(registry).register((index, identifier, entry) -> visitor.accept(identifier, entry));
+    }
+
     @Override
     public void onInitialize() {
-        Registry.register(Registry.ENTITY_TYPE, CreeperSpores.id("creeperling"), CREEPERLING);
-        Registry.register(Registry.STATUS_EFFECT, CreeperSpores.id("creeper_spore"), CREEPER_SPORES_EFFECT);
+        visitRegistry(Registry.ENTITY_TYPE, (id, type) -> {
+            if (CREEPER_LIKES.contains(id)) {
+                registerCreeperLike(id, type);
+            }
+        });
+    }
+
+    public static void registerCreeperLike(Identifier id, EntityType<?> type) {
+        String prefix = id.getNamespace().equals("minecraft") ? "" : (id.toString().replace(':', '_') + "_");
+        Registry.register(Registry.ENTITY_TYPE, CreeperSpores.id(prefix + "creeperling"), createCreeperlingType(type));
+        Registry.register(Registry.STATUS_EFFECT, CreeperSpores.id(prefix + "creeper_spore"), createCreeperSporesEffect(type));
+    }
+
+    private static CreeperSporeEffect createCreeperSporesEffect(EntityType<?> creeperType) {
+        CreeperSporeEffect effect = new CreeperSporeEffect(StatusEffectType.NEUTRAL, 0x22AA00, creeperType);
+        CREEPER_SPORES_EFFECTS.put(creeperType, effect);
+        return effect;
+    }
+
+    private static EntityType<CreeperlingEntity> createCreeperlingType(EntityType<?> creeperType) {
+        EntityType<CreeperlingEntity> creeperlingType = FabricEntityTypeBuilder
+                .create(creeperType.getCategory(), CreeperlingEntity::new)
+                .size(EntityDimensions.changing(creeperType.getWidth() / 2f, creeperType.getHeight() / 2f))
+                .trackable(64, 1, true)
+                .build();
+        ((EntityTypeAccessor) creeperlingType).setTranslationKey("entity.creeperspores.creeperling");
+        CREEPERLINGS.put(creeperType, creeperlingType);
+        return creeperlingType;
     }
 }

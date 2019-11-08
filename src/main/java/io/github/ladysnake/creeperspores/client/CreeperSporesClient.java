@@ -22,11 +22,12 @@ import io.github.ladysnake.creeperspores.common.CreeperlingEntity;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.network.ClientSidePacketRegistry;
+import net.minecraft.entity.EntityType;
 
 public class CreeperSporesClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
-        EntityRendererRegistry.INSTANCE.register(CreeperlingEntity.class, (r, it) -> new CreeperlingEntityRenderer(r));
+        EntityRendererRegistry.INSTANCE.register(CreeperSpores.CREEPERLINGS.get(EntityType.CREEPER), (manager, context) -> new CreeperlingEntityRenderer(manager, CreeperlingEntityRenderer.DEFAULT_SKIN));
         ClientSidePacketRegistry.INSTANCE.register(CreeperSpores.CREEPERLING_FERTILIZATION_PACKET, CreeperlingEntity::createParticles);
     }
 }

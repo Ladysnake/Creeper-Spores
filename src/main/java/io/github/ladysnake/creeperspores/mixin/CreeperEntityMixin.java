@@ -25,8 +25,8 @@ import net.fabricmc.fabric.api.util.TriState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.data.TrackedData;
+import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.mob.CreeperEntity;
 import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -67,7 +67,7 @@ public abstract class CreeperEntityMixin extends HostileEntity implements SporeS
         if (affectedEntity instanceof LivingEntity && this.shouldSpreadSpores()) {
             LivingEntity victim = ((LivingEntity) affectedEntity);
             double exposure = Explosion.getExposure(center, victim);
-            victim.addPotionEffect(new StatusEffectInstance(CreeperSpores.CREEPER_SPORES_EFFECTS.get(this.getType()), (int) Math.round(CreeperSpores.MAX_SPORE_TIME * exposure)));
+            victim.addStatusEffect(new StatusEffectInstance(CreeperSpores.CREEPER_SPORES_EFFECTS.get(this.getType()), (int) Math.round(CreeperSpores.MAX_SPORE_TIME * exposure)));
         }
     }
 
@@ -102,7 +102,7 @@ public abstract class CreeperEntityMixin extends HostileEntity implements SporeS
 
     @Inject(method = "readCustomDataFromTag", at = @At("RETURN"))
     private void readCustomDataFromTag(CompoundTag tag, CallbackInfo ci) {
-        if (tag.containsKey(CreeperSpores.GIVE_SPORES_TAG)) {
+        if (tag.contains(CreeperSpores.GIVE_SPORES_TAG)) {
             this.giveSpores = TriState.of(tag.getBoolean(CreeperSpores.GIVE_SPORES_TAG));
         }
     }

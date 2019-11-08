@@ -218,7 +218,7 @@ public class CreeperlingEntity extends MobEntityWithAi implements SkinOverlayOwn
     public float getPathfindingFavor(BlockPos pos, WorldView worldView) {
         // Creeperlings like sunlight
         int skyLightLevel = worldView.getLightLevel(LightType.SKY, pos);
-        float skyFavor = worldView.getDimension().getLightLevelToBrightness()[skyLightLevel] * 3.0F;
+        float skyFavor = worldView.getDimension().method_23759(skyLightLevel) * 3.0F;
         // But they can do with artificial light if there is not anything better
         float favor = Math.max(worldView.getBrightness(pos) - 0.5F, skyFavor);
         // They like good soils too
@@ -300,10 +300,10 @@ public class CreeperlingEntity extends MobEntityWithAi implements SkinOverlayOwn
     private static void pushOutOfBlocks(Entity self) {
         Box bb = self.getBoundingBox();
         EntityAccessor access = ((EntityAccessor) self);
-        access.invokePushOutOfBlocks(self.getX() - (double)self.getWidth() * 0.35D, bb.minY + 0.5D, self.getZ() + (double)self.getWidth() * 0.35D);
-        access.invokePushOutOfBlocks(self.getX() - (double)self.getWidth() * 0.35D, bb.minY + 0.5D, self.getZ() - (double)self.getWidth() * 0.35D);
-        access.invokePushOutOfBlocks(self.getX() + (double)self.getWidth() * 0.35D, bb.minY + 0.5D, self.getZ() - (double)self.getWidth() * 0.35D);
-        access.invokePushOutOfBlocks(self.getX() + (double)self.getWidth() * 0.35D, bb.minY + 0.5D, self.getZ() + (double)self.getWidth() * 0.35D);
+        access.invokePushOutOfBlocks(self.getX() - (double)self.getWidth() * 0.35D, bb.y1 + 0.5D, self.getZ() + (double)self.getWidth() * 0.35D);
+        access.invokePushOutOfBlocks(self.getX() - (double)self.getWidth() * 0.35D, bb.y1 + 0.5D, self.getZ() - (double)self.getWidth() * 0.35D);
+        access.invokePushOutOfBlocks(self.getX() + (double)self.getWidth() * 0.35D, bb.y1 + 0.5D, self.getZ() - (double)self.getWidth() * 0.35D);
+        access.invokePushOutOfBlocks(self.getX() + (double)self.getWidth() * 0.35D, bb.y1 + 0.5D, self.getZ() + (double)self.getWidth() * 0.35D);
     }
 
     @Override

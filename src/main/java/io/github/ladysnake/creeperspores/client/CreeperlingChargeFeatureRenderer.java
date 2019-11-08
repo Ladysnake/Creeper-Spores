@@ -18,13 +18,13 @@
 package io.github.ladysnake.creeperspores.client;
 
 import io.github.ladysnake.creeperspores.common.CreeperlingEntity;
+import net.minecraft.client.render.entity.feature.EnergySwirlOverlayFeatureRenderer;
 import net.minecraft.client.render.entity.feature.FeatureRendererContext;
-import net.minecraft.client.render.entity.feature.SkinOverlayFeatureRenderer;
 import net.minecraft.client.render.entity.model.CreeperEntityModel;
 import net.minecraft.client.render.entity.model.EntityModel;
 import net.minecraft.util.Identifier;
 
-public class CreeperlingChargeFeatureRenderer extends SkinOverlayFeatureRenderer<CreeperlingEntity, CreeperEntityModel<CreeperlingEntity>> {
+public class CreeperlingChargeFeatureRenderer extends EnergySwirlOverlayFeatureRenderer<CreeperlingEntity, CreeperEntityModel<CreeperlingEntity>> {
     private static final Identifier SKIN = new Identifier("textures/entity/creeper/creeper_armor.png");
     private final CreeperEntityModel<CreeperlingEntity> creeperModel = new CreeperEntityModel<>(2.0F);
 
@@ -33,17 +33,17 @@ public class CreeperlingChargeFeatureRenderer extends SkinOverlayFeatureRenderer
     }
 
     @Override
-    protected float method_23202(float v) {
+    protected float getEnergySwirlX(float v) {
         return v * 0.01F;
     }
 
     @Override
-    protected Identifier method_23201() {
+    protected Identifier getEnergySwirlTexture() {
         return SKIN;
     }
 
     @Override
-    protected EntityModel<CreeperlingEntity> method_23203() {
+    protected EntityModel<CreeperlingEntity> getEnergySwirlModel() {
         return this.creeperModel;
     }
 

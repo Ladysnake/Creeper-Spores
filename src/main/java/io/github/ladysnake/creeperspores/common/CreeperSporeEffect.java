@@ -50,7 +50,7 @@ public class CreeperSporeEffect extends StatusEffect {
     }
 
     @Override
-    public String method_5559() {
+    public String loadTranslationKey() {
         return "effect.creeperspores.creeper_spore";
     }
 

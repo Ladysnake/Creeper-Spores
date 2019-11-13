@@ -5,6 +5,7 @@
   "mixins": [
     "AbstractInventoryScreenMixin",
     "EntityRendererAccessor",
+    "EntityRendererRegistryMixin",
     "StatusEffectSpriteManagerMixin"
   ],
   "injectors": {

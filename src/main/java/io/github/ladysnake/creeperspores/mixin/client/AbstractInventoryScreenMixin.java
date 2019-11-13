@@ -31,7 +31,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.List;
 
 @Mixin(AbstractInventoryScreen.class)
-public class AbstractInventoryScreenMixin {
+public abstract class AbstractInventoryScreenMixin {
     @Unique
     private List<StatusEffectInstance> renderedEffects;
     @Unique

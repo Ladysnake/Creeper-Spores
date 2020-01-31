@@ -50,7 +50,7 @@ public class CreeperSporeEffect extends StatusEffect {
     }
 
     @Override
-    public String method_5559() {
+    public String loadTranslationKey() {
         return "effect.creeperspores.creeper_spore";
     }
 
@@ -61,7 +61,7 @@ public class CreeperSporeEffect extends StatusEffect {
     public static CreeperlingEntity spawnCreeperling(Entity affected, EntityType<? extends CreeperlingEntity> creeperlingType) {
         if (!affected.world.isClient) {
             CreeperlingEntity spawn = Objects.requireNonNull(creeperlingType.create(affected.world));
-            spawn.setPositionAndAngles(affected.x, affected.y, affected.z, 0, 0);
+            spawn.refreshPositionAndAngles(affected.getX(), affected.getY(), affected.getZ(), 0, 0);
             affected.world.spawnEntity(spawn);
             return spawn;
         }

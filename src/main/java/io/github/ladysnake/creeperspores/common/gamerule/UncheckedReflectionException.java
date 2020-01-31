@@ -15,21 +15,10 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program; If not, see <https://www.gnu.org/licenses>.
  */
-package io.github.ladysnake.creeperspores.gamerule;
+package io.github.ladysnake.creeperspores.common.gamerule;
 
-public enum CreeperGrief {
-    VANILLA, CHARGED, NEVER;
-
-    public boolean shouldGrief(boolean charged) {
-        switch (this) {
-            case NEVER:
-                return false;
-            case CHARGED:
-                return charged;
-            case VANILLA:
-                return true;
-            default:
-                throw new AssertionError("Unexpected enum " + this);
-        }
+public class UncheckedReflectionException extends RuntimeException {
+    public UncheckedReflectionException(String message, Throwable cause) {
+        super(message, cause);
     }
 }

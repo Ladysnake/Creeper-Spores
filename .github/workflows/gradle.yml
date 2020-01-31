@@ -16,4 +16,4 @@ jobs:
     - name: Build with Gradle
       run: |
         chmod a+x gradlew
-        ./gradlew build
+        ./gradlew build --stacktrace

@@ -20,11 +20,15 @@ package io.github.ladysnake.creeperspores.common;
 import io.github.ladysnake.creeperspores.CreeperSpores;
 import io.github.ladysnake.creeperspores.mixin.EntityAccessor;
 import io.netty.buffer.Unpooled;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.EnvironmentInterface;
+import net.fabricmc.api.EnvironmentInterfaces;
 import net.fabricmc.fabric.api.network.PacketContext;
 import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
 import net.fabricmc.fabric.api.server.PlayerStream;
 import net.minecraft.block.Material;
 import net.minecraft.client.network.packet.CustomPayloadS2CPacket;
+import net.minecraft.client.render.entity.feature.SkinOverlayOwner;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.attribute.EntityAttributes;
@@ -57,7 +61,11 @@ import javax.annotation.Nullable;
 import java.util.Random;
 import java.util.UUID;
 
-public class CreeperlingEntity extends MobEntityWithAi {
+@EnvironmentInterfaces({@EnvironmentInterface(
+        value = EnvType.CLIENT,
+        itf = SkinOverlayOwner.class
+)})
+public class CreeperlingEntity extends MobEntityWithAi implements SkinOverlayOwner {
     private static final TrackedData<Boolean> CHARGED = DataTracker.registerData(CreeperlingEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
     public static final int MATURATION_TIME = 20 * 60 * 8;
 
@@ -85,6 +93,11 @@ public class CreeperlingEntity extends MobEntityWithAi {
         this.goalSelector.add(5, new WanderAroundFarGoal(this, 1.0));
         this.goalSelector.add(6, new LookAtEntityGoal(this, PlayerEntity.class, 8.0F));
         this.setTrusting(false);
+    }
+
+    @Override
+    public boolean shouldRenderOverlay() {
+        return this.isCharged();
     }
 
     @Override
@@ -167,7 +180,7 @@ public class CreeperlingEntity extends MobEntityWithAi {
                     double speedX = random.nextGaussian() * 0.02D;
                     double speedY = random.nextGaussian() * 0.02D;
                     double speedZ = random.nextGaussian() * 0.02D;
-                    e.world.addParticle(ParticleTypes.HAPPY_VILLAGER, e.x - 0.5 + random.nextFloat(), e.y + random.nextFloat(), e.z - 0.5 + random.nextFloat(), speedX, speedY, speedZ);
+                    e.world.addParticle(ParticleTypes.HAPPY_VILLAGER, e.getX() - 0.5 + random.nextFloat(), e.getY() + random.nextFloat(), e.getZ() - 0.5 + random.nextFloat(), speedX, speedY, speedZ);
                 }
             }
         });
@@ -179,7 +192,7 @@ public class CreeperlingEntity extends MobEntityWithAi {
             if (!world.isClient) {
                 Entity attacker = cause.getAttacker();
                 if (attacker instanceof OcelotEntity || attacker instanceof CatEntity) {
-                    ((ServerWorld)this.world).spawnParticles(ParticleTypes.HEART, attacker.x, attacker.y + attacker.getStandingEyeHeight(), attacker.z, 0, 0, 0.2f, 0, 0.1D);
+                    ((ServerWorld)this.world).spawnParticles(ParticleTypes.HEART, attacker.getX(), attacker.getY() + attacker.getStandingEyeHeight(), attacker.getZ(), 0, 0, 0.2f, 0, 0.1D);
                 }
             }
             return true;
@@ -202,14 +215,14 @@ public class CreeperlingEntity extends MobEntityWithAi {
     }
 
     @Override
-    public float getPathfindingFavor(BlockPos pos, ViewableWorld worldView) {
+    public float getPathfindingFavor(BlockPos pos, WorldView worldView) {
         // Creeperlings like sunlight
         int skyLightLevel = worldView.getLightLevel(LightType.SKY, pos);
-        float skyFavor = worldView.getDimension().getLightLevelToBrightness()[skyLightLevel] * 3.0F;
+        float skyFavor = worldView.getDimension().getBrightness(skyLightLevel) * 3.0F;
         // But they can do with artificial light if there is not anything better
         float favor = Math.max(worldView.getBrightness(pos) - 0.5F, skyFavor);
         // They like good soils too
-        if (BlockTags.DIRT_LIKE.contains(worldView.getBlockState(pos.down()).getBlock())) {
+        if (BlockTags.BAMBOO_PLANTABLE_ON.contains(worldView.getBlockState(pos.down(1)).getBlock())) {
             favor += 3.0F;
         }
         // What they really want is camouflage
@@ -243,13 +256,13 @@ public class CreeperlingEntity extends MobEntityWithAi {
     @Override
     public void readCustomDataFromTag(CompoundTag tag) {
         super.readCustomDataFromTag(tag);
-        if (tag.containsKey("powered")) {
+        if (tag.contains("powered")) {
             this.dataTracker.set(CHARGED, tag.getBoolean("powered"));
         }
-        if (tag.containsKey("ticksInSunlight")) {
+        if (tag.contains("ticksInSunlight")) {
             this.ticksInSunlight = tag.getInt("ticksInSunlight");
         }
-        if (tag.containsKey("trusting")) {
+        if (tag.contains("trusting")) {
             this.setTrusting(tag.getBoolean("trusting"));
         }
     }
@@ -281,16 +294,16 @@ public class CreeperlingEntity extends MobEntityWithAi {
 
     private float getGrowthChance() {
         float skyExposition = this.world.getLightLevel(LightType.SKY, new BlockPos(this)) / 15f;
-        return this.world.isDaylight() ? skyExposition : skyExposition * 0.5f * this.world.getMoonSize();
+        return this.world.isDay() ? skyExposition : skyExposition * 0.5f * this.world.getMoonSize();
     }
 
     private static void pushOutOfBlocks(Entity self) {
         Box bb = self.getBoundingBox();
         EntityAccessor access = ((EntityAccessor) self);
-        access.invokePushOutOfBlocks(self.x - (double)self.getWidth() * 0.35D, bb.minY + 0.5D, self.z + (double)self.getWidth() * 0.35D);
-        access.invokePushOutOfBlocks(self.x - (double)self.getWidth() * 0.35D, bb.minY + 0.5D, self.z - (double)self.getWidth() * 0.35D);
-        access.invokePushOutOfBlocks(self.x + (double)self.getWidth() * 0.35D, bb.minY + 0.5D, self.z - (double)self.getWidth() * 0.35D);
-        access.invokePushOutOfBlocks(self.x + (double)self.getWidth() * 0.35D, bb.minY + 0.5D, self.z + (double)self.getWidth() * 0.35D);
+        access.invokePushOutOfBlocks(self.getX() - (double)self.getWidth() * 0.35D, bb.y1 + 0.5D, self.getZ() + (double)self.getWidth() * 0.35D);
+        access.invokePushOutOfBlocks(self.getX() - (double)self.getWidth() * 0.35D, bb.y1 + 0.5D, self.getZ() - (double)self.getWidth() * 0.35D);
+        access.invokePushOutOfBlocks(self.getX() + (double)self.getWidth() * 0.35D, bb.y1 + 0.5D, self.getZ() - (double)self.getWidth() * 0.35D);
+        access.invokePushOutOfBlocks(self.getX() + (double)self.getWidth() * 0.35D, bb.y1 + 0.5D, self.getZ() + (double)self.getWidth() * 0.35D);
     }
 
     @Override

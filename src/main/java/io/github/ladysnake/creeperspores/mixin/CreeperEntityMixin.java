@@ -20,11 +20,13 @@ package io.github.ladysnake.creeperspores.mixin;
 import io.github.ladysnake.creeperspores.CreeperSpores;
 import io.github.ladysnake.creeperspores.common.CreeperlingEntity;
 import io.github.ladysnake.creeperspores.common.SporeSpreader;
-import io.github.ladysnake.creeperspores.gamerule.CreeperGrief;
+import io.github.ladysnake.creeperspores.common.gamerule.CSGamerules;
+import io.github.ladysnake.creeperspores.common.gamerule.CreeperGrief;
 import net.fabricmc.fabric.api.util.TriState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.mob.CreeperEntity;
 import net.minecraft.entity.mob.HostileEntity;
@@ -35,6 +37,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraft.world.explosion.Explosion;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -49,7 +52,7 @@ public abstract class CreeperEntityMixin extends HostileEntity implements SporeS
 
     @Unique private TriState giveSpores = TriState.DEFAULT;
 
-    @Shadow public abstract boolean isCharged();
+    @Shadow @Final private static TrackedData<Boolean> CHARGED;
 
     protected CreeperEntityMixin(EntityType<? extends HostileEntity> type, World world) {
         super(type, world);
@@ -65,7 +68,7 @@ public abstract class CreeperEntityMixin extends HostileEntity implements SporeS
         if (affectedEntity instanceof LivingEntity && this.shouldSpreadSpores()) {
             LivingEntity victim = ((LivingEntity) affectedEntity);
             double exposure = Explosion.getExposure(center, victim);
-            victim.addPotionEffect(new StatusEffectInstance(CreeperSpores.CREEPER_SPORES_EFFECTS.get(this.getType()), (int) Math.round(CreeperSpores.MAX_SPORE_TIME * exposure)));
+            victim.addStatusEffect(new StatusEffectInstance(CreeperSpores.CREEPER_SPORES_EFFECTS.get(this.getType()), (int) Math.round(CreeperSpores.MAX_SPORE_TIME * exposure)));
         }
     }
 
@@ -84,8 +87,8 @@ public abstract class CreeperEntityMixin extends HostileEntity implements SporeS
 
     @ModifyVariable(method = "explode", ordinal = 0, at = @At(value = "STORE", ordinal = 0))
     private Explosion.DestructionType griefLessExplosion(Explosion.DestructionType explosionType) {
-        CreeperGrief grief = world.getGameRules().get(CreeperSpores.CREEPER_GRIEF).get();
-        if (!grief.shouldGrief(this.isCharged())) {
+        CreeperGrief grief = world.getGameRules().get(CSGamerules.CREEPER_GRIEF).get();
+        if (!grief.shouldGrief(this.dataTracker.get(CHARGED))) {
             return Explosion.DestructionType.NONE;
         }
         return explosionType;
@@ -100,7 +103,7 @@ public abstract class CreeperEntityMixin extends HostileEntity implements SporeS
 
     @Inject(method = "readCustomDataFromTag", at = @At("RETURN"))
     private void readCustomDataFromTag(CompoundTag tag, CallbackInfo ci) {
-        if (tag.containsKey(CreeperSpores.GIVE_SPORES_TAG)) {
+        if (tag.contains(CreeperSpores.GIVE_SPORES_TAG)) {
             this.giveSpores = TriState.of(tag.getBoolean(CreeperSpores.GIVE_SPORES_TAG));
         }
     }

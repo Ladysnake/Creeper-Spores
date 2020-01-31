@@ -4,6 +4,8 @@
   "compatibilityLevel": "JAVA_8",
   "mixins": [
     "AbstractInventoryScreenMixin",
+    "EntityRendererAccessor",
+    "EntityRendererRegistryMixin",
     "StatusEffectSpriteManagerMixin"
   ],
   "injectors": {

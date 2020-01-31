@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program; If not, see <https://www.gnu.org/licenses>.
  */
-package io.github.ladysnake.creeperspores.gamerule;
+package io.github.ladysnake.creeperspores.common.gamerule;
 
 import com.google.common.base.Preconditions;
 import com.mojang.brigadier.context.CommandContext;
@@ -47,6 +47,7 @@ public final class EnumRule<E extends Enum<E>> extends GameRules.Rule<EnumRule<E
         this.value = value;
     }
 
+    @Override
     protected void setFromArgument(CommandContext<ServerCommandSource> commandContext, String name) {
         this.value = commandContext.getArgument(name, this.enumType);
     }
@@ -55,11 +56,13 @@ public final class EnumRule<E extends Enum<E>> extends GameRules.Rule<EnumRule<E
         return this.value;
     }
 
-    protected String valueToString() {
+    @Override
+    protected String serialize() {
         return this.value.toString();
     }
 
-    protected void setFromString(String value) {
+    @Override
+    protected void deserialize(String value) {
         if (!value.isEmpty()) {
             try {
                 this.value = Enum.valueOf(this.enumType, value);
@@ -70,7 +73,8 @@ public final class EnumRule<E extends Enum<E>> extends GameRules.Rule<EnumRule<E
         }
     }
 
-    public int toCommandResult() {
+    @Override
+    public int getCommandResult() {
         return this.value.ordinal();
     }
 

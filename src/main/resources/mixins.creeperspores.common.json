@@ -10,8 +10,10 @@
     "EntityTypeAccessor",
     "ExplosionMixin",
     "GameRulesAccessor",
+    "GameRulesMixin",
     "HostileEntityMixin",
     "LivingEntityMixin",
+    "RuleTypeAccessor",
     "SpawnHelperMixin"
   ],
   "injectors": {

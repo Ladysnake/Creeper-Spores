@@ -1,4 +1,12 @@
 ------------------------------------------------------
+Version 1.3.1
+------------------------------------------------------
+Updated to 1.15.2
+
+Bug Fixes
+- Gamerules were never registered on dedicated servers
+
+------------------------------------------------------
 Version 1.3.0
 ------------------------------------------------------
 Additions
@@ -31,7 +39,6 @@ Version 1.1.0
 Additions
 - Creeperlings are now tempted by bonemeal
 - Creeperlings that have been given bonemeal will stop fleeing from players
-
 
 ------------------------------------------------------
 Version 1.0.1

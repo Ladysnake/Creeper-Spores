@@ -5,6 +5,7 @@ Updated to 1.15.2
 
 Bug Fixes
 - Gamerules were never registered on dedicated servers
+- CreeperEntity's data tracker was all messed up, causing clientside log spam and uncommon crashes.
 
 ------------------------------------------------------
 Version 1.3.0

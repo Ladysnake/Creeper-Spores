@@ -218,7 +218,7 @@ public class CreeperlingEntity extends MobEntityWithAi implements SkinOverlayOwn
     public float getPathfindingFavor(BlockPos pos, WorldView worldView) {
         // Creeperlings like sunlight
         int skyLightLevel = worldView.getLightLevel(LightType.SKY, pos);
-        float skyFavor = worldView.getDimension().method_23759(skyLightLevel) * 3.0F;
+        float skyFavor = worldView.getDimension().getBrightness(skyLightLevel) * 3.0F;
         // But they can do with artificial light if there is not anything better
         float favor = Math.max(worldView.getBrightness(pos) - 0.5F, skyFavor);
         // They like good soils too
@@ -294,7 +294,7 @@ public class CreeperlingEntity extends MobEntityWithAi implements SkinOverlayOwn
 
     private float getGrowthChance() {
         float skyExposition = this.world.getLightLevel(LightType.SKY, new BlockPos(this)) / 15f;
-        return this.world.isDaylight() ? skyExposition : skyExposition * 0.5f * this.world.getMoonSize();
+        return this.world.isDay() ? skyExposition : skyExposition * 0.5f * this.world.getMoonSize();
     }
 
     private static void pushOutOfBlocks(Entity self) {

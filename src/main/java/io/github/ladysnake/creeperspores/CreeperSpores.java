@@ -19,9 +19,6 @@ package io.github.ladysnake.creeperspores;
 
 import io.github.ladysnake.creeperspores.common.CreeperSporeEffect;
 import io.github.ladysnake.creeperspores.common.CreeperlingEntity;
-import io.github.ladysnake.creeperspores.gamerule.CSGamerules;
-import io.github.ladysnake.creeperspores.gamerule.CreeperGrief;
-import io.github.ladysnake.creeperspores.gamerule.EnumRule;
 import io.github.ladysnake.creeperspores.mixin.EntityTypeAccessor;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.entity.FabricEntityTypeBuilder;
@@ -34,7 +31,6 @@ import net.minecraft.item.Item;
 import net.minecraft.tag.Tag;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
-import net.minecraft.world.GameRules;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -54,7 +50,6 @@ public class CreeperSpores implements ModInitializer {
     public static final Map<EntityType<?>, CreeperSporeEffect> CREEPER_SPORES_EFFECTS = new HashMap<>();
 
     public static final Tag<Item> FERTILIZERS = TagRegistry.item(new Identifier("fabric", "fertilizers"));
-    public static final GameRules.RuleKey<EnumRule<CreeperGrief>> CREEPER_GRIEF = CSGamerules.register("cspores_creeperGrief", EnumRule.of(CreeperGrief.CHARGED));
 
     public static final Identifier CREEPERLING_FERTILIZATION_PACKET = id("creeperling-fertilization");
     public static final String GIVE_SPORES_TAG = "cspores:giveSpores";

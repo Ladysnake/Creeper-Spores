@@ -37,13 +37,13 @@ public abstract class AbstractInventoryScreenMixin {
     @Unique
     private int renderedEffectsIndex;
 
-    @Inject(method = "method_18644", at = @At("HEAD"))
+    @Inject(method = "drawStatusEffectDescriptions", at = @At("HEAD"))
     private void retrieveRenderedEffects(int x, int width, Iterable<StatusEffectInstance> effects, CallbackInfo ci) {
         renderedEffects = (List<StatusEffectInstance>) effects;
         renderedEffectsIndex = 0;
     }
 
-    @ModifyVariable(method = "method_18644", at = @At(value = "STORE", ordinal = 0), ordinal = 0)
+    @ModifyVariable(method = "drawStatusEffectDescriptions", at = @At(value = "STORE", ordinal = 0), ordinal = 0)
     private String updateRenderedEffectName(String drawnString) {
         StatusEffect renderedEffect = renderedEffects.get(renderedEffectsIndex++).getEffectType();
         if (renderedEffect instanceof CreeperSporeEffect) {

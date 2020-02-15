@@ -285,6 +285,8 @@ public class CreeperlingEntity extends MobEntityWithAi implements SkinOverlayOwn
                 UUID adultUuid = adult.getUuid();
                 adult.fromTag(this.toTag(new CompoundTag()));
                 adult.setUuid(adultUuid);
+                adult.getAttributeInstance(EntityAttributes.MAX_HEALTH).setBaseValue(20.0D);
+                adult.setHealth(adult.getHealth() * 2.0F);
                 world.spawnEntity(adult);
                 pushOutOfBlocks(adult);
                 this.remove();

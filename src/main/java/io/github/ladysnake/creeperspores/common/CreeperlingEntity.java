@@ -31,6 +31,7 @@ import net.minecraft.client.network.packet.CustomPayloadS2CPacket;
 import net.minecraft.client.render.entity.feature.SkinOverlayOwner;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.*;
+import net.minecraft.entity.attribute.EntityAttributeInstance;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
@@ -62,11 +63,11 @@ import java.util.Random;
 import java.util.UUID;
 
 @EnvironmentInterfaces({@EnvironmentInterface(
-        value = EnvType.CLIENT,
-        itf = SkinOverlayOwner.class
+    value = EnvType.CLIENT,
+    itf = SkinOverlayOwner.class
 )})
 public class CreeperlingEntity extends MobEntityWithAi implements SkinOverlayOwner {
-    private static final TrackedData<Boolean> CHARGED = DataTracker.registerData(CreeperlingEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+private static final TrackedData<Boolean> CHARGED = DataTracker.registerData(CreeperlingEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
     public static final int MATURATION_TIME = 20 * 60 * 8;
 
     private int ticksInSunlight = 0;
@@ -283,10 +284,13 @@ public class CreeperlingEntity extends MobEntityWithAi implements SkinOverlayOwn
             if (this.ticksInSunlight >= MATURATION_TIME) {
                 CreeperEntity adult = new CreeperEntity(EntityType.CREEPER, world);
                 UUID adultUuid = adult.getUuid();
+                EntityAttributeInstance adultMaxHealth = adult.getAttributeInstance(EntityAttributes.MAX_HEALTH);
+                EntityAttributeInstance babyMaxHealth = this.getAttributeInstance(EntityAttributes.MAX_HEALTH);
+                int healthMultiplier = (int)adultMaxHealth.getValue() / (int)babyMaxHealth.getValue();
                 adult.fromTag(this.toTag(new CompoundTag()));
                 adult.setUuid(adultUuid);
-                adult.getAttributeInstance(EntityAttributes.MAX_HEALTH).setBaseValue(20.0D);
-                adult.setHealth(adult.getHealth() * 2.0F);
+                adultMaxHealth.setBaseValue(adult.defaultMaximumHealth);
+                adult.setHealth(adult.getHealth() * healthMultiplier);
                 world.spawnEntity(adult);
                 pushOutOfBlocks(adult);
                 this.remove();

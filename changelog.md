@@ -1,4 +1,10 @@
 ------------------------------------------------------
+Version 1.3.4
+------------------------------------------------------
+An update brought to you by Joaoh1
+- Fixed creepers grown from creeperlings having less health than regular ones.
+
+------------------------------------------------------
 Version 1.3.3
 ------------------------------------------------------
 Oops, I had forgotten to update my mixins

@@ -285,7 +285,10 @@ public class CreeperlingEntity extends MobEntityWithAi implements SkinOverlayOwn
                 ++this.ticksInSunlight;
             }
             if (this.ticksInSunlight >= MATURATION_TIME) {
-                CreeperEntity adult = new CreeperEntity(EntityType.CREEPER, world);
+                LivingEntity adult = kind.creeperType.create(world);
+                if (adult == null) {    // fallback to vanilla creeper
+                    adult = Objects.requireNonNull(CreeperEntry.getVanilla().creeperType.create(world));
+                }
                 UUID adultUuid = adult.getUuid();
                 EntityAttributeInstance adultMaxHealth = adult.getAttributeInstance(EntityAttributes.MAX_HEALTH);
                 EntityAttributeInstance babyMaxHealth = this.getAttributeInstance(EntityAttributes.MAX_HEALTH);

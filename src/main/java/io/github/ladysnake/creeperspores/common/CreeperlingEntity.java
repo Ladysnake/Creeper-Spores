@@ -17,6 +17,7 @@
  */
 package io.github.ladysnake.creeperspores.common;
 
+import io.github.ladysnake.creeperspores.CreeperEntry;
 import io.github.ladysnake.creeperspores.CreeperSpores;
 import io.github.ladysnake.creeperspores.mixin.EntityAccessor;
 import io.netty.buffer.Unpooled;
@@ -37,7 +38,6 @@ import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.entity.mob.CreeperEntity;
 import net.minecraft.entity.mob.MobEntityWithAi;
 import net.minecraft.entity.passive.CatEntity;
 import net.minecraft.entity.passive.OcelotEntity;
@@ -59,6 +59,7 @@ import net.minecraft.util.math.Box;
 import net.minecraft.world.*;
 
 import javax.annotation.Nullable;
+import java.util.Objects;
 import java.util.Random;
 import java.util.UUID;
 
@@ -70,12 +71,15 @@ public class CreeperlingEntity extends MobEntityWithAi implements SkinOverlayOwn
     private static final TrackedData<Boolean> CHARGED = DataTracker.registerData(CreeperlingEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
     public static final int MATURATION_TIME = 20 * 60 * 8;
 
+    private final CreeperEntry kind;
+
     private int ticksInSunlight = 0;
     private boolean trusting;
     private FleeEntityGoal<PlayerEntity> fleeGoal;
 
-    public CreeperlingEntity(EntityType<? extends CreeperlingEntity> type, World world) {
-        super(type, world);
+    public CreeperlingEntity(CreeperEntry kind, World world) {
+        super(kind.creeperlingType, world);
+        this.kind = kind;
     }
 
     @Override
@@ -132,19 +136,18 @@ public class CreeperlingEntity extends MobEntityWithAi implements SkinOverlayOwn
             }
             return true;
         } else {
-            @SuppressWarnings("unchecked") EntityType<? extends CreeperlingEntity> thisType = (EntityType<? extends CreeperlingEntity>) this.getType();
-            if (interactSpawnEgg(player, this, thisType, held)) {
+            if (interactSpawnEgg(player, this, held, this.kind)) {
                 return true;
             }
         }
         return super.interactMob(player, hand);
     }
 
-    public static boolean interactSpawnEgg(PlayerEntity player, Entity interacted, EntityType<? extends CreeperlingEntity> creeperlingType, ItemStack stack) {
+    public static boolean interactSpawnEgg(PlayerEntity player, Entity interacted, ItemStack stack, CreeperEntry kind) {
         Item item = stack.getItem();
         if (item instanceof SpawnEggItem && ((SpawnEggItem)item).getEntityType(stack.getTag()) == EntityType.CREEPER) {
             if (!interacted.world.isClient) {
-                CreeperlingEntity creeperling = CreeperSporeEffect.spawnCreeperling(interacted, creeperlingType);
+                CreeperlingEntity creeperling = kind.spawnCreeperling(interacted);
                 if (creeperling != null) {
                     if (stack.hasCustomName()) {
                         creeperling.setCustomName(stack.getName());

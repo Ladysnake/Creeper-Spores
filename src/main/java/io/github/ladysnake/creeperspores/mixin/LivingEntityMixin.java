@@ -17,8 +17,7 @@
  */
 package io.github.ladysnake.creeperspores.mixin;
 
-import io.github.ladysnake.creeperspores.CreeperSpores;
-import io.github.ladysnake.creeperspores.common.CreeperSporeEffect;
+import io.github.ladysnake.creeperspores.CreeperEntry;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -39,7 +38,7 @@ public abstract class LivingEntityMixin extends Entity {
     @Shadow
     public abstract float getHealth();
 
-    @Shadow @Nullable public abstract StatusEffectInstance getStatusEffect(StatusEffect statusEffect_1);
+    @Shadow @Nullable public abstract StatusEffectInstance getStatusEffect(StatusEffect effect);
 
     public LivingEntityMixin(EntityType<?> type, World world) {
         super(type, world);
@@ -47,8 +46,8 @@ public abstract class LivingEntityMixin extends Entity {
 
     @Inject(method = "damage", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/LivingEntity;getHealth()F", ordinal = 1))
     private void spawnCreeperling(DamageSource cause, float amount, CallbackInfoReturnable<Boolean> cir) {
-        for (CreeperSporeEffect sporeEffect : CreeperSpores.CREEPER_SPORES_EFFECTS.values()) {
-            StatusEffectInstance spores = this.getStatusEffect(sporeEffect);
+        for (CreeperEntry creeperEntry : CreeperEntry.all()) {
+            StatusEffectInstance spores = this.getStatusEffect(creeperEntry.sporeEffect);
             if (spores != null) {
                 float chance = 0.2f * (spores.getAmplifier() + 1);
                 if (this.getHealth() <= 0.0f) {
@@ -58,7 +57,7 @@ public abstract class LivingEntityMixin extends Entity {
                     chance *= 2;
                 }
                 if (random.nextFloat() < chance) {
-                    sporeEffect.spawnCreeperling(this);
+                    creeperEntry.spawnCreeperling(this);
                 }
             }
         }

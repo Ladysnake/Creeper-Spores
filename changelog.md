@@ -1,4 +1,13 @@
 ------------------------------------------------------
+Version 1.3.6
+------------------------------------------------------
+Bugfixes:
+- Fixed modded creeperlings always growing into vanilla creepers
+
+API:
+- Added a new creeper registration method to the mod's API
+
+------------------------------------------------------
 Version 1.3.5
 ------------------------------------------------------
 An update brought to you by yuwanjun564

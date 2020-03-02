@@ -17,11 +17,10 @@
  */
 package io.github.ladysnake.creeperspores.mixin.client;
 
-import io.github.ladysnake.creeperspores.CreeperSpores;
+import io.github.ladysnake.creeperspores.CreeperEntry;
 import io.github.ladysnake.creeperspores.common.CreeperSporeEffect;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.texture.StatusEffectSpriteManager;
-import net.minecraft.entity.EntityType;
 import net.minecraft.entity.effect.StatusEffect;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -33,7 +32,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(StatusEffectSpriteManager.class)
 public abstract class StatusEffectSpriteManagerMixin {
     @Unique
-    private static final StatusEffect BASE_CREEPER_SPORES = CreeperSpores.CREEPER_SPORES_EFFECTS.get(EntityType.CREEPER);
+    private static final StatusEffect BASE_CREEPER_SPORES = CreeperEntry.getVanilla().sporeEffect;
 
     @Shadow public abstract Sprite getSprite(StatusEffect statusEffect_1);
 

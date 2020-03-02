@@ -30,9 +30,13 @@ import net.minecraft.entity.effect.StatusEffectType;
 import net.minecraft.item.Item;
 import net.minecraft.tag.Tag;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.Lazy;
 import net.minecraft.util.registry.Registry;
+import net.minecraft.world.World;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Contract;
 
 import java.util.*;
 import java.util.function.BiConsumer;
@@ -40,14 +44,13 @@ import java.util.function.BiConsumer;
 public class CreeperSpores implements ModInitializer {
     public static final Logger LOGGER = LogManager.getLogger("creeper-spores");
 
+    /** Identifiers corresponding to entity types that should be {@linkplain #registerCreeperLike(Identifier, EntityType)
+        registered as creeper likes} if and when the entity type gets registered to {@link Registry#ENTITY_TYPE}.*/
     public static final Set<Identifier> CREEPER_LIKES = new HashSet<>(Arrays.asList(
             new Identifier("minecraft", "creeper"),
             new Identifier("mobz", "creep_entity"),
             new Identifier("mobz", "crip_entity")
     ));
-
-    public static final Map<EntityType<?>, EntityType<CreeperlingEntity>> CREEPERLINGS = new HashMap<>();
-    public static final Map<EntityType<?>, CreeperSporeEffect> CREEPER_SPORES_EFFECTS = new HashMap<>();
 
     public static final Tag<Item> FERTILIZERS = TagRegistry.item(new Identifier("fabric", "fertilizers"));
 
@@ -60,7 +63,8 @@ public class CreeperSpores implements ModInitializer {
     }
 
     public static <T> void visitRegistry(Registry<T> registry, BiConsumer<Identifier, T> visitor) {
-        registry.getIds().forEach(id -> visitor.accept(id, registry.get(id))); RegistryEntryAddedCallback.event(registry).register((index, identifier, entry) -> visitor.accept(identifier, entry));
+        registry.getIds().forEach(id -> visitor.accept(id, registry.get(id)));
+        RegistryEntryAddedCallback.event(registry).register((index, identifier, entry) -> visitor.accept(identifier, entry));
     }
 
     @Override
@@ -72,26 +76,48 @@ public class CreeperSpores implements ModInitializer {
         });
     }
 
-    public static void registerCreeperLike(Identifier id, EntityType<?> type) {
+    @ApiStatus.Internal
+    public static void registerCreeperLike(Identifier id) {
+        Optional<EntityType<?>> creeperType = Registry.ENTITY_TYPE.getOrEmpty(id);
+        if (creeperType.isPresent()) {
+            registerCreeperLike(id, creeperType.get());
+        } else {
+            CREEPER_LIKES.add(id);
+        }
+    }
+
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    @ApiStatus.Internal
+    public static void registerCreeperLike(Identifier id, EntityType type) {
         String prefix = id.getNamespace().equals("minecraft") ? "" : (id.toString().replace(':', '_') + "_");
-        Registry.register(Registry.ENTITY_TYPE, CreeperSpores.id(prefix + "creeperling"), createCreeperlingType(type));
-        Registry.register(Registry.STATUS_EFFECT, CreeperSpores.id(prefix + "creeper_spore"), createCreeperSporesEffect(type));
+        EntityType<CreeperlingEntity> creeperlingType = Registry.register(
+                Registry.ENTITY_TYPE,
+                CreeperSpores.id(prefix + "creeperling"),
+                createCreeperlingType(type)
+        );
+        CreeperSporeEffect sporesEffect = Registry.register(
+                Registry.STATUS_EFFECT,
+                CreeperSpores.id(prefix + "creeper_spore"),
+                createCreeperSporesEffect(type)
+        );
+        CreeperEntry.register(type, creeperlingType, sporesEffect);
     }
 
+    @Contract(pure = true)
     private static CreeperSporeEffect createCreeperSporesEffect(EntityType<?> creeperType) {
-        CreeperSporeEffect effect = new CreeperSporeEffect(StatusEffectType.NEUTRAL, 0x22AA00, creeperType);
-        CREEPER_SPORES_EFFECTS.put(creeperType, effect);
-        return effect;
+        return new CreeperSporeEffect(StatusEffectType.NEUTRAL, 0x22AA00, creeperType);
     }
 
+    @Contract(pure = true)
     private static EntityType<CreeperlingEntity> createCreeperlingType(EntityType<?> creeperType) {
+        Lazy<CreeperEntry> kind = new Lazy<>(() -> Objects.requireNonNull(CreeperEntry.get(creeperType)));
         EntityType<CreeperlingEntity> creeperlingType = FabricEntityTypeBuilder
-                .create(creeperType.getCategory(), CreeperlingEntity::new)
+                .create(creeperType.getCategory(),
+                        (EntityType<CreeperlingEntity> type, World world) -> new CreeperlingEntity(kind.get(), world))
                 .size(EntityDimensions.changing(creeperType.getWidth() / 2f, creeperType.getHeight() / 2f))
                 .trackable(64, 1, true)
                 .build();
         ((EntityTypeAccessor) creeperlingType).setTranslationKey("entity.creeperspores.creeperling");
-        CREEPERLINGS.put(creeperType, creeperlingType);
         return creeperlingType;
     }
 }

@@ -17,22 +17,24 @@
  */
 package io.github.ladysnake.creeperspores.common;
 
-import io.github.ladysnake.creeperspores.CreeperSpores;
+import io.github.ladysnake.creeperspores.CreeperEntry;
 import net.minecraft.client.resource.language.I18n;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectType;
+import net.minecraft.util.Lazy;
 
 import java.util.Objects;
 
 public class CreeperSporeEffect extends StatusEffect {
     private final EntityType<?> creeperType;
+    private final Lazy<CreeperEntry> creeperEntry;
 
     public CreeperSporeEffect(StatusEffectType type, int color, EntityType<?> creeperType) {
         super(type, color);
         this.creeperType = creeperType;
+        this.creeperEntry = new Lazy<>(() -> Objects.requireNonNull(CreeperEntry.get(this.creeperType)));
     }
 
     @Override
@@ -42,11 +44,7 @@ public class CreeperSporeEffect extends StatusEffect {
 
     @Override
     public void applyUpdateEffect(LivingEntity affected, int amplifier) {
-        spawnCreeperling(affected);
-    }
-
-    public void spawnCreeperling(Entity affected) {
-        spawnCreeperling(affected, CreeperSpores.CREEPERLINGS.get(this.creeperType));
+        this.creeperEntry.get().spawnCreeperling(affected);
     }
 
     @Override
@@ -58,13 +56,4 @@ public class CreeperSporeEffect extends StatusEffect {
         return I18n.translate("effect.creeperspores.generic_spore", I18n.translate(this.creeperType.getTranslationKey()));
     }
 
-    public static CreeperlingEntity spawnCreeperling(Entity affected, EntityType<? extends CreeperlingEntity> creeperlingType) {
-        if (!affected.world.isClient) {
-            CreeperlingEntity spawn = Objects.requireNonNull(creeperlingType.create(affected.world));
-            spawn.refreshPositionAndAngles(affected.getX(), affected.getY(), affected.getZ(), 0, 0);
-            affected.world.spawnEntity(spawn);
-            return spawn;
-        }
-        return null;
-    }
 }

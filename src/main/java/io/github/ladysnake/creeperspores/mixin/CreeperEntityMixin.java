@@ -17,6 +17,7 @@
  */
 package io.github.ladysnake.creeperspores.mixin;
 
+import io.github.ladysnake.creeperspores.CreeperEntry;
 import io.github.ladysnake.creeperspores.CreeperSpores;
 import io.github.ladysnake.creeperspores.common.CreeperlingEntity;
 import io.github.ladysnake.creeperspores.common.SporeSpreader;
@@ -68,7 +69,10 @@ public abstract class CreeperEntityMixin extends HostileEntity implements SporeS
         if (affectedEntity instanceof LivingEntity && this.shouldSpreadSpores()) {
             LivingEntity victim = ((LivingEntity) affectedEntity);
             double exposure = Explosion.getExposure(center, victim);
-            victim.addStatusEffect(new StatusEffectInstance(CreeperSpores.CREEPER_SPORES_EFFECTS.get(this.getType()), (int) Math.round(CreeperSpores.MAX_SPORE_TIME * exposure)));
+            CreeperEntry creeperEntry = CreeperEntry.get(this.getType());
+            if (creeperEntry != null) {
+                victim.addStatusEffect(new StatusEffectInstance(creeperEntry.sporeEffect, (int) Math.round(CreeperSpores.MAX_SPORE_TIME * exposure)));
+            }
         }
     }
 
@@ -79,8 +83,8 @@ public abstract class CreeperEntityMixin extends HostileEntity implements SporeS
     )
     private void interactSpawnEgg(PlayerEntity player, Hand hand, CallbackInfoReturnable<Boolean> cir) {
         ItemStack stack = player.getStackInHand(hand);
-        EntityType<CreeperlingEntity> creeperlingType = CreeperSpores.CREEPERLINGS.get(this.getType());
-        if (creeperlingType != null && CreeperlingEntity.interactSpawnEgg(player, this, creeperlingType, stack)) {
+        CreeperEntry creeperEntry = CreeperEntry.get(this.getType());
+        if (creeperEntry != null && CreeperlingEntity.interactSpawnEgg(player, this, stack, creeperEntry)) {
             cir.setReturnValue(true);
         }
     }

@@ -27,7 +27,7 @@
   ],
   "depends": {
     "fabric": "*",
-    "minecraft": ">=1.15-alpha.19.35.a"
+    "minecraft": ">=1.16-alpha.20.10.a"
   },
   "suggests": {
     "reactivecreepers": "*"

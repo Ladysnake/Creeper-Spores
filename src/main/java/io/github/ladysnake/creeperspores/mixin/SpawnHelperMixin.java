@@ -30,9 +30,9 @@ import static org.spongepowered.asm.mixin.injection.At.Shift.AFTER;
 
 @Mixin(SpawnHelper.class)
 public abstract class SpawnHelperMixin {
-    @ModifyVariable(method = "spawnEntitiesInChunk", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/mob/MobEntity;refreshPositionAndAngles(DDDFF)V", shift = AFTER))
+    @ModifyVariable(method = "method_24930", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/mob/MobEntity;refreshPositionAndAngles(DDDFF)V", shift = AFTER))
     private static MobEntity substituteCreeper(MobEntity spawnedEntity) {
-        if (spawnedEntity instanceof CreeperEntity && spawnedEntity.world.getLightLevel(LightType.SKY, spawnedEntity.getBlockPos()) > 0) {
+        if (spawnedEntity instanceof CreeperEntity && spawnedEntity.world.getLightLevel(LightType.SKY, spawnedEntity.getSenseCenterPos()) > 0) {
             CreeperEntry creeperEntry = CreeperEntry.get(spawnedEntity.getType());
             if (creeperEntry != null) {
                 return creeperEntry.createCreeperling(spawnedEntity);

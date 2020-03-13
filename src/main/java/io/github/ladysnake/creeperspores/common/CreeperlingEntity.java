@@ -28,7 +28,6 @@ import net.fabricmc.fabric.api.network.PacketContext;
 import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
 import net.fabricmc.fabric.api.server.PlayerStream;
 import net.minecraft.block.Material;
-import net.minecraft.client.network.packet.CustomPayloadS2CPacket;
 import net.minecraft.client.render.entity.feature.SkinOverlayOwner;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.*;
@@ -46,6 +45,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.SpawnEggItem;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.packet.s2c.play.CustomPayloadS2CPacket;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.server.world.ServerWorld;
@@ -107,7 +107,7 @@ public class CreeperlingEntity extends MobEntityWithAi implements SkinOverlayOwn
 
     @Override
     public boolean canSpawn(IWorld world, SpawnType spawnType) {
-        return super.canSpawn(world, spawnType) && this.world.getLightLevel(LightType.SKY, this.getBlockPos()) > 0;
+        return super.canSpawn(world, spawnType) && this.world.getLightLevel(LightType.SKY, this.getSenseCenterPos()) > 0;
     }
 
     public boolean isTrusting() {
@@ -305,7 +305,7 @@ public class CreeperlingEntity extends MobEntityWithAi implements SkinOverlayOwn
     }
 
     private float getGrowthChance() {
-        float skyExposition = this.world.getLightLevel(LightType.SKY, new BlockPos(this)) / 15f;
+        float skyExposition = this.world.getLightLevel(LightType.SKY, this.getSenseCenterPos()) / 15f;
         return this.world.isDay() ? skyExposition : skyExposition * 0.5f * this.world.getMoonSize();
     }
 

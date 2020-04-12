@@ -292,11 +292,11 @@ public class CreeperlingEntity extends MobEntityWithAi implements SkinOverlayOwn
                 UUID adultUuid = adult.getUuid();
                 EntityAttributeInstance adultMaxHealth = adult.getAttributeInstance(EntityAttributes.MAX_HEALTH);
                 EntityAttributeInstance babyMaxHealth = this.getAttributeInstance(EntityAttributes.MAX_HEALTH);
-                int healthMultiplier = (int)adultMaxHealth.getValue() / (int)babyMaxHealth.getValue();
+                double healthMultiplier = adultMaxHealth.getValue() / babyMaxHealth.getValue();
                 adult.fromTag(this.toTag(new CompoundTag()));
                 adult.setUuid(adultUuid);
                 adultMaxHealth.setBaseValue(adult.defaultMaximumHealth);
-                adult.setHealth(adult.getHealth() * healthMultiplier);
+                adult.setHealth(adult.getHealth() * (float)healthMultiplier);
                 world.spawnEntity(adult);
                 pushOutOfBlocks(adult);
                 this.remove();

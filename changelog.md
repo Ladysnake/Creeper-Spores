@@ -1,4 +1,10 @@
 ------------------------------------------------------
+Version 1.3.7
+------------------------------------------------------
+Another patch brought to you by Joaoh1
+- Fixed edge case health issues with creepers grown from creeperlings
+
+------------------------------------------------------
 Version 1.3.6
 ------------------------------------------------------
 Bugfixes:

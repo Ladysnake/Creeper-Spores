@@ -1,7 +1,7 @@
 import java.time.Year
 
 plugins {
-    id "fabric-loom" version "0.2.6-SNAPSHOT"
+    id "fabric-loom" version "0.4.3"
     id "net.minecrell.licenser" version "0.2.1"
     id 'com.matthewprenger.cursegradle' version '1.4.0'
     id "com.jfrog.bintray" version '1.8.4'
@@ -60,8 +60,9 @@ dependencies {
         exclude group: 'net.fabricmc.fabric-api'
     }
 
-    //optional dependency!
     modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
+    modImplementation "io.github.fablabsmc:GameRules:${gamerules_version}"
+    include "io.github.fablabsmc:GameRules:${gamerules_version}"
 
 //    modRuntime "curse.maven:mobz:2826831"
 

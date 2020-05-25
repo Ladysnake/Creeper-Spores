@@ -13,7 +13,6 @@
     "GameRulesMixin",
     "HostileEntityMixin",
     "LivingEntityMixin",
-    "RuleTypeAccessor",
     "SpawnHelperMixin"
   ],
   "injectors": {

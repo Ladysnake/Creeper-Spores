@@ -17,25 +17,19 @@
  */
 package io.github.ladysnake.creeperspores.common.gamerule;
 
-import com.mojang.brigadier.arguments.ArgumentType;
-import io.github.ladysnake.creeperspores.mixin.GameRulesAccessor;
-import io.github.ladysnake.creeperspores.mixin.RuleTypeAccessor;
-import net.minecraft.server.MinecraftServer;
+import io.github.fablabsmc.fablabs.api.gamerule.v1.GameRuleRegistry;
+import io.github.fablabsmc.fablabs.api.gamerule.v1.RuleFactory;
+import io.github.fablabsmc.fablabs.api.gamerule.v1.rule.EnumRule;
+import io.github.ladysnake.creeperspores.CreeperSpores;
 import net.minecraft.world.GameRules;
 
-import java.util.function.BiConsumer;
-import java.util.function.Function;
-import java.util.function.Supplier;
-
 public class CSGamerules {
-    public static final GameRules.RuleKey<EnumRule<CreeperGrief>> CREEPER_GRIEF = register("cspores_creeperGrief", EnumRule.of(CreeperGrief.CHARGED));
+    public static final GameRules.RuleKey<EnumRule<CreeperGrief>> CREEPER_GRIEF = register(
+            "creeper_grief",
+            RuleFactory.createEnumRule(CreeperGrief.CHARGED));
 
     public static <T extends GameRules.Rule<T>> GameRules.RuleKey<T> register(String name, GameRules.RuleType<T> type) {
-        return GameRulesAccessor.invokeRegister(name, type);
+        return GameRuleRegistry.register(CreeperSpores.id(name), GameRules.RuleCategory.MOBS, type);
     }
 
-    @SuppressWarnings("unchecked")
-    public static <T extends GameRules.Rule<T>> GameRules.RuleType<T> createRuleType(Supplier<ArgumentType<?>> argumentType, Function<GameRules.RuleType<T>, T> factory, BiConsumer<MinecraftServer, T> notifier) {
-        return RuleTypeAccessor.invokeNew(argumentType, factory, notifier);
-    }
 }

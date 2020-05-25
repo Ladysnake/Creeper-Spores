@@ -24,8 +24,7 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 @Mixin(GameRules.class)
 public interface GameRulesAccessor {
     @Invoker
-    @SuppressWarnings("PublicStaticMixinMember")
-    static <T extends GameRules.Rule<T>> GameRules.RuleKey<T> invokeRegister(String name, GameRules.RuleType<T> type) {
+    static <T extends GameRules.Rule<T>> GameRules.RuleKey<T> invokeRegister(String name, GameRules.RuleCategory cat, GameRules.RuleType<T> type) {
         throw new AssertionError();
     }
 }

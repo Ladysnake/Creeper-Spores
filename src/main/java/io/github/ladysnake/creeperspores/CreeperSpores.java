@@ -21,12 +21,18 @@ import io.github.ladysnake.creeperspores.common.CreeperSporeEffect;
 import io.github.ladysnake.creeperspores.common.CreeperlingEntity;
 import io.github.ladysnake.creeperspores.mixin.EntityTypeAccessor;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.entity.FabricEntityTypeBuilder;
 import net.fabricmc.fabric.api.event.registry.RegistryEntryAddedCallback;
+import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
+import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.fabricmc.fabric.api.tag.TagRegistry;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.attribute.DefaultAttributeContainer;
+import net.minecraft.entity.attribute.DefaultAttributeRegistry;
+import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.effect.StatusEffectType;
+import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.item.Item;
 import net.minecraft.tag.Tag;
 import net.minecraft.util.Identifier;
@@ -71,14 +77,17 @@ public class CreeperSpores implements ModInitializer {
     public void onInitialize() {
         visitRegistry(Registry.ENTITY_TYPE, (id, type) -> {
             if (CREEPER_LIKES.contains(id)) {
-                registerCreeperLike(id, type);
+                // can't actually check that the entity type is living, so just hope nothing goes wrong
+                @SuppressWarnings("unchecked") EntityType<? extends LivingEntity> livingType = (EntityType<? extends LivingEntity>) type;
+                registerCreeperLike(id, livingType);
             }
         });
     }
 
     @ApiStatus.Internal
     public static void registerCreeperLike(Identifier id) {
-        Optional<EntityType<?>> creeperType = Registry.ENTITY_TYPE.getOrEmpty(id);
+        // can't actually check that the entity type is living, so just hope nothing goes wrong
+        @SuppressWarnings("unchecked") Optional<EntityType<? extends LivingEntity>> creeperType = (Optional<EntityType<? extends LivingEntity>>) Registry.ENTITY_TYPE.getOrEmpty(id);
         if (creeperType.isPresent()) {
             registerCreeperLike(id, creeperType.get());
         } else {
@@ -86,14 +95,18 @@ public class CreeperSpores implements ModInitializer {
         }
     }
 
-    @SuppressWarnings({"rawtypes", "unchecked"})
     @ApiStatus.Internal
-    public static void registerCreeperLike(Identifier id, EntityType type) {
+    public static void registerCreeperLike(Identifier id, EntityType<? extends LivingEntity> type) {
         String prefix = id.getNamespace().equals("minecraft") ? "" : (id.toString().replace(':', '_') + "_");
         EntityType<CreeperlingEntity> creeperlingType = Registry.register(
                 Registry.ENTITY_TYPE,
                 CreeperSpores.id(prefix + "creeperling"),
                 createCreeperlingType(type)
+        );
+        DefaultAttributeContainer defaultAttributes = DefaultAttributeRegistry.get(type);
+        FabricDefaultAttributeRegistry.register(creeperlingType, MobEntity.createMobAttributes()
+                .add(EntityAttributes.GENERIC_MAX_HEALTH, defaultAttributes.getBaseValue(EntityAttributes.GENERIC_MAX_HEALTH) * 0.5)
+                .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, defaultAttributes.getBaseValue(EntityAttributes.GENERIC_MOVEMENT_SPEED) * 0.8)
         );
         CreeperSporeEffect sporesEffect = Registry.register(
                 Registry.STATUS_EFFECT,
@@ -109,12 +122,12 @@ public class CreeperSpores implements ModInitializer {
     }
 
     @Contract(pure = true)
-    private static EntityType<CreeperlingEntity> createCreeperlingType(EntityType<?> creeperType) {
+    private static EntityType<CreeperlingEntity> createCreeperlingType(EntityType<? extends LivingEntity> creeperType) {
         Lazy<CreeperEntry> kind = new Lazy<>(() -> Objects.requireNonNull(CreeperEntry.get(creeperType)));
         EntityType<CreeperlingEntity> creeperlingType = FabricEntityTypeBuilder
-                .create(creeperType.getCategory(),
+                .create(creeperType.getSpawnGroup(),
                         (EntityType<CreeperlingEntity> type, World world) -> new CreeperlingEntity(kind.get(), world))
-                .size(EntityDimensions.changing(creeperType.getWidth() / 2f, creeperType.getHeight() / 2f))
+                .dimensions(EntityDimensions.changing(creeperType.getWidth() / 2f, creeperType.getHeight() / 2f))
                 .trackable(64, 1, true)
                 .build();
         ((EntityTypeAccessor) creeperlingType).setTranslationKey("entity.creeperspores.creeperling");

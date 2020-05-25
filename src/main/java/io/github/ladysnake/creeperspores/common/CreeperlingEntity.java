@@ -45,6 +45,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.SpawnEggItem;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.packet.s2c.play.CustomPayloadS2CPacket;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.recipe.Ingredient;
@@ -53,7 +54,6 @@ import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.tag.BlockTags;
 import net.minecraft.util.Hand;
-import net.minecraft.util.PacketByteBuf;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.world.*;
@@ -83,13 +83,6 @@ public class CreeperlingEntity extends MobEntityWithAi implements SkinOverlayOwn
     }
 
     @Override
-    protected void initAttributes() {
-        super.initAttributes();
-        this.getAttributeInstance(EntityAttributes.MAX_HEALTH).setBaseValue(10.0D);
-        this.getAttributeInstance(EntityAttributes.MOVEMENT_SPEED).setBaseValue(0.2D);
-    }
-
-    @Override
     protected void initGoals() {
         this.goalSelector.add(1, new SwimGoal(this));
         this.goalSelector.add(2, new FleeEntityGoal<>(this, OcelotEntity.class, 6.0F, 1.0D, 1.2D));
@@ -106,8 +99,8 @@ public class CreeperlingEntity extends MobEntityWithAi implements SkinOverlayOwn
     }
 
     @Override
-    public boolean canSpawn(IWorld world, SpawnType spawnType) {
-        return super.canSpawn(world, spawnType) && this.world.getLightLevel(LightType.SKY, this.getSenseCenterPos()) > 0;
+    public boolean canSpawn(WorldAccess world, SpawnReason spawnType) {
+        return super.canSpawn(world, spawnType) && this.world.getLightLevel(LightType.SKY, this.getBlockPos()) > 0;
     }
 
     public boolean isTrusting() {
@@ -206,7 +199,7 @@ public class CreeperlingEntity extends MobEntityWithAi implements SkinOverlayOwn
 
     @Nullable
     @Override
-    public EntityData initialize(IWorld world, LocalDifficulty difficulty, SpawnType spawnType, @Nullable EntityData data, @Nullable CompoundTag tag) {
+    public EntityData initialize(WorldAccess world, LocalDifficulty difficulty, SpawnReason spawnType, @Nullable EntityData data, @Nullable CompoundTag tag) {
         EntityData ret = super.initialize(world, difficulty, spawnType, data, tag);
         float localDifficulty = difficulty.getClampedLocalDifficulty();
         this.ticksInSunlight = (int) (MATURATION_TIME * this.random.nextFloat() * 0.9 * localDifficulty);
@@ -222,7 +215,8 @@ public class CreeperlingEntity extends MobEntityWithAi implements SkinOverlayOwn
     public float getPathfindingFavor(BlockPos pos, WorldView worldView) {
         // Creeperlings like sunlight
         int skyLightLevel = worldView.getLightLevel(LightType.SKY, pos);
-        float skyFavor = worldView.getDimension().getBrightness(skyLightLevel) * 3.0F;
+        // method_28516 == getBrightness
+        float skyFavor = worldView.getDimension().method_28516(skyLightLevel) * 3.0F;
         // But they can do with artificial light if there is not anything better
         float favor = Math.max(worldView.getBrightness(pos) - 0.5F, skyFavor);
         // They like good soils too
@@ -290,8 +284,8 @@ public class CreeperlingEntity extends MobEntityWithAi implements SkinOverlayOwn
                     adult = Objects.requireNonNull(CreeperEntry.getVanilla().creeperType.create(world));
                 }
                 UUID adultUuid = adult.getUuid();
-                EntityAttributeInstance adultMaxHealth = adult.getAttributeInstance(EntityAttributes.MAX_HEALTH);
-                EntityAttributeInstance babyMaxHealth = this.getAttributeInstance(EntityAttributes.MAX_HEALTH);
+                EntityAttributeInstance adultMaxHealth = adult.getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH);
+                EntityAttributeInstance babyMaxHealth = this.getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH);
                 int healthMultiplier = (int)adultMaxHealth.getValue() / (int)babyMaxHealth.getValue();
                 adult.fromTag(this.toTag(new CompoundTag()));
                 adult.setUuid(adultUuid);
@@ -305,17 +299,17 @@ public class CreeperlingEntity extends MobEntityWithAi implements SkinOverlayOwn
     }
 
     private float getGrowthChance() {
-        float skyExposition = this.world.getLightLevel(LightType.SKY, this.getSenseCenterPos()) / 15f;
+        float skyExposition = this.world.getLightLevel(LightType.SKY, this.getBlockPos()) / 15f;
         return this.world.isDay() ? skyExposition : skyExposition * 0.5f * this.world.getMoonSize();
     }
 
     private static void pushOutOfBlocks(Entity self) {
         Box bb = self.getBoundingBox();
         EntityAccessor access = ((EntityAccessor) self);
-        access.invokePushOutOfBlocks(self.getX() - (double)self.getWidth() * 0.35D, bb.y1 + 0.5D, self.getZ() + (double)self.getWidth() * 0.35D);
-        access.invokePushOutOfBlocks(self.getX() - (double)self.getWidth() * 0.35D, bb.y1 + 0.5D, self.getZ() - (double)self.getWidth() * 0.35D);
-        access.invokePushOutOfBlocks(self.getX() + (double)self.getWidth() * 0.35D, bb.y1 + 0.5D, self.getZ() - (double)self.getWidth() * 0.35D);
-        access.invokePushOutOfBlocks(self.getX() + (double)self.getWidth() * 0.35D, bb.y1 + 0.5D, self.getZ() + (double)self.getWidth() * 0.35D);
+        access.invokePushOutOfBlocks(self.getX() - (double)self.getWidth() * 0.35D, bb.minY + 0.5D, self.getZ() + (double)self.getWidth() * 0.35D);
+        access.invokePushOutOfBlocks(self.getX() - (double)self.getWidth() * 0.35D, bb.minY + 0.5D, self.getZ() - (double)self.getWidth() * 0.35D);
+        access.invokePushOutOfBlocks(self.getX() + (double)self.getWidth() * 0.35D, bb.minY + 0.5D, self.getZ() - (double)self.getWidth() * 0.35D);
+        access.invokePushOutOfBlocks(self.getX() + (double)self.getWidth() * 0.35D, bb.minY + 0.5D, self.getZ() + (double)self.getWidth() * 0.35D);
     }
 
     @Override

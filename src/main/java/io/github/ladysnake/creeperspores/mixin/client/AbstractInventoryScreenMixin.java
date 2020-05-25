@@ -19,6 +19,7 @@ package io.github.ladysnake.creeperspores.mixin.client;
 
 import io.github.ladysnake.creeperspores.common.CreeperSporeEffect;
 import net.minecraft.client.gui.screen.ingame.AbstractInventoryScreen;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import org.spongepowered.asm.mixin.Mixin;
@@ -38,7 +39,7 @@ public abstract class AbstractInventoryScreenMixin {
     private int renderedEffectsIndex;
 
     @Inject(method = "drawStatusEffectDescriptions", at = @At("HEAD"))
-    private void retrieveRenderedEffects(int x, int width, Iterable<StatusEffectInstance> effects, CallbackInfo ci) {
+    private void retrieveRenderedEffects(MatrixStack matrices, int x, int width, Iterable<StatusEffectInstance> effects, CallbackInfo ci) {
         renderedEffects = (List<StatusEffectInstance>) effects;
         renderedEffectsIndex = 0;
     }

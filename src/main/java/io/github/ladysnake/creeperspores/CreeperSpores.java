@@ -87,7 +87,8 @@ public class CreeperSpores implements ModInitializer {
     @ApiStatus.Internal
     public static void registerCreeperLike(Identifier id) {
         // can't actually check that the entity type is living, so just hope nothing goes wrong
-        @SuppressWarnings("unchecked") Optional<EntityType<? extends LivingEntity>> creeperType = (Optional<EntityType<? extends LivingEntity>>) Registry.ENTITY_TYPE.getOrEmpty(id);
+        // the cast to Optional<?> is not optional, according to javac
+        @SuppressWarnings({"unchecked", "RedundantCast"}) Optional<EntityType<? extends LivingEntity>> creeperType = (Optional<EntityType<? extends LivingEntity>>) (Optional<?>) Registry.ENTITY_TYPE.getOrEmpty(id);
         if (creeperType.isPresent()) {
             registerCreeperLike(id, creeperType.get());
         } else {

@@ -20,16 +20,15 @@ package io.github.ladysnake.creeperspores.common.gamerule;
 import io.github.fablabsmc.fablabs.api.gamerule.v1.GameRuleRegistry;
 import io.github.fablabsmc.fablabs.api.gamerule.v1.RuleFactory;
 import io.github.fablabsmc.fablabs.api.gamerule.v1.rule.EnumRule;
-import io.github.ladysnake.creeperspores.CreeperSpores;
 import net.minecraft.world.GameRules;
 
 public class CSGamerules {
     public static final GameRules.RuleKey<EnumRule<CreeperGrief>> CREEPER_GRIEF = register(
-            "creeper_grief",
+            "cspores_creeperGrief",
             RuleFactory.createEnumRule(CreeperGrief.CHARGED));
 
     public static <T extends GameRules.Rule<T>> GameRules.RuleKey<T> register(String name, GameRules.RuleType<T> type) {
-        return GameRuleRegistry.register(CreeperSpores.id(name), GameRules.RuleCategory.MOBS, type);
+        return GameRuleRegistry.register(name, GameRules.RuleCategory.MOBS, type);
     }
 
 }

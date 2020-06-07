@@ -53,6 +53,7 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.tag.BlockTags;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
@@ -120,17 +121,17 @@ public class CreeperlingEntity extends MobEntityWithAi implements SkinOverlayOwn
     }
 
     @Override
-    protected boolean interactMob(PlayerEntity player, Hand hand) {
+    protected ActionResult interactMob(PlayerEntity player, Hand hand) {
         ItemStack held = player.getStackInHand(hand);
         if (CreeperSpores.FERTILIZERS.contains(held.getItem())) {
             if (!world.isClient) {
                 this.applyFertilizer(held);
                 this.setTrusting(true);
             }
-            return true;
+            return ActionResult.SUCCESS;
         } else {
             if (interactSpawnEgg(player, this, held, this.kind)) {
-                return true;
+                return ActionResult.SUCCESS;
             }
         }
         return super.interactMob(player, hand);
@@ -286,10 +287,11 @@ public class CreeperlingEntity extends MobEntityWithAi implements SkinOverlayOwn
                 UUID adultUuid = adult.getUuid();
                 EntityAttributeInstance adultMaxHealth = adult.getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH);
                 EntityAttributeInstance babyMaxHealth = this.getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH);
+                assert adultMaxHealth != null && babyMaxHealth != null;
                 int healthMultiplier = (int)adultMaxHealth.getValue() / (int)babyMaxHealth.getValue();
                 adult.fromTag(this.toTag(new CompoundTag()));
                 adult.setUuid(adultUuid);
-                adultMaxHealth.setBaseValue(adult.defaultMaximumHealth);
+                adultMaxHealth.setBaseValue(adult.defaultMaxHealth);
                 adult.setHealth(adult.getHealth() * healthMultiplier);
                 world.spawnEntity(adult);
                 pushOutOfBlocks(adult);

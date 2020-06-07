@@ -15,20 +15,21 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program; If not, see <https://www.gnu.org/licenses>.
  */
-package io.github.ladysnake.creeperspores.common.gamerule;
+package io.github.ladysnake.creeperspores;
 
-import io.github.fablabsmc.fablabs.api.gamerule.v1.GameRuleRegistry;
-import io.github.fablabsmc.fablabs.api.gamerule.v1.RuleFactory;
-import io.github.fablabsmc.fablabs.api.gamerule.v1.rule.EnumRule;
-import net.minecraft.world.GameRules;
+public enum CreeperGrief {
+    VANILLA, CHARGED, NEVER;
 
-public class CSGamerules {
-    public static final GameRules.RuleKey<EnumRule<CreeperGrief>> CREEPER_GRIEF = register(
-            "cspores_creeperGrief",
-            RuleFactory.createEnumRule(CreeperGrief.CHARGED));
-
-    public static <T extends GameRules.Rule<T>> GameRules.RuleKey<T> register(String name, GameRules.RuleType<T> type) {
-        return GameRuleRegistry.register(name, GameRules.RuleCategory.MOBS, type);
+    public boolean shouldGrief(boolean charged) {
+        switch (this) {
+            case NEVER:
+                return false;
+            case CHARGED:
+                return charged;
+            case VANILLA:
+                return true;
+            default:
+                throw new AssertionError("Unexpected enum " + this);
+        }
     }
-
 }

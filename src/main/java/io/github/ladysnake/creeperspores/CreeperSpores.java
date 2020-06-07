@@ -17,6 +17,9 @@
  */
 package io.github.ladysnake.creeperspores;
 
+import io.github.fablabsmc.fablabs.api.gamerule.v1.GameRuleRegistry;
+import io.github.fablabsmc.fablabs.api.gamerule.v1.RuleFactory;
+import io.github.fablabsmc.fablabs.api.gamerule.v1.rule.EnumRule;
 import io.github.ladysnake.creeperspores.common.CreeperSporeEffect;
 import io.github.ladysnake.creeperspores.common.CreeperlingEntity;
 import io.github.ladysnake.creeperspores.mixin.EntityTypeAccessor;
@@ -38,6 +41,7 @@ import net.minecraft.tag.Tag;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Lazy;
 import net.minecraft.util.registry.Registry;
+import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -64,6 +68,11 @@ public class CreeperSpores implements ModInitializer {
     public static final String GIVE_SPORES_TAG = "cspores:giveSpores";
     public static final int MAX_SPORE_TIME = 20 * 180;
 
+    public static final GameRules.Key<EnumRule<CreeperGrief>> CREEPER_GRIEF = registerGamerule(
+            "cspores_creeperGrief",
+            RuleFactory.createEnumRule(CreeperGrief.CHARGED)
+    );
+
     public static Identifier id(String path) {
         return new Identifier("creeperspores", path);
     }
@@ -82,6 +91,10 @@ public class CreeperSpores implements ModInitializer {
                 registerCreeperLike(id, livingType);
             }
         });
+    }
+
+    private static <T extends GameRules.Rule<T>> GameRules.Key<T> registerGamerule(String name, GameRules.Type<T> type) {
+        return GameRuleRegistry.register(name, GameRules.Category.MOBS, type);
     }
 
     @ApiStatus.Internal

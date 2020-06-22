@@ -44,7 +44,7 @@ public abstract class LivingEntityMixin extends Entity {
         super(type, world);
     }
 
-    @Inject(method = "damage", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/LivingEntity;method_29504()Z", ordinal = 1))
+    @Inject(method = "damage", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/LivingEntity;isDead()Z", ordinal = 1))
     private void spawnCreeperling(DamageSource cause, float amount, CallbackInfoReturnable<Boolean> cir) {
         for (CreeperEntry creeperEntry : CreeperEntry.all()) {
             StatusEffectInstance spores = this.getStatusEffect(creeperEntry.sporeEffect);
@@ -62,5 +62,4 @@ public abstract class LivingEntityMixin extends Entity {
             }
         }
     }
-
 }

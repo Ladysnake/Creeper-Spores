@@ -17,14 +17,14 @@
  */
 package io.github.ladysnake.creeperspores;
 
-import io.github.fablabsmc.fablabs.api.gamerule.v1.GameRuleRegistry;
-import io.github.fablabsmc.fablabs.api.gamerule.v1.RuleFactory;
-import io.github.fablabsmc.fablabs.api.gamerule.v1.rule.EnumRule;
 import io.github.ladysnake.creeperspores.common.CreeperSporeEffect;
 import io.github.ladysnake.creeperspores.common.CreeperlingEntity;
 import io.github.ladysnake.creeperspores.mixin.EntityTypeAccessor;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.registry.RegistryEntryAddedCallback;
+import net.fabricmc.fabric.api.gamerule.v1.GameRuleFactory;
+import net.fabricmc.fabric.api.gamerule.v1.GameRuleRegistry;
+import net.fabricmc.fabric.api.gamerule.v1.rule.EnumRule;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.fabricmc.fabric.api.tag.TagRegistry;
@@ -70,7 +70,7 @@ public class CreeperSpores implements ModInitializer {
 
     public static final GameRules.Key<EnumRule<CreeperGrief>> CREEPER_GRIEF = registerGamerule(
             "cspores_creeperGrief",
-            RuleFactory.createEnumRule(CreeperGrief.CHARGED)
+            GameRuleFactory.createEnumRule(CreeperGrief.CHARGED)
     );
 
     public static Identifier id(String path) {

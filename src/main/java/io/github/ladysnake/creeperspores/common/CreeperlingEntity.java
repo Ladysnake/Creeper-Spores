@@ -37,7 +37,7 @@ import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.entity.mob.MobEntityWithAi;
+import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.entity.passive.CatEntity;
 import net.minecraft.entity.passive.OcelotEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -68,7 +68,7 @@ import java.util.UUID;
         value = EnvType.CLIENT,
         itf = SkinOverlayOwner.class
 )})
-public class CreeperlingEntity extends MobEntityWithAi implements SkinOverlayOwner {
+public class CreeperlingEntity extends PathAwareEntity implements SkinOverlayOwner {
     private static final TrackedData<Boolean> CHARGED = DataTracker.registerData(CreeperlingEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
     public static final int MATURATION_TIME = 20 * 60 * 8;
 

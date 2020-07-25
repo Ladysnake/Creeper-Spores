@@ -27,6 +27,7 @@
   ],
   "depends": {
     "fabric": "*",
+    "fabric-game-rule-api-v1": "*",
     "minecraft": ">=1.16-alpha.20.10.a"
   },
   "suggests": {

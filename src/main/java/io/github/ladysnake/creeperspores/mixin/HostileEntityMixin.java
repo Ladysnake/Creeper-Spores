@@ -21,21 +21,22 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.mob.CreeperEntity;
 import net.minecraft.entity.mob.HostileEntity;
-import net.minecraft.entity.mob.MobEntityWithAi;
+import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 
 @Mixin(HostileEntity.class)
-public abstract class HostileEntityMixin extends MobEntityWithAi {
-    protected HostileEntityMixin(EntityType<? extends MobEntityWithAi> type, World world) {
+public abstract class HostileEntityMixin extends PathAwareEntity {
+    protected HostileEntityMixin(EntityType<? extends PathAwareEntity> type, World world) {
         super(type, world);
     }
 
-    @ModifyArg(method = "damage", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/mob/MobEntityWithAi;damage(Lnet/minecraft/entity/damage/DamageSource;F)Z"), index = 1)
+    @ModifyArg(method = "damage", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/mob/PathAwareEntity;damage(Lnet/minecraft/entity/damage/DamageSource;F)Z"), index = 1)
     private float dealDoubleFireDamage(DamageSource damage, float damageAmount) {
-        if ((MobEntityWithAi) this instanceof CreeperEntity && damage.isFire()) {
+        //noinspection ConstantConditions
+        if ((PathAwareEntity) this instanceof CreeperEntity && damage.isFire()) {
             return damageAmount * 2;
         }
         return damageAmount;

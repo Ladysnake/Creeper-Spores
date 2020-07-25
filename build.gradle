@@ -3,12 +3,12 @@ import java.time.Year
 plugins {
     id "fabric-loom" version "0.4-SNAPSHOT"
     id "com.github.fudge.forgedflowerloom" version "2.0.0"
-    id "net.minecrell.licenser" version "0.2.1"
+    id 'net.minecrell.licenser' version '0.4.1'
     id 'com.matthewprenger.cursegradle' version '1.4.0'
     id "com.jfrog.bintray" version '1.8.4'
     id 'org.ajoberstar.grgit' version '3.1.1'
     id 'com.github.breadmoirai.github-release' version '2.2.9'
-    id "com.wynprice.cursemaven" version "2.1.1"
+    id "com.wynprice.cursemaven" version "2.1.5"
     id "maven-publish"
 }
 
@@ -41,14 +41,9 @@ processResources {
 }
 
 repositories {
-    mavenLocal()
     maven {
         name = "FabricMC"
         url = "https://maven.fabricmc.net"
-    }
-    maven {
-        name = "JitPack"
-        url = "https://jitpack.io"
     }
 }
 
@@ -62,8 +57,6 @@ dependencies {
     }
 
     modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
-    modImplementation "io.github.fablabsmc:GameRules:${gamerules_version}"
-    include "io.github.fablabsmc:GameRules:${gamerules_version}"
 
 //    modRuntime "curse.maven:mobz:2826831"
 

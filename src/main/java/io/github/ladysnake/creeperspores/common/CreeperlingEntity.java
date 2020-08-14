@@ -200,8 +200,8 @@ public class CreeperlingEntity extends PathAwareEntity implements SkinOverlayOwn
 
     @Nullable
     @Override
-    public EntityData initialize(WorldAccess world, LocalDifficulty difficulty, SpawnReason spawnType, @Nullable EntityData data, @Nullable CompoundTag tag) {
-        EntityData ret = super.initialize(world, difficulty, spawnType, data, tag);
+    public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData data, @Nullable CompoundTag tag) {
+        EntityData ret = super.initialize(world, difficulty, spawnReason, data, tag);
         float localDifficulty = difficulty.getClampedLocalDifficulty();
         this.ticksInSunlight = (int) (MATURATION_TIME * this.random.nextFloat() * 0.9 * localDifficulty);
         return ret;
@@ -267,8 +267,8 @@ public class CreeperlingEntity extends PathAwareEntity implements SkinOverlayOwn
     }
 
     @Override
-    public void onStruckByLightning(LightningEntity lightningEntity_1) {
-        super.onStruckByLightning(lightningEntity_1);
+    public void onStruckByLightning(ServerWorld world, LightningEntity lightning) {
+        super.onStruckByLightning(world, lightning);
         this.dataTracker.set(CHARGED, true);
     }
 

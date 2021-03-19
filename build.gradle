@@ -1,14 +1,15 @@
 import java.time.Year
+import com.modrinth.minotaur.TaskModrinthUpload;
 
 plugins {
-    id "fabric-loom" version "0.4-SNAPSHOT"
-    id "com.github.fudge.forgedflowerloom" version "2.0.0"
-    id 'net.minecrell.licenser' version '0.4.1'
-    id 'com.matthewprenger.cursegradle' version '1.4.0'
+    id "fabric-loom" version "0.7-SNAPSHOT"
+    id "net.minecrell.licenser" version "0.2.1"
+    id "com.matthewprenger.cursegradle" version "1.4.0"
     id "com.jfrog.bintray" version '1.8.4'
+    id "com.jfrog.artifactory" version "4.20.0"
     id 'org.ajoberstar.grgit' version '3.1.1'
     id 'com.github.breadmoirai.github-release' version '2.2.9'
-    id "com.wynprice.cursemaven" version "2.1.5"
+    id 'com.modrinth.minotaur' version '1.1.0'
     id "maven-publish"
 }
 
@@ -45,6 +46,12 @@ repositories {
         name = "FabricMC"
         url = "https://maven.fabricmc.net"
     }
+    maven {
+        url = 'https://www.cursemaven.com'
+        content {
+            includeGroup 'curse.maven'
+        }
+    }
 }
 
 dependencies {
@@ -58,7 +65,7 @@ dependencies {
 
     modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
 
-//    modRuntime "curse.maven:mobz:2826831"
+//    modRuntime "curse.maven:mobz-336554:2826831"
 
     compileOnly "com.google.code.findbugs:jsr305:3.0.2"
     compileOnly "org.jetbrains:annotations:19.0.0"
@@ -94,6 +101,11 @@ license {
             gplVersion = project.gpl_version
         }
     }
+}
+
+ext {
+    // no idea how else to import TaskModrinthUpload from release.gradle
+    TaskModrinthUpload2 = TaskModrinthUpload
 }
 
 apply from: 'release.gradle'

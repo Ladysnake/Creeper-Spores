@@ -284,15 +284,20 @@ public class CreeperlingEntity extends PathAwareEntity implements SkinOverlayOwn
                 if (adult == null) {    // fallback to vanilla creeper
                     adult = Objects.requireNonNull(CreeperEntry.getVanilla().creeperType.create(world));
                 }
+
+                EntityAttributeInstance adultMaxHealthAttr = adult.getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH);
+                EntityAttributeInstance babyMaxHealthAttr = this.getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH);
+
+                assert adultMaxHealthAttr != null && babyMaxHealthAttr != null;
+
                 UUID adultUuid = adult.getUuid();
-                EntityAttributeInstance adultMaxHealth = adult.getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH);
-                EntityAttributeInstance babyMaxHealth = this.getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH);
-                assert adultMaxHealth != null && babyMaxHealth != null;
-                int healthMultiplier = (int)adultMaxHealth.getValue() / (int)babyMaxHealth.getValue();
+                double defaultMaxHealth = adultMaxHealthAttr.getBaseValue();
+                double healthMultiplier = adultMaxHealthAttr.getValue() / babyMaxHealthAttr.getValue();
                 adult.fromTag(this.toTag(new CompoundTag()));
                 adult.setUuid(adultUuid);
-                adultMaxHealth.setBaseValue(adult.defaultMaxHealth);
-                adult.setHealth(adult.getHealth() * healthMultiplier);
+                adultMaxHealthAttr.setBaseValue(defaultMaxHealth);
+                adult.setHealth(adult.getHealth() * (float)healthMultiplier);
+
                 world.spawnEntity(adult);
                 pushOutOfBlocks(adult);
                 this.remove();

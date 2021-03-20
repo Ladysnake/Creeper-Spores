@@ -64,26 +64,6 @@ artifactory {
 artifactoryPublish.dependsOn(checkGitStatus)
 artifactoryPublish.dependsOn build
 
-bintray {
-    user = project.findProperty('bintray_user')
-    key = project.findProperty('bintray_api_key')
-    publications = ['mavenJava']
-    publish = true //[Default: false] Whether version should be auto published after an upload
-    pkg {
-        repo = 'mods'
-        name = project.name
-        userOrg = 'ladysnake'
-        version {
-            name = project.version
-            vcsTag = project.version
-            released  = new Date()
-        }
-    }
-}
-
-bintrayUpload.dependsOn(checkGitStatus)
-bintrayUpload.dependsOn build
-
 // configure the maven publication
 publishing {
     publications {
@@ -105,7 +85,7 @@ publishing {
     }
 }
 
-task modrinth (type: TaskModrinthUpload2, dependsOn: checkGitStatus){
+task modrinth (type: ModrinthUpload, dependsOn: checkGitStatus){
     if (project.findProperty('modrinth_key') != null) {
         token = project.findProperty('modrinth_key')
     }
@@ -197,7 +177,7 @@ curseforge {
 
 tasks.curseforge.dependsOn(checkGitStatus)
 
-task release(dependsOn: [tasks.publish, tasks.githubRelease, tasks.bintrayUpload, tasks.curseforge]) {
+task release(dependsOn: [tasks.publish, tasks.githubRelease, tasks.artifactoryPublish, tasks.curseforge, tasks.modrinth]) {
     group = 'publishing'
     description = 'Releases a new version to Maven, Github and Curseforge'
 }

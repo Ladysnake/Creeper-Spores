@@ -105,7 +105,7 @@ license {
 
 ext {
     // no idea how else to import TaskModrinthUpload from release.gradle
-    TaskModrinthUpload2 = TaskModrinthUpload
+    ModrinthUpload = TaskModrinthUpload
 }
 
 apply from: 'release.gradle'

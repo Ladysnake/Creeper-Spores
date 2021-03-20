@@ -3,9 +3,9 @@
   "effect.creeperspores.generic_spore": "%s 孢子",
   "entity.creeperspores.creeperling": "年幼爬行者",
   "item.creeperspores.creeperling_spawn_egg": "年幼爬行者刷怪蛋",
-  "gamerule.cspores_creeperGrief": "爬行者爆炸破坏",
-  "gamerule.cspores_creeperGrief.vanilla": "总是",
-  "gamerule.cspores_creeperGrief.charged": "充电",
-  "gamerule.cspores_creeperGrief.never": "永不",
-  "gamerule.cspores_creeperGrief.description": "总是 = 所有爬行者都能破坏地形; 充电 = 仅充电爬行者; 永不 = 爬行者无破坏性"
+  "gamerule.creeper-spores:creeperGrief": "爬行者爆炸破坏",
+  "gamerule.creeper-spores:creeperGrief.vanilla": "总是",
+  "gamerule.creeper-spores:creeperGrief.charged": "充电",
+  "gamerule.creeper-spores:creeperGrief.never": "永不",
+  "gamerule.creeper-spores:creeperGrief.description": "总是 = 所有爬行者都能破坏地形; 充电 = 仅充电爬行者; 永不 = 爬行者无破坏性"
 }

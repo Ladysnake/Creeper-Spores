@@ -9,6 +9,8 @@
     "EntityAccessor",
     "EntityTypeAccessor",
     "ExplosionMixin",
+    "GameRuleKeyAccessor",
+    "GameRulesMixin",
     "HostileEntityMixin",
     "LivingEntityMixin",
     "SpawnHelperMixin"

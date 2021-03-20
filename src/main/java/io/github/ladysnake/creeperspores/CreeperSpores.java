@@ -1,5 +1,5 @@
 /*
- * Creeper-Spores
+ * Creeper Spores
  * Copyright (C) 2019-2021 Ladysnake
  *
  * This program is free software; you can redistribute it and/or

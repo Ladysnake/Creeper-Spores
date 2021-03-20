@@ -9,4 +9,4 @@ pluginManagement {
         gradlePluginPortal()
     }
 }
-rootProject.name = mod_name.replace(' ', '-')
+rootProject.name = mod_name.toLowerCase(Locale.ROOT).replace(' ', '-')

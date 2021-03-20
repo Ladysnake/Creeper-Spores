@@ -1,4 +1,13 @@
 ------------------------------------------------------
+Version 1.5.0
+------------------------------------------------------
+- Naturally spawned creepers now get replaced with creeperlings 20% of the time (was previously 100%)
+- Added the `creeper-spores:creeperReplaceChance` gamerule to configure the chance that a creeper gets replaced
+- Renamed `cspores_creeperGrief` gamerule to `creeper-spores:creeperGrief`, for consistency
+  - Old values will be migrated upon loading your world
+- Updated zh_cn localization (thanks EnterFor !)
+
+------------------------------------------------------
 Version 1.4.1
 ------------------------------------------------------
 Updated to 1.16.2

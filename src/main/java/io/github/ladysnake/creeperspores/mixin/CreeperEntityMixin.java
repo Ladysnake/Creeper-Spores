@@ -20,7 +20,8 @@ package io.github.ladysnake.creeperspores.mixin;
 import io.github.ladysnake.creeperspores.CreeperSpores;
 import io.github.ladysnake.creeperspores.common.CreeperlingEntity;
 import io.github.ladysnake.creeperspores.common.SporeSpreader;
-import io.github.ladysnake.creeperspores.gamerule.CreeperGrief;
+import io.github.ladysnake.creeperspores.common.gamerule.CSGamerules;
+import io.github.ladysnake.creeperspores.common.gamerule.CreeperGrief;
 import net.fabricmc.fabric.api.util.TriState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -86,7 +87,7 @@ public abstract class CreeperEntityMixin extends HostileEntity implements SporeS
 
     @ModifyVariable(method = "explode", ordinal = 0, at = @At(value = "STORE", ordinal = 0))
     private Explosion.DestructionType griefLessExplosion(Explosion.DestructionType explosionType) {
-        CreeperGrief grief = world.getGameRules().get(CreeperSpores.CREEPER_GRIEF).get();
+        CreeperGrief grief = world.getGameRules().get(CSGamerules.CREEPER_GRIEF).get();
         if (!grief.shouldGrief(this.dataTracker.get(CHARGED))) {
             return Explosion.DestructionType.NONE;
         }

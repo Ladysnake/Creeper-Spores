@@ -58,7 +58,7 @@ import java.util.Random;
 import java.util.UUID;
 
 public class CreeperlingEntity extends MobEntityWithAi {
-    private static final TrackedData<Boolean> CHARGED = DataTracker.registerData(CreeperEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+    private static final TrackedData<Boolean> CHARGED = DataTracker.registerData(CreeperlingEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
     public static final int MATURATION_TIME = 20 * 60 * 8;
 
     private int ticksInSunlight = 0;

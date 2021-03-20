@@ -66,7 +66,7 @@ import java.util.UUID;
         itf = SkinOverlayOwner.class
 )})
 public class CreeperlingEntity extends MobEntityWithAi implements SkinOverlayOwner {
-    private static final TrackedData<Boolean> CHARGED = DataTracker.registerData(CreeperEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+    private static final TrackedData<Boolean> CHARGED = DataTracker.registerData(CreeperlingEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
     public static final int MATURATION_TIME = 20 * 60 * 8;
 
     private int ticksInSunlight = 0;

@@ -24,6 +24,7 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.registry.RegistryEntryAddedCallback;
 import net.fabricmc.fabric.api.gamerule.v1.GameRuleFactory;
 import net.fabricmc.fabric.api.gamerule.v1.GameRuleRegistry;
+import net.fabricmc.fabric.api.gamerule.v1.rule.DoubleRule;
 import net.fabricmc.fabric.api.gamerule.v1.rule.EnumRule;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
@@ -69,8 +70,12 @@ public class CreeperSpores implements ModInitializer {
     public static final int MAX_SPORE_TIME = 20 * 180;
 
     public static final GameRules.Key<EnumRule<CreeperGrief>> CREEPER_GRIEF = registerGamerule(
-            "cspores_creeperGrief",
+            "creeper-spores:creeperGrief",
             GameRuleFactory.createEnumRule(CreeperGrief.CHARGED)
+    );
+    public static final GameRules.Key<DoubleRule> CREEPER_REPLACE_CHANCE = registerGamerule(
+            "creeper-spores:creeperReplaceChance",
+            GameRuleFactory.createDoubleRule(0.2, 0, 1)
     );
 
     public static Identifier id(String path) {

@@ -11,7 +11,6 @@
     "ExplosionMixin",
     "GameRuleKeyAccessor",
     "GameRulesMixin",
-    "HostileEntityMixin",
     "LivingEntityMixin",
     "SpawnHelperMixin"
   ],

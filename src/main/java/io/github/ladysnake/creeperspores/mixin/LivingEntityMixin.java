@@ -24,11 +24,14 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.mob.CreeperEntity;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyArg;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import javax.annotation.Nullable;
@@ -61,5 +64,14 @@ public abstract class LivingEntityMixin extends Entity {
                 }
             }
         }
+    }
+
+    @ModifyVariable(method = "damage", at = @At("HEAD"), ordinal = 0, argsOnly = true)
+    private float dealDoubleFireDamage(float damageAmount, DamageSource damage) {
+        //noinspection ConstantConditions
+        if ((Entity) this instanceof CreeperEntity && damage.isFire()) {
+            return damageAmount * 2;
+        }
+        return damageAmount;
     }
 }

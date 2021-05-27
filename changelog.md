@@ -3,6 +3,9 @@ Version 1.6.0
 ------------------------------------------------------
 Updated to MC 1.17
 
+- Added German localization (thanks soradotwav !)
+- Updated French localization (thanks Koockies !)
+
 ------------------------------------------------------
 Version 1.5.0
 ------------------------------------------------------

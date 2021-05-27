@@ -1,0 +1,12 @@
+{
+  "effect.creeperspores.creeper_spore": "Creeper Sporen",
+  "effect.creeperspores.generic_spore": "%s Sporen",
+  "entity.creeperspores.creeperling": "Creeperlein",
+  "item.creeperspores.creeperling_spawn_egg": "Creeperlein Spawn-Ei",
+  "gamerule.creeper-spores:creeperGrief": "Zerstörende Creeper-Explosionen",
+  "gamerule.creeper-spores:creeperGrief.vanilla": "Immer",
+  "gamerule.creeper-spores:creeperGrief.charged": "Geladen",
+  "gamerule.creeper-spores:creeperGrief.never": "Nie",
+  "gamerule.creeper-spores:creeperGrief.description": "VANILLA = Alle Creeper können den Boden zerstören; CHARGED = Nur geladene Creeper; NEVER = Creeper können den Boden nicht zerstören",
+  "gamerule.creeper-spores:creeperReplaceChance": "Chance, einen gespawnten Creeper mit einem Creeperlein zu ersetzen"
+}

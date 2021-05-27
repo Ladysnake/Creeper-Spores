@@ -25,12 +25,24 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.EnvironmentInterface;
 import net.fabricmc.api.EnvironmentInterfaces;
 import net.fabricmc.fabric.api.network.PacketContext;
-import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
-import net.fabricmc.fabric.api.server.PlayerStream;
+import net.fabricmc.fabric.api.networking.v1.PacketSender;
+import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.minecraft.block.Material;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.ClientPlayNetworkHandler;
+import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.render.entity.feature.SkinOverlayOwner;
-import net.minecraft.entity.*;
-import net.minecraft.entity.ai.goal.*;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityData;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LightningEntity;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.SpawnReason;
+import net.minecraft.entity.ai.goal.FleeEntityGoal;
+import net.minecraft.entity.ai.goal.LookAtEntityGoal;
+import net.minecraft.entity.ai.goal.SwimGoal;
+import net.minecraft.entity.ai.goal.TemptGoal;
+import net.minecraft.entity.ai.goal.WanderAroundFarGoal;
 import net.minecraft.entity.attribute.EntityAttributeInstance;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
@@ -44,11 +56,12 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.SpawnEggItem;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.packet.s2c.play.CustomPayloadS2CPacket;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.recipe.Ingredient;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
@@ -57,7 +70,14 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
-import net.minecraft.world.*;
+import net.minecraft.util.thread.ThreadExecutor;
+import net.minecraft.world.Difficulty;
+import net.minecraft.world.LightType;
+import net.minecraft.world.LocalDifficulty;
+import net.minecraft.world.ServerWorldAccess;
+import net.minecraft.world.World;
+import net.minecraft.world.WorldAccess;
+import net.minecraft.world.WorldView;
 
 import javax.annotation.Nullable;
 import java.util.Objects;
@@ -147,7 +167,7 @@ public class CreeperlingEntity extends PathAwareEntity implements SkinOverlayOwn
                         creeperling.setCustomName(stack.getName());
                     }
 
-                    if (!player.abilities.creativeMode) {
+                    if (!player.getAbilities().creativeMode) {
                         stack.decrement(1);
                     }
                 }
@@ -162,16 +182,19 @@ public class CreeperlingEntity extends PathAwareEntity implements SkinOverlayOwn
             this.ticksInSunlight += (20 * (60 + 120 * this.random.nextFloat()));
             boneMeal.decrement(1);
             PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
-            buf.writeInt(this.getEntityId());
+            buf.writeInt(this.getId());
             CustomPayloadS2CPacket packet = new CustomPayloadS2CPacket(CreeperSpores.CREEPERLING_FERTILIZATION_PACKET, buf);
-            PlayerStream.watching(this).forEach(p -> ServerSidePacketRegistry.INSTANCE.sendToPlayer(p, packet));
+
+            for (ServerPlayerEntity p : PlayerLookup.tracking(this)) {
+                p.networkHandler.sendPacket(packet);
+            }
         }
     }
 
-    public static void createParticles(PacketContext ctx, PacketByteBuf buf) {
+    public static void createParticles(ThreadExecutor<?> ctx, PlayerEntity player, PacketByteBuf buf) {
         int entityId = buf.readInt();
-        ctx.getTaskQueue().execute(() -> {
-            Entity e = ctx.getPlayer().world.getEntityById(entityId);
+        ctx.execute(() -> {
+            Entity e = player.world.getEntityById(entityId);
             if (e instanceof CreeperlingEntity) {
                 for(int i = 0; i < 15; ++i) {
                     Random random = e.world.random;
@@ -200,7 +223,7 @@ public class CreeperlingEntity extends PathAwareEntity implements SkinOverlayOwn
 
     @Nullable
     @Override
-    public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData data, @Nullable CompoundTag tag) {
+    public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData data, @Nullable NbtCompound tag) {
         EntityData ret = super.initialize(world, difficulty, spawnReason, data, tag);
         float localDifficulty = difficulty.getClampedLocalDifficulty();
         this.ticksInSunlight = (int) (MATURATION_TIME * this.random.nextFloat() * 0.9 * localDifficulty);
@@ -208,7 +231,7 @@ public class CreeperlingEntity extends PathAwareEntity implements SkinOverlayOwn
     }
 
     @Override
-    protected int getCurrentExperience(PlayerEntity player) {
+    protected int getXpToDrop(PlayerEntity player) {
         return 2 + this.world.random.nextInt(3);
     }
 
@@ -217,9 +240,11 @@ public class CreeperlingEntity extends PathAwareEntity implements SkinOverlayOwn
         // Creeperlings like sunlight
         int skyLightLevel = worldView.getLightLevel(LightType.SKY, pos);
         // method_28516 == getBrightness
-        float skyFavor = worldView.getDimension().method_28516(skyLightLevel) * 3.0F;
+        float skyFavor = worldView.getDimension().getBrightness(skyLightLevel) * 3.0F;
         // But they can do with artificial light if there is not anything better
-        float favor = Math.max(worldView.getBrightness(pos) - 0.5F, skyFavor);
+        // One day we will get in trouble for using this method, but in the mean time it's used by everything else
+        @SuppressWarnings("deprecation") float brightnessAtPos = worldView.getBrightness(pos);
+        float favor = Math.max(brightnessAtPos - 0.5F, skyFavor);
         // They like good soils too
         if (BlockTags.BAMBOO_PLANTABLE_ON.contains(worldView.getBlockState(pos.down(1)).getBlock())) {
             favor += 3.0F;
@@ -243,8 +268,8 @@ public class CreeperlingEntity extends PathAwareEntity implements SkinOverlayOwn
     }
 
     @Override
-    public void writeCustomDataToTag(CompoundTag tag) {
-        super.writeCustomDataToTag(tag);
+    public void writeCustomDataToNbt(NbtCompound tag) {
+        super.writeCustomDataToNbt(tag);
         if (this.isCharged()) {
             tag.putBoolean("powered", true);
         }
@@ -253,8 +278,8 @@ public class CreeperlingEntity extends PathAwareEntity implements SkinOverlayOwn
     }
 
     @Override
-    public void readCustomDataFromTag(CompoundTag tag) {
-        super.readCustomDataFromTag(tag);
+    public void readCustomDataFromNbt(NbtCompound tag) {
+        super.readCustomDataFromNbt(tag);
         if (tag.contains("powered")) {
             this.dataTracker.set(CHARGED, tag.getBoolean("powered"));
         }
@@ -293,14 +318,14 @@ public class CreeperlingEntity extends PathAwareEntity implements SkinOverlayOwn
                 UUID adultUuid = adult.getUuid();
                 double defaultMaxHealth = adultMaxHealthAttr.getBaseValue();
                 double healthMultiplier = adultMaxHealthAttr.getValue() / babyMaxHealthAttr.getValue();
-                adult.fromTag(this.toTag(new CompoundTag()));
+                adult.readNbt(this.writeNbt(new NbtCompound()));
                 adult.setUuid(adultUuid);
                 adultMaxHealthAttr.setBaseValue(defaultMaxHealth);
                 adult.setHealth(adult.getHealth() * (float)healthMultiplier);
 
                 world.spawnEntity(adult);
                 pushOutOfBlocks(adult);
-                this.remove();
+                this.remove(RemovalReason.DISCARDED);
             }
         }
     }
@@ -325,7 +350,7 @@ public class CreeperlingEntity extends PathAwareEntity implements SkinOverlayOwn
     }
 
     @Override
-    protected float getSoundPitch() {
+    public float getSoundPitch() {
         return (this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.5F;
     }
 

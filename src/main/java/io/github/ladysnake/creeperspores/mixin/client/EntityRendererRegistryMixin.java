@@ -20,6 +20,9 @@ package io.github.ladysnake.creeperspores.mixin.client;
 import io.github.ladysnake.creeperspores.CreeperEntry;
 import io.github.ladysnake.creeperspores.client.CreeperlingEntityRenderer;
 import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityRendererRegistry;
+import net.fabricmc.fabric.impl.client.renderer.registry.EntityRendererRegistryImpl;
+import net.minecraft.client.render.entity.EntityRendererFactory;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -27,16 +30,15 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(value = EntityRendererRegistry.class, remap = false)
+@Mixin(value = EntityRendererRegistryImpl.class, remap = false)
 public abstract class EntityRendererRegistryMixin {
-    @Shadow public abstract void register(EntityType<?> entityType, EntityRendererRegistry.Factory factory);
+    @Shadow public abstract <E extends Entity> void register(EntityType<?> entityType, EntityRendererFactory<E> factory);
 
-    @Inject(method = "register", at = @At(value = "INVOKE", target = "Ljava/util/Map;keySet()Ljava/util/Set;"))
-    private void onRendererRegistered(EntityType<?> entityType, EntityRendererRegistry.Factory factory, CallbackInfo ci) {
+    @Inject(method = "register", at = @At(value = "RETURN"))
+    private <E extends Entity> void onRendererRegistered(EntityType<? extends E> entityType, EntityRendererFactory<E> factory, CallbackInfo ci) {
         CreeperEntry creeperEntry = CreeperEntry.get(entityType);
         if (creeperEntry != null) {
-            this.register(creeperEntry.creeperlingType, (manager, context) -> CreeperlingEntityRenderer.createRenderer(manager, context, factory));
+            this.register(creeperEntry.creeperlingType, (context) -> CreeperlingEntityRenderer.createRenderer(context, factory));
         }
     }
-
 }

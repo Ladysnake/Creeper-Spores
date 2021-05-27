@@ -17,24 +17,25 @@
  */
 package io.github.ladysnake.creeperspores.common;
 
+import com.google.common.base.Suppliers;
 import io.github.ladysnake.creeperspores.CreeperEntry;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectType;
-import net.minecraft.util.Lazy;
 
 import java.util.Objects;
+import java.util.function.Supplier;
 
 public class CreeperSporeEffect extends StatusEffect {
     private final EntityType<?> creeperType;
-    private final Lazy<CreeperEntry> creeperEntry;
+    private final Supplier<CreeperEntry> creeperEntry;
 
     public CreeperSporeEffect(StatusEffectType type, int color, EntityType<?> creeperType) {
         super(type, color);
         this.creeperType = creeperType;
-        this.creeperEntry = new Lazy<>(() -> Objects.requireNonNull(CreeperEntry.get(this.creeperType)));
+        this.creeperEntry = Suppliers.memoize(() -> Objects.requireNonNull(CreeperEntry.get(this.creeperType)));
     }
 
     @Override

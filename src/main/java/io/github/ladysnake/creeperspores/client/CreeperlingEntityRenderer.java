@@ -22,8 +22,10 @@ import io.github.ladysnake.creeperspores.mixin.client.EntityRendererAccessor;
 import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityRendererRegistry;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.render.entity.EntityRenderer;
+import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.entity.MobEntityRenderer;
 import net.minecraft.client.render.entity.model.CreeperEntityModel;
+import net.minecraft.client.render.entity.model.EntityModelLayers;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.Identifier;
@@ -35,8 +37,8 @@ public class CreeperlingEntityRenderer extends MobEntityRenderer<CreeperlingEnti
 
     private final Identifier texture;
 
-    public static EntityRenderer<? extends Entity> createRenderer(EntityRenderDispatcher manager, EntityRendererRegistry.Context context, EntityRendererRegistry.Factory factory) {
-        EntityRenderer<?> baseRenderer = factory.create(manager, context);
+    public static <E extends Entity> EntityRenderer<CreeperlingEntity> createRenderer(EntityRendererFactory.Context context, EntityRendererFactory<E> factory) {
+        EntityRenderer<?> baseRenderer = factory.create(context);
         Identifier texture;
         try {
             texture = ((EntityRendererAccessor) baseRenderer).invokeGetTexture(null);
@@ -44,12 +46,12 @@ public class CreeperlingEntityRenderer extends MobEntityRenderer<CreeperlingEnti
             // This creeper renderer does not like nulls, fall back to default texture
             texture = DEFAULT_SKIN;
         }
-        return new CreeperlingEntityRenderer(manager, texture);
+        return new CreeperlingEntityRenderer(context, texture);
     }
 
-    public CreeperlingEntityRenderer(EntityRenderDispatcher dispatcher, Identifier texture) {
-        super(dispatcher, new CreeperEntityModel<>(), 0.25F);
-        this.addFeature(new CreeperlingChargeFeatureRenderer(this));
+    public CreeperlingEntityRenderer(EntityRendererFactory.Context context, Identifier texture) {
+        super(context, new CreeperEntityModel<>(context.getPart(EntityModelLayers.CREEPER)), 0.25F);
+        this.addFeature(new CreeperlingChargeFeatureRenderer(this, context.getModelLoader()));
         this.texture = texture;
     }
 

@@ -32,7 +32,7 @@ import net.minecraft.entity.mob.CreeperEntity;
 import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -65,8 +65,7 @@ public abstract class CreeperEntityMixin extends HostileEntity implements SporeS
 
     @Override
     public void spreadSpores(Explosion explosion, Vec3d center, Entity affectedEntity) {
-        if (affectedEntity instanceof LivingEntity && this.shouldSpreadSpores()) {
-            LivingEntity victim = ((LivingEntity) affectedEntity);
+        if (affectedEntity instanceof LivingEntity victim && this.shouldSpreadSpores()) {
             double exposure = Explosion.getExposure(center, victim);
             CreeperEntry creeperEntry = CreeperEntry.get(this.getType());
             if (creeperEntry != null) {
@@ -97,15 +96,15 @@ public abstract class CreeperEntityMixin extends HostileEntity implements SporeS
         return explosionType;
     }
 
-    @Inject(method = "writeCustomDataToTag", at = @At("RETURN"))
-    private void writeCustomDataToTag(CompoundTag tag, CallbackInfo ci) {
+    @Inject(method = "writeCustomDataToNbt", at = @At("RETURN"))
+    private void writeCustomDataToTag(NbtCompound tag, CallbackInfo ci) {
         if (this.giveSpores != TriState.DEFAULT) {
             tag.putBoolean(CreeperSpores.GIVE_SPORES_TAG, this.giveSpores.get());
         }
     }
 
-    @Inject(method = "readCustomDataFromTag", at = @At("RETURN"))
-    private void readCustomDataFromTag(CompoundTag tag, CallbackInfo ci) {
+    @Inject(method = "readCustomDataFromNbt", at = @At("RETURN"))
+    private void readCustomDataFromTag(NbtCompound tag, CallbackInfo ci) {
         if (tag.contains(CreeperSpores.GIVE_SPORES_TAG)) {
             this.giveSpores = TriState.of(tag.getBoolean(CreeperSpores.GIVE_SPORES_TAG));
         }

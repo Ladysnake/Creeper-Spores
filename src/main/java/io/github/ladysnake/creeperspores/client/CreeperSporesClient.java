@@ -21,6 +21,7 @@ import io.github.ladysnake.creeperspores.CreeperEntry;
 import io.github.ladysnake.creeperspores.CreeperSpores;
 import io.github.ladysnake.creeperspores.common.CreeperlingEntity;
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.network.ClientSidePacketRegistry;
 
@@ -29,11 +30,11 @@ public class CreeperSporesClient implements ClientModInitializer {
     public void onInitializeClient() {
         EntityRendererRegistry.INSTANCE.register(
                 CreeperEntry.getVanilla().creeperlingType,
-                (manager, context) -> new CreeperlingEntityRenderer(manager, CreeperlingEntityRenderer.DEFAULT_SKIN)
+                (context) -> new CreeperlingEntityRenderer(context, CreeperlingEntityRenderer.DEFAULT_SKIN)
         );
-        ClientSidePacketRegistry.INSTANCE.register(
+        ClientPlayNetworking.registerGlobalReceiver(
                 CreeperSpores.CREEPERLING_FERTILIZATION_PACKET,
-                CreeperlingEntity::createParticles
+                (client, handler, buf, responseSender) -> CreeperlingEntity.createParticles(client, client.player, buf)
         );
     }
 }

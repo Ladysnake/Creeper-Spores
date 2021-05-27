@@ -96,7 +96,7 @@ task modrinth (type: ModrinthUpload, dependsOn: checkGitStatus){
         addFile(remapJar)
     }
     changelog = project.getChangelogText()
-    "${project.curseforge_versions}".split('; ').each {
+    "${project.modrinth_versions ?: project.curseforge_versions}".split('; ').each {
         addGameVersion it
     }
     addLoader('fabric')

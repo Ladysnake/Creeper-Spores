@@ -4,7 +4,7 @@
 
 A Minecraft mod for the Fabric Mod Loader, adding new creeper mechanics based on the idea of them being plants.
 
-## Wiki
+## Features
 
 ### Creeperlings' Appearance
 

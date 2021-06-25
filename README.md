@@ -2,7 +2,7 @@
 
 [![img](https://img.shields.io/discord/292744693803122688?color=informational&label=Ladysnake&logo=Discord)](https://ladysnake.glitch.me)[![img](http://cf.way2muchnoise.eu/full_creeper-spores_downloads.svg)](https://www.curseforge.com/minecraft/mc-mods/creeper-spores)[![img](http://cf.way2muchnoise.eu/versions/minecraft_creeper-spores_latest.svg)](https://www.curseforge.com/minecraft/mc-mods/creeper-spores)
 
-A Minecraft mod for the Fabric Mod Loader, adding new creeper mechanics based on the theory of them being plants.
+A Minecraft mod for the Fabric Mod Loader, adding new creeper mechanics based on the idea of them being plants.
 
 ## Wiki
 

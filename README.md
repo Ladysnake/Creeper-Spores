@@ -1,24 +1,39 @@
 # Creeper Spores
 
-[![Curseforge](https://curse.nikky.moe/api/img/331636/files?logo)](https://www.curseforge.com/minecraft/mc-mods/creeper-spores)
+[![img](https://img.shields.io/discord/292744693803122688?color=informational&label=Ladysnake&logo=Discord)](https://ladysnake.glitch.me)[![img](http://cf.way2muchnoise.eu/full_creeper-spores_downloads.svg)](https://www.curseforge.com/minecraft/mc-mods/creeper-spores)[![img](http://cf.way2muchnoise.eu/versions/minecraft_creeper-spores_latest.svg)](https://www.curseforge.com/minecraft/mc-mods/creeper-spores)
 
-A Minecraft mod for the Fabric Mod Loader, adding new creeper mechanics based on them being plants.
+A Minecraft mod for the Fabric Mod Loader, adding new creeper mechanics based on the idea of them being plants.
 
-## Creeper Spores
+## Features
 
-Creeper Spores propagation replaces terrain damage from regular creepers.
-Spores manifest as a status effect affecting nearby living entities. When an entity gets hit or dies under the effect, 
-or when the effect runs out, a creeperling has a chance to spawn.
+### Creeperlings' Appearance
 
-## Creeperlings
+This mod changes the usual Creeper explosion from blowing up your world to infesting it! Creeper explosions will cast the "Creeper Spores" effect on all entities caught in the explosion. When this effect runs out, the affected entity is hit or dies there is a chance for a Creeperling to spawn.
 
-Cute baby creepers that will eventually grow up after getting enough sunlight. They have half the health of an adult,
-and will flee from survival players and cats. Bone meal can be applied to a creeperling to make it grow faster.
-Creeperlings share some characteristics with catnip, making them the natural prey of cats and ocelots.
+![CreeperSporesEffect](https://user-images.githubusercontent.com/83953120/123487475-40347d00-d60e-11eb-9d65-1f42cb4f640e.png)
 
-## Misc
+In Addition to that, Creeperlings can also spawn instead of normal Creepers on the surface with a chance of 20%.
 
-- Creepers spawning on the surface are replaced with creeperlings
-- Creepers get double fire damage (dry leaves burn quite well I hear)
-- Charged creepers still destroy terrain unless mobGriefing is set to false (farming heads is a dangerous business)
-- You can spawn a creeperling by using a creeper spawn egg on another creeper or creeperling
+In Creative Mode, clicking an adult Creeper or a Creeperling with a Creeper Spawn Egg will summon a Creeperling as with most other mobs.
+
+![Creeperlings](https://user-images.githubusercontent.com/83953120/123487499-4aef1200-d60e-11eb-92fd-44753171a502.png)
+
+### Creeperlings' Attributes
+
+Creeperlings have only half the health of a normal Creeper and are, just as them, scared of Cats and Ocelots. However they will also flee from the player.
+
+Since Creepers are considered plants in this mod, both adult Creepers and Creeperlings take double the fire damage, Creeperlings need sunlight to grow up and can be bonemealed to speed up their growing. They will also be tempted to bonemeal and follow you around when holding it. When fed with bonemeal they will trust the player and stop fleeing from it, meaning that they can be kept as pets as long as you keep them from growing up!
+
+![CreeperlingGrowing](https://user-images.githubusercontent.com/83953120/123487512-517d8980-d60e-11eb-8978-e51017d582ad.png)
+
+### Gamerules
+
+There are currently 2 Gamerules to configure your experience with this mod:
+
+#### ***creeper-spores:creeperGrief*** can be set to:
+
+- **charged**: Only charged Creepers destroy terrain. This is the **default setting**.
+- **never**: Creepers can not destroy terrain under any circumstances.
+- **vanilla**: Creepers will destroy terrain just as usual.
+
+#### ***creeper-spores:creeperReplaceChance*** is used to configure the rate at which Creepers are replaced with Creeperlings when naturally spawning.

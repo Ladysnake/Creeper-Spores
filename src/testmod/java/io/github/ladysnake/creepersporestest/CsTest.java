@@ -15,16 +15,13 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program; If not, see <https://www.gnu.org/licenses>.
  */
-package io.github.ladysnake.creeperspores;
+package io.github.ladysnake.creepersporestest;
 
-public enum CreeperGrief {
-    VANILLA, CHARGED, NEVER;
+import net.fabricmc.api.ModInitializer;
 
-    public boolean shouldGrief(boolean charged) {
-        return switch (this) {
-            case NEVER -> false;
-            case CHARGED -> charged;
-            case VANILLA -> true;
-        };
+public class CsTest implements ModInitializer {
+    @Override
+    public void onInitialize() {
+
     }
 }

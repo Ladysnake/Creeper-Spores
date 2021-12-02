@@ -15,16 +15,14 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program; If not, see <https://www.gnu.org/licenses>.
  */
-package io.github.ladysnake.creeperspores;
+package io.github.ladysnake.creepersporestest.mixin;
 
-public enum CreeperGrief {
-    VANILLA, CHARGED, NEVER;
+import net.minecraft.entity.mob.CreeperEntity;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.gen.Invoker;
 
-    public boolean shouldGrief(boolean charged) {
-        return switch (this) {
-            case NEVER -> false;
-            case CHARGED -> charged;
-            case VANILLA -> true;
-        };
-    }
+@Mixin(CreeperEntity.class)
+public interface CreeperEntityAccessor {
+    @Invoker("explode")
+    void cs$explode();
 }

@@ -15,31 +15,34 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program; If not, see <https://www.gnu.org/licenses>.
  */
-package io.github.ladysnake.creeperspores.mixin.client;
+package io.github.ladysnake.creepersporestest.mixin.flakyfix;
 
-import io.github.ladysnake.creeperspores.CreeperEntry;
-import io.github.ladysnake.creeperspores.common.CreeperSporeEffect;
-import net.minecraft.client.texture.Sprite;
-import net.minecraft.client.texture.StatusEffectSpriteManager;
-import net.minecraft.entity.effect.StatusEffect;
+import io.github.ladysnake.creepersporestest.flakyfix.FixedGameTestState;
+import net.minecraft.test.GameTestState;
+import net.minecraft.test.TestSet;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(StatusEffectSpriteManager.class)
-public abstract class StatusEffectSpriteManagerMixin {
-    @Unique
-    private static final StatusEffect BASE_CREEPER_SPORES = CreeperEntry.getVanilla().sporeEffect();
+import java.util.Collection;
+import java.util.List;
+import java.util.ListIterator;
 
-    @Shadow public abstract Sprite getSprite(StatusEffect statusEffect_1);
+@Mixin(TestSet.class)
+public abstract class TestSetMixin {
+    @Shadow @Final private Collection<GameTestState> tests;
 
-    @Inject(method = "getSprite", at = @At("HEAD"), cancellable = true)
-    private void getCreeperSporesSprite(StatusEffect effect, CallbackInfoReturnable<Sprite> cir) {
-        if (effect instanceof CreeperSporeEffect && effect != BASE_CREEPER_SPORES) {
-            cir.setReturnValue(getSprite(BASE_CREEPER_SPORES));
+    @Inject(method = "isDone", at = @At("HEAD"))
+    private void replaceTestStates(CallbackInfoReturnable<Boolean> cir) {
+        for (ListIterator<GameTestState> it = ((List<GameTestState>)this.tests).listIterator(); it.hasNext(); ) {
+            GameTestState test = it.next();
+            GameTestState replacement = ((FixedGameTestState) test).cs$getReplacementGameTest();
+            if (replacement != test) {
+                it.set(replacement);
+            }
         }
     }
 }

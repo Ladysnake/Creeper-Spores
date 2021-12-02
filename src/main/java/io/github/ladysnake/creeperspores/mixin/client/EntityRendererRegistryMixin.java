@@ -19,8 +19,7 @@ package io.github.ladysnake.creeperspores.mixin.client;
 
 import io.github.ladysnake.creeperspores.CreeperEntry;
 import io.github.ladysnake.creeperspores.client.CreeperlingEntityRenderer;
-import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityRendererRegistry;
-import net.fabricmc.fabric.impl.client.renderer.registry.EntityRendererRegistryImpl;
+import net.fabricmc.fabric.impl.client.rendering.EntityRendererRegistryImpl;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -32,13 +31,15 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(value = EntityRendererRegistryImpl.class, remap = false)
 public abstract class EntityRendererRegistryMixin {
-    @Shadow public abstract <E extends Entity> void register(EntityType<?> entityType, EntityRendererFactory<E> factory);
+    @Shadow
+    public static <E extends Entity> void register(EntityType<?> entityType, EntityRendererFactory<E> factory) {
+    }
 
     @Inject(method = "register", at = @At(value = "RETURN"))
-    private <E extends Entity> void onRendererRegistered(EntityType<? extends E> entityType, EntityRendererFactory<E> factory, CallbackInfo ci) {
+    private static <E extends Entity> void onRendererRegistered(EntityType<? extends E> entityType, EntityRendererFactory<E> factory, CallbackInfo ci) {
         CreeperEntry creeperEntry = CreeperEntry.get(entityType);
         if (creeperEntry != null) {
-            this.register(creeperEntry.creeperlingType, (context) -> CreeperlingEntityRenderer.createRenderer(context, factory));
+            register(creeperEntry.creeperlingType(), (context) -> CreeperlingEntityRenderer.createRenderer(context, factory));
         }
     }
 }

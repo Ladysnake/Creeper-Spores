@@ -15,28 +15,27 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program; If not, see <https://www.gnu.org/licenses>.
  */
-package io.github.ladysnake.creeperspores.mixin;
+package io.github.ladysnake.creepersporestest.mixin.flakyfix;
 
-import io.github.ladysnake.creeperspores.common.CreeperlingEntity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ai.goal.TargetGoal;
-import net.minecraft.entity.passive.AnimalEntity;
-import net.minecraft.entity.passive.CatEntity;
-import net.minecraft.entity.passive.OcelotEntity;
-import net.minecraft.world.World;
+import io.github.ladysnake.creepersporestest.flakyfix.FixedGameTestState;
+import net.minecraft.test.GameTestState;
+import net.minecraft.test.TestManager;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin({OcelotEntity.class, CatEntity.class})
-public abstract class CatEntitiesMixin extends AnimalEntity {
-    protected CatEntitiesMixin(EntityType<? extends AnimalEntity> type, World world) {
-        super(type, world);
-    }
+import java.util.Collection;
 
-    @Inject(method = "initGoals", at = @At("RETURN"))
-    private void initGoals(CallbackInfo ci) {
-        this.targetSelector.add(1, new TargetGoal<>(this, CreeperlingEntity.class, false));
+@Mixin(TestManager.class)
+public abstract class TestManagerMixin {
+    @Shadow @Final private Collection<GameTestState> tests;
+
+    // Ensure that when a test is restarted, it keeps track of its successor state
+    @Inject(method = "start", at = @At("HEAD"))
+    private void linkReplacementTests(GameTestState test, CallbackInfo ci) {
+        this.tests.stream().filter(t -> t.getTestFunction() == test.getTestFunction()).findFirst().ifPresent(t -> ((FixedGameTestState) t).cs$setReplacementGameTest(test));
     }
 }

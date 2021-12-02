@@ -15,16 +15,11 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program; If not, see <https://www.gnu.org/licenses>.
  */
-package io.github.ladysnake.creeperspores;
+package io.github.ladysnake.creepersporestest.flakyfix;
 
-public enum CreeperGrief {
-    VANILLA, CHARGED, NEVER;
+import net.minecraft.test.GameTestState;
 
-    public boolean shouldGrief(boolean charged) {
-        return switch (this) {
-            case NEVER -> false;
-            case CHARGED -> charged;
-            case VANILLA -> true;
-        };
-    }
+public interface FixedGameTestState {
+    void cs$setReplacementGameTest(GameTestState state);
+    GameTestState cs$getReplacementGameTest();
 }

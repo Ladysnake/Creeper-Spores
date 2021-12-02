@@ -17,6 +17,7 @@
  */
 package io.github.ladysnake.creeperspores;
 
+import com.google.common.base.Suppliers;
 import io.github.ladysnake.creeperspores.common.CreeperSporeEffect;
 import io.github.ladysnake.creeperspores.common.CreeperlingEntity;
 import io.github.ladysnake.creeperspores.mixin.EntityTypeAccessor;
@@ -28,7 +29,7 @@ import net.fabricmc.fabric.api.gamerule.v1.rule.DoubleRule;
 import net.fabricmc.fabric.api.gamerule.v1.rule.EnumRule;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
-import net.fabricmc.fabric.api.tag.TagRegistry;
+import net.fabricmc.fabric.api.tag.TagFactory;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -40,7 +41,6 @@ import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.item.Item;
 import net.minecraft.tag.Tag;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.Lazy;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
@@ -49,8 +49,13 @@ import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
 import java.util.function.BiConsumer;
+import java.util.function.Supplier;
 
 public class CreeperSpores implements ModInitializer {
     public static final Logger LOGGER = LogManager.getLogger("creeper-spores");
@@ -63,7 +68,7 @@ public class CreeperSpores implements ModInitializer {
             new Identifier("mobz", "crip_entity")
     ));
 
-    public static final Tag<Item> FERTILIZERS = TagRegistry.item(new Identifier("fabric", "fertilizers"));
+    public static final Tag<Item> FERTILIZERS = TagFactory.ITEM.create(new Identifier("fabric", "fertilizers"));
 
     public static final Identifier CREEPERLING_FERTILIZATION_PACKET = id("creeperling-fertilization");
     public static final String GIVE_SPORES_TAG = "cspores:giveSpores";
@@ -142,12 +147,14 @@ public class CreeperSpores implements ModInitializer {
 
     @Contract(pure = true)
     private static EntityType<CreeperlingEntity> createCreeperlingType(EntityType<? extends LivingEntity> creeperType) {
-        Lazy<CreeperEntry> kind = new Lazy<>(() -> Objects.requireNonNull(CreeperEntry.get(creeperType)));
+        Supplier<CreeperEntry> kind = Suppliers.memoize(() -> CreeperEntry.get(creeperType));
         EntityType<CreeperlingEntity> creeperlingType = FabricEntityTypeBuilder
                 .create(creeperType.getSpawnGroup(),
-                        (EntityType<CreeperlingEntity> type, World world) -> new CreeperlingEntity(kind.get(), world))
+                        (EntityType<CreeperlingEntity> type, World world) -> new CreeperlingEntity(Objects.requireNonNull(kind.get()), world))
                 .dimensions(EntityDimensions.changing(creeperType.getWidth() / 2f, creeperType.getHeight() / 2f))
-                .trackable(64, 1, true)
+                .trackRangeBlocks(64)
+                .trackedUpdateRate(1)
+                .forceTrackedVelocityUpdates(true)
                 .build();
         ((EntityTypeAccessor) creeperlingType).setTranslationKey("entity.creeperspores.creeperling");
         return creeperlingType;

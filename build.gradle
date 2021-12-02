@@ -2,8 +2,10 @@ import java.time.Year
 import com.modrinth.minotaur.TaskModrinthUpload
 
 plugins {
-    id "fabric-loom" version "0.8-SNAPSHOT"
-    id 'org.cadixdev.licenser' version '0.6.0'
+    id "fabric-loom" version "0.10-SNAPSHOT"
+    id 'org.quiltmc.quilt-mappings-on-loom' version "3.1.1"
+    id 'io.github.juuxel.loom-quiltflower-mini' version "1.1.0"
+    id 'org.cadixdev.licenser' version '0.6.1'
     id 'com.matthewprenger.cursegradle' version '1.4.0'
     id 'com.jfrog.artifactory' version '4.21.0'
     id 'org.ajoberstar.grgit' version '3.1.1'
@@ -12,7 +14,7 @@ plugins {
     id 'maven-publish'
 }
 
-sourceCompatibility = targetCompatibility = JavaVersion.VERSION_16
+sourceCompatibility = targetCompatibility = JavaVersion.VERSION_17
 
 archivesBaseName = project.name
 version = project.mod_version
@@ -28,6 +30,46 @@ processResources {
                 "mod_name": project.mod_name
     }
 }
+
+sourceSets {
+    testmod {
+        compileClasspath += main.compileClasspath
+        runtimeClasspath += main.runtimeClasspath
+    }
+}
+
+loom {
+    runs {
+        testmodClient {
+            client()
+            name = "Testmod Client"
+            source sourceSets.testmod
+        }
+        testmodServer {
+            server()
+            name = "Testmod Server"
+            source sourceSets.testmod
+        }
+        gametest {
+            inherit testmodServer
+
+            name "Game Test"
+
+            // Enable the gametest runner
+            vmArg "-Dfabric-api.gametest"
+            vmArg "-Dfabric-api.gametest.report-file=${project.buildDir}/junit.xml"
+            runDir "build/gametest"
+        }
+        autoTestServer {
+            inherit testmodServer
+
+            name "Auto Test Server"
+
+            vmArg "-Dfabric.autoTest"
+        }
+    }
+}
+check.dependsOn runGametest
 
 repositories {
     maven {
@@ -50,10 +92,12 @@ repositories {
 
 dependencies {
     minecraft "com.mojang:minecraft:${minecraft_version}"
-    mappings "net.fabricmc:yarn:${yarn_mappings}:v2"
+    mappings(loom.layered {
+        addLayer(quiltMappings.mappings("org.quiltmc:quilt-mappings:${minecraft_version}+build.${project.quilt_mappings}:v2"))
+    })
     modImplementation "net.fabricmc:fabric-loader:${loader_version}"
 
-    modRuntime ("com.terraformersmc:modmenu:${modmenu_version}") {
+    modRuntimeOnly ("com.terraformersmc:modmenu:${modmenu_version}") {
         exclude group: 'net.fabricmc.fabric-api'
     }
 
@@ -63,6 +107,8 @@ dependencies {
 
     compileOnly "com.google.code.findbugs:jsr305:3.0.2"
     compileOnly "org.jetbrains:annotations:19.0.0"
+
+    testmodImplementation sourceSets.main.output
 }
 
 tasks.withType(JavaCompile).configureEach {
@@ -72,8 +118,8 @@ tasks.withType(JavaCompile).configureEach {
     // If Javadoc is generated, this must be specified in that task too.
     it.options.encoding = "UTF-8"
 
-    // Minecraft 1.17 (21w19a) upwards uses Java 16.
-    it.options.release.set(16)
+    // Minecraft 1.18 (pre2) upwards uses Java 17.
+    it.options.release.set(17)
 }
 
 

@@ -1,0 +1,14 @@
+{
+  "required": true,
+  "package": "io.github.ladysnake.creepersporestest.mixin",
+  "compatibilityLevel": "JAVA_16",
+  "mixins": [
+    "CreeperEntityAccessor",
+    "flakyfix.GameTestStateMixin",
+    "flakyfix.TestManagerMixin",
+    "flakyfix.TestSetMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

@@ -30,7 +30,6 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
@@ -50,7 +49,7 @@ public abstract class LivingEntityMixin extends Entity {
     @Inject(method = "damage", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/LivingEntity;isDead()Z", ordinal = 1))
     private void spawnCreeperling(DamageSource cause, float amount, CallbackInfoReturnable<Boolean> cir) {
         for (CreeperEntry creeperEntry : CreeperEntry.all()) {
-            StatusEffectInstance spores = this.getStatusEffect(creeperEntry.sporeEffect);
+            StatusEffectInstance spores = this.getStatusEffect(creeperEntry.sporeEffect());
             if (spores != null) {
                 float chance = 0.2f * (spores.getAmplifier() + 1);
                 if (this.getHealth() <= 0.0f) {

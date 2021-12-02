@@ -22,14 +22,13 @@ import io.github.ladysnake.creeperspores.CreeperSpores;
 import io.github.ladysnake.creeperspores.common.CreeperlingEntity;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityRendererRegistry;
-import net.fabricmc.fabric.api.network.ClientSidePacketRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 
 public class CreeperSporesClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
-        EntityRendererRegistry.INSTANCE.register(
-                CreeperEntry.getVanilla().creeperlingType,
+        EntityRendererRegistry.register(
+                CreeperEntry.getVanilla().creeperlingType(),
                 (context) -> new CreeperlingEntityRenderer(context, CreeperlingEntityRenderer.DEFAULT_SKIN)
         );
         ClientPlayNetworking.registerGlobalReceiver(

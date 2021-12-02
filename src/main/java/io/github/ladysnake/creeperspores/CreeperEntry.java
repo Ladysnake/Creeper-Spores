@@ -29,7 +29,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-public final class CreeperEntry {
+public record CreeperEntry(EntityType<? extends LivingEntity> creeperType,
+                           EntityType<CreeperlingEntity> creeperlingType,
+                           CreeperSporeEffect sporeEffect) {
     private static final Map<EntityType<?>, CreeperEntry> CREEPER_ENTRIES = new HashMap<>();
 
     static void register(EntityType<? extends LivingEntity> type, EntityType<CreeperlingEntity> creeperlingType, CreeperSporeEffect sporesEffect) {
@@ -47,16 +49,6 @@ public final class CreeperEntry {
 
     public static CreeperEntry getVanilla() {
         return Objects.requireNonNull(CREEPER_ENTRIES.get(EntityType.CREEPER));
-    }
-
-    public final EntityType<? extends LivingEntity> creeperType;
-    public final EntityType<CreeperlingEntity> creeperlingType;
-    public final CreeperSporeEffect sporeEffect;
-
-    private CreeperEntry(EntityType<? extends LivingEntity> creeperType, EntityType<CreeperlingEntity> creeperlingType, CreeperSporeEffect sporeEffect) {
-        this.creeperType = creeperType;
-        this.creeperlingType = creeperlingType;
-        this.sporeEffect = sporeEffect;
     }
 
     /**

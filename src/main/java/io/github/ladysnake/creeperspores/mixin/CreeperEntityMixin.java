@@ -69,7 +69,7 @@ public abstract class CreeperEntityMixin extends HostileEntity implements SporeS
             double exposure = Explosion.getExposure(center, victim);
             CreeperEntry creeperEntry = CreeperEntry.get(this.getType());
             if (creeperEntry != null) {
-                victim.addStatusEffect(new StatusEffectInstance(creeperEntry.sporeEffect, (int) Math.round(CreeperSpores.MAX_SPORE_TIME * exposure)));
+                victim.addStatusEffect(new StatusEffectInstance(creeperEntry.sporeEffect(), (int) Math.round(CreeperSpores.MAX_SPORE_TIME * exposure)));
             }
         }
     }

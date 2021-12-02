@@ -21,17 +21,9 @@ import io.github.ladysnake.creeperspores.CreeperEntry;
 import io.github.ladysnake.creeperspores.CreeperSpores;
 import io.github.ladysnake.creeperspores.mixin.EntityAccessor;
 import io.netty.buffer.Unpooled;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.EnvironmentInterface;
-import net.fabricmc.api.EnvironmentInterfaces;
-import net.fabricmc.fabric.api.network.PacketContext;
-import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.minecraft.block.Material;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayNetworkHandler;
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.render.entity.feature.SkinOverlayOwner;
+import net.minecraft.client.render.entity.feature.ConditionalOverlayOwner;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityData;
 import net.minecraft.entity.EntityType;
@@ -84,11 +76,7 @@ import java.util.Objects;
 import java.util.Random;
 import java.util.UUID;
 
-@EnvironmentInterfaces({@EnvironmentInterface(
-        value = EnvType.CLIENT,
-        itf = SkinOverlayOwner.class
-)})
-public class CreeperlingEntity extends PathAwareEntity implements SkinOverlayOwner {
+public class CreeperlingEntity extends PathAwareEntity implements ConditionalOverlayOwner {
     private static final TrackedData<Boolean> CHARGED = DataTracker.registerData(CreeperlingEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
     public static final int MATURATION_TIME = 20 * 60 * 8;
 
@@ -99,7 +87,7 @@ public class CreeperlingEntity extends PathAwareEntity implements SkinOverlayOwn
     private FleeEntityGoal<PlayerEntity> fleeGoal;
 
     public CreeperlingEntity(CreeperEntry kind, World world) {
-        super(kind.creeperlingType, world);
+        super(kind.creeperlingType(), world);
         this.kind = kind;
     }
 
@@ -115,7 +103,7 @@ public class CreeperlingEntity extends PathAwareEntity implements SkinOverlayOwn
     }
 
     @Override
-    public boolean shouldRenderOverlay() {
+    public boolean isOverlayConditionMet() {
         return this.isCharged();
     }
 
@@ -159,7 +147,7 @@ public class CreeperlingEntity extends PathAwareEntity implements SkinOverlayOwn
 
     public static boolean interactSpawnEgg(PlayerEntity player, Entity interacted, ItemStack stack, CreeperEntry kind) {
         Item item = stack.getItem();
-        if (item instanceof SpawnEggItem && ((SpawnEggItem)item).getEntityType(stack.getTag()) == EntityType.CREEPER) {
+        if (item instanceof SpawnEggItem && ((SpawnEggItem)item).getEntityType(stack.getNbt()) == EntityType.CREEPER) {
             if (!interacted.world.isClient) {
                 CreeperlingEntity creeperling = kind.spawnCreeperling(interacted);
                 if (creeperling != null) {
@@ -305,9 +293,9 @@ public class CreeperlingEntity extends PathAwareEntity implements SkinOverlayOwn
                 ++this.ticksInSunlight;
             }
             if (this.ticksInSunlight >= MATURATION_TIME) {
-                LivingEntity adult = kind.creeperType.create(world);
+                LivingEntity adult = kind.creeperType().create(world);
                 if (adult == null) {    // fallback to vanilla creeper
-                    adult = Objects.requireNonNull(CreeperEntry.getVanilla().creeperType.create(world));
+                    adult = Objects.requireNonNull(CreeperEntry.getVanilla().creeperType().create(world));
                 }
 
                 EntityAttributeInstance adultMaxHealthAttr = adult.getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH);

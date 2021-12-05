@@ -19,7 +19,6 @@ package io.github.ladysnake.creeperspores.mixin;
 
 import com.mojang.serialization.DynamicLike;
 import io.github.ladysnake.creeperspores.CreeperSpores;
-import net.fabricmc.fabric.api.gamerule.v1.rule.EnumRule;
 import net.minecraft.world.GameRules;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;

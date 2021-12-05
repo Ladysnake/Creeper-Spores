@@ -20,13 +20,14 @@ package io.github.ladysnake.creeperspores.mixin;
 import io.github.ladysnake.creeperspores.common.SporeSpreader;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.explosion.Explosion;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.ModifyVariable;
+import org.spongepowered.asm.mixin.injection.Redirect;
 
 import javax.annotation.Nullable;
 
@@ -43,11 +44,11 @@ public abstract class ExplosionMixin {
 
 
     // Using ModifyVariable is way easier than an Inject capturing every local
-    @ModifyVariable(method = "collectBlocksAndDamageEntities", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/Entity;damage(Lnet/minecraft/entity/damage/DamageSource;F)Z"))
-    private Entity spreadSpores(Entity affectedEntity) {
+    @Redirect(method = "collectBlocksAndDamageEntities", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/Entity;damage(Lnet/minecraft/entity/damage/DamageSource;F)Z"))
+    private boolean spreadSpores(Entity affectedEntity, DamageSource source, float amount) {
         if (this.getCausingEntity() instanceof SporeSpreader) {
             ((SporeSpreader) this.getCausingEntity()).spreadSpores((Explosion) (Object) this, new Vec3d(this.x, this.y, this.z), affectedEntity);
         }
-        return affectedEntity;
+        return affectedEntity.damage(source, amount);
     }
 }

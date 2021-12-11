@@ -43,7 +43,7 @@ public abstract class ExplosionMixin {
 
 
     // Using ModifyVariable is way easier than an Inject capturing every local
-    @ModifyVariable(method = "collectBlocksAndDamageEntities", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/Entity;damage(Lnet/minecraft/entity/damage/DamageSource;F)Z"))
+    @ModifyVariable(method = "collectBlocksAndDamageEntities", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/Entity;damage(Lnet/minecraft/entity/damage/DamageSource;F)Z", shift = At.Shift.AFTER), ordinal = 0)
     private Entity spreadSpores(Entity affectedEntity) {
         if (this.getCausingEntity() instanceof SporeSpreader) {
             ((SporeSpreader) this.getCausingEntity()).spreadSpores((Explosion) (Object) this, new Vec3d(this.x, this.y, this.z), affectedEntity);

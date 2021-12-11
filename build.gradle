@@ -104,6 +104,7 @@ dependencies {
     modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
 
 //    modRuntime "curse.maven:mobz-336554:2826831"
+    modRuntime "curse.maven:carpet-349239:3542018"
 
     compileOnly "com.google.code.findbugs:jsr305:3.0.2"
     compileOnly "org.jetbrains:annotations:19.0.0"

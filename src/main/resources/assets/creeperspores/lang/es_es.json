@@ -1,0 +1,12 @@
+{
+  "effect.creeperspores.creeper_spore": "Esporas de creeper",
+  "effect.creeperspores.generic_spore": "Esporas de %s",
+  "entity.creeperspores.creeperling": "Creepercito",
+  "item.creeperspores.creeperling_spawn_egg": "Generar creepercito",
+  "gamerule.creeper-spores:creeperGrief": "Explosiones de creeper destructivas",
+  "gamerule.creeper-spores:creeperGrief.vanilla": "Siempre",
+  "gamerule.creeper-spores:creeperGrief.charged": "Cargado",
+  "gamerule.creeper-spores:creeperGrief.never": "Nunca",
+  "gamerule.creeper-spores:creeperGrief.description": "VANILLA = todos los creepers pueden destruir terreno; CHARGED = solo los creepers cargados; NEVER = ningún creeper será destructivo.",
+  "gamerule.creeper-spores:creeperReplaceChance": "Posibilidad de reemplazar un creeper por un creepercito"
+}

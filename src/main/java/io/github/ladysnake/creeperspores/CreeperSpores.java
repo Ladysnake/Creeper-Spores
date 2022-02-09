@@ -36,7 +36,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.DefaultAttributeRegistry;
 import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.effect.StatusEffectType;
+import net.minecraft.entity.effect.StatusEffectCategory;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.item.Item;
 import net.minecraft.tag.Tag;
@@ -142,7 +142,7 @@ public class CreeperSpores implements ModInitializer {
 
     @Contract(pure = true)
     private static CreeperSporeEffect createCreeperSporesEffect(EntityType<?> creeperType) {
-        return new CreeperSporeEffect(StatusEffectType.NEUTRAL, 0x22AA00, creeperType);
+        return new CreeperSporeEffect(StatusEffectCategory.NEUTRAL, 0x22AA00, creeperType);
     }
 
     @Contract(pure = true)

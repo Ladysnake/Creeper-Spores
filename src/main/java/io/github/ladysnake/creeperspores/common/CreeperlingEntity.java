@@ -23,7 +23,7 @@ import io.github.ladysnake.creeperspores.mixin.EntityAccessor;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.minecraft.block.Material;
-import net.minecraft.client.render.entity.feature.ConditionalOverlayOwner;
+import net.minecraft.client.render.entity.feature.SkinOverlayOwner;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityData;
 import net.minecraft.entity.EntityType;
@@ -76,7 +76,7 @@ import java.util.Objects;
 import java.util.Random;
 import java.util.UUID;
 
-public class CreeperlingEntity extends PathAwareEntity implements ConditionalOverlayOwner {
+public class CreeperlingEntity extends PathAwareEntity implements SkinOverlayOwner {
     private static final TrackedData<Boolean> CHARGED = DataTracker.registerData(CreeperlingEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
     public static final int MATURATION_TIME = 20 * 60 * 8;
 
@@ -103,7 +103,7 @@ public class CreeperlingEntity extends PathAwareEntity implements ConditionalOve
     }
 
     @Override
-    public boolean isOverlayConditionMet() {
+    public boolean shouldRenderOverlay() {
         return this.isCharged();
     }
 

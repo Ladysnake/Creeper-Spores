@@ -23,7 +23,7 @@ import net.minecraft.client.resource.language.I18n;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffect;
-import net.minecraft.entity.effect.StatusEffectType;
+import net.minecraft.entity.effect.StatusEffectCategory;
 
 import java.util.Objects;
 import java.util.function.Supplier;
@@ -32,7 +32,7 @@ public class CreeperSporeEffect extends StatusEffect {
     private final EntityType<?> creeperType;
     private final Supplier<CreeperEntry> creeperEntry;
 
-    public CreeperSporeEffect(StatusEffectType type, int color, EntityType<?> creeperType) {
+    public CreeperSporeEffect(StatusEffectCategory type, int color, EntityType<?> creeperType) {
         super(type, color);
         this.creeperType = creeperType;
         this.creeperEntry = Suppliers.memoize(() -> Objects.requireNonNull(CreeperEntry.get(this.creeperType)));

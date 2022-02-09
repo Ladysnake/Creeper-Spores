@@ -19,7 +19,7 @@ package io.github.ladysnake.creeperspores.mixin;
 
 import io.github.ladysnake.creeperspores.common.CreeperlingEntity;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ai.goal.TargetGoal;
+import net.minecraft.entity.ai.goal.ActiveTargetGoal;
 import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.passive.CatEntity;
 import net.minecraft.entity.passive.OcelotEntity;
@@ -37,6 +37,6 @@ public abstract class CatEntitiesMixin extends AnimalEntity {
 
     @Inject(method = "initGoals", at = @At("RETURN"))
     private void initGoals(CallbackInfo ci) {
-        this.targetSelector.add(1, new TargetGoal<>(this, CreeperlingEntity.class, false));
+        this.targetSelector.add(1, new ActiveTargetGoal<>(this, CreeperlingEntity.class, false));
     }
 }

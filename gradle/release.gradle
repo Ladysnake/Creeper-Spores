@@ -1,5 +1,3 @@
-apply from: 'https://raw.githubusercontent.com/OnyxStudios/Gradle-Scripts/master/scripts/fabric/publish/changelog.gradle'
-
 task checkGitStatus() {
     group = 'publishing'
     description = 'Checks that the git repository is in a state suitable for release'
@@ -68,14 +66,7 @@ artifactoryPublish.dependsOn build
 publishing {
     publications {
         mavenJava(MavenPublication) {
-            // add all the jars that should be included when publishing to maven
-            artifact(remapJar) {
-                classifier ''
-                builtBy remapJar
-            }
-            artifact(sourcesJar) {
-                builtBy remapSourcesJar
-            }
+            from components.java
         }
     }
 

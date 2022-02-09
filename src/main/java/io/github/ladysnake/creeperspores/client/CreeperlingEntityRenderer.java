@@ -1,6 +1,6 @@
 /*
  * Creeper Spores
- * Copyright (C) 2019-2021 Ladysnake
+ * Copyright (C) 2019-2022 Ladysnake
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -19,8 +19,6 @@ package io.github.ladysnake.creeperspores.client;
 
 import io.github.ladysnake.creeperspores.common.CreeperlingEntity;
 import io.github.ladysnake.creeperspores.mixin.client.EntityRendererAccessor;
-import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityRendererRegistry;
-import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.entity.MobEntityRenderer;

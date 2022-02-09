@@ -1,6 +1,6 @@
 /*
  * Creeper Spores
- * Copyright (C) 2019-2021 Ladysnake
+ * Copyright (C) 2019-2022 Ladysnake
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -19,7 +19,6 @@ package io.github.ladysnake.creeperspores.mixin;
 
 import com.mojang.serialization.DynamicLike;
 import io.github.ladysnake.creeperspores.CreeperSpores;
-import net.fabricmc.fabric.api.gamerule.v1.rule.EnumRule;
 import net.minecraft.world.GameRules;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;

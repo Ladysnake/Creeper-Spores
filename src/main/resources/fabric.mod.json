@@ -32,5 +32,11 @@
   },
   "suggests": {
     "reactivecreepers": "*"
+  },
+  "contact": {
+    "sources": "https://github.com/Ladysnake/Creeper-Spores",
+    "issues": "https://github.com/Ladysnake/Creeper-Spores/issues",
+    "discord": "ladysnake.glitch.me/discord",
+    "homepage": "https://ladysnake.github.io/wiki/creeper-spores"
   }
 }

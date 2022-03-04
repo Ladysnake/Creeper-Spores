@@ -1,18 +1,6 @@
-import com.modrinth.minotaur.TaskModrinthUpload
-
-import java.time.Year
-
 plugins {
-    id "fabric-loom" version "0.11-SNAPSHOT"
-    id 'org.quiltmc.quilt-mappings-on-loom' version "3.1.1"
+    id 'io.github.ladysnake.chenille' version '0.6.1'
     id 'io.github.juuxel.loom-quiltflower' version "1.6.0"
-    id 'org.cadixdev.licenser' version '0.6.1'
-    id 'com.matthewprenger.cursegradle' version '1.4.0'
-    id 'com.jfrog.artifactory' version '4.21.0'
-    id 'org.ajoberstar.grgit' version '3.1.1'
-    id 'com.github.breadmoirai.github-release' version '2.2.12'
-    id 'com.modrinth.minotaur' version '1.2.1'
-    id 'maven-publish'
 }
 
 sourceCompatibility = targetCompatibility = JavaVersion.VERSION_17
@@ -20,6 +8,21 @@ sourceCompatibility = targetCompatibility = JavaVersion.VERSION_17
 archivesBaseName = project.name
 version = project.mod_version
 group = project.maven_group
+
+chenille {
+    configurePublishing {
+        withArtifactory()
+        withCurseforgeRelease()
+        withGithubRelease()
+        withModrinthRelease()
+    }
+    configureTestmod {
+        withDependencyConfiguration()
+    }
+
+    javaVersion = 17
+    license = 'LGPL'
+}
 
 processResources {
     inputs.property "version", project.version
@@ -31,38 +34,6 @@ processResources {
                 "mod_name": project.mod_name
     }
 }
-
-sourceSets {
-    testmod {
-        compileClasspath += main.compileClasspath
-        runtimeClasspath += main.runtimeClasspath
-    }
-}
-
-loom {
-    runs {
-        gametest {
-            server()
-            source sourceSets.testmod
-
-            name "Game Test"
-
-            // Enable the gametest runner
-            vmArg "-Dfabric-api.gametest"
-            vmArg "-Dfabric-api.gametest.report-file=${project.buildDir}/junit.xml"
-            runDir "build/gametest"
-        }
-        autoTestServer {
-            server()
-            source sourceSets.testmod
-
-            name "Auto Test Server"
-
-            vmArg "-Dfabric.autoTest"
-        }
-    }
-}
-check.dependsOn runGametest
 
 repositories {
     maven {
@@ -103,17 +74,6 @@ dependencies {
     testmodImplementation sourceSets.main.output
 }
 
-tasks.withType(JavaCompile).configureEach {
-    // ensure that the encoding is set to UTF-8, no matter what the system default is
-    // this fixes some edge cases with special characters not displaying correctly
-    // see http://yodaconditions.net/blog/fix-for-java-file-encoding-problems-with-gradle.html
-    // If Javadoc is generated, this must be specified in that task too.
-    it.options.encoding = "UTF-8"
-
-    // Minecraft 1.18 (pre2) upwards uses Java 17.
-    it.options.release.set(17)
-}
-
 
 java {
     // Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
@@ -121,33 +81,3 @@ java {
     // If you remove this line, sources will not be generated.
     withSourcesJar()
 }
-
-license {
-    header = rootProject.file("code_quality/${project.license_header}_HEADER.txt")
-
-    include "**/*.java"
-
-    newLine.set(false) // Disables the empty line between the header and package name
-    //ignoreFailures = true //Ignore failures and only print a warning on license violations
-
-    //export variables
-    ext {
-        year = Year.now()
-        projectDisplayName = project.mod_name
-        projectOwners = rootProject.owners
-        if (project.license_header.contains('GPL')) {
-            if (!project.hasProperty("gpl_version")) {
-                throw new RuntimeException("GPL version needs to be specified through the 'gpl_version' property")
-            }
-            gplVersion = project.gpl_version
-        }
-    }
-}
-
-ext {
-    // no idea how else to import TaskModrinthUpload from release.gradle
-    ModrinthUpload = TaskModrinthUpload
-}
-
-apply from: 'gradle/utilities.gradle'
-apply from: 'gradle/release.gradle'

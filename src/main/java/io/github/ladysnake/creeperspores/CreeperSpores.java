@@ -29,7 +29,6 @@ import net.fabricmc.fabric.api.gamerule.v1.rule.DoubleRule;
 import net.fabricmc.fabric.api.gamerule.v1.rule.EnumRule;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
-import net.fabricmc.fabric.api.tag.TagFactory;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -39,7 +38,7 @@ import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.effect.StatusEffectCategory;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.item.Item;
-import net.minecraft.tag.Tag;
+import net.minecraft.tag.TagKey;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.GameRules;
@@ -68,7 +67,7 @@ public class CreeperSpores implements ModInitializer {
             new Identifier("mobz", "crip_entity")
     ));
 
-    public static final Tag<Item> FERTILIZERS = TagFactory.ITEM.create(new Identifier("fabric", "fertilizers"));
+    public static final TagKey<Item> FERTILIZERS = TagKey.of(Registry.ITEM_KEY, new Identifier("fabric", "fertilizers"));
 
     public static final Identifier CREEPERLING_FERTILIZATION_PACKET = id("creeperling-fertilization");
     public static final String GIVE_SPORES_TAG = "cspores:giveSpores";
@@ -88,8 +87,8 @@ public class CreeperSpores implements ModInitializer {
     }
 
     public static <T> void visitRegistry(Registry<T> registry, BiConsumer<Identifier, T> visitor) {
-        registry.getIds().forEach(id -> visitor.accept(id, registry.get(id)));
         RegistryEntryAddedCallback.event(registry).register((index, identifier, entry) -> visitor.accept(identifier, entry));
+        new HashSet<>(registry.getIds()).forEach(id -> visitor.accept(id, registry.get(id)));
     }
 
     @Override

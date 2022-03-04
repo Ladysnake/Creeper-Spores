@@ -131,7 +131,7 @@ public class CreeperlingEntity extends PathAwareEntity implements SkinOverlayOwn
     @Override
     protected ActionResult interactMob(PlayerEntity player, Hand hand) {
         ItemStack held = player.getStackInHand(hand);
-        if (CreeperSpores.FERTILIZERS.contains(held.getItem())) {
+        if (held.isIn(CreeperSpores.FERTILIZERS)) {
             if (!world.isClient) {
                 this.applyFertilizer(held);
                 this.setTrusting(true);
@@ -234,7 +234,7 @@ public class CreeperlingEntity extends PathAwareEntity implements SkinOverlayOwn
         @SuppressWarnings("deprecation") float brightnessAtPos = worldView.getBrightness(pos);
         float favor = Math.max(brightnessAtPos - 0.5F, skyFavor);
         // They like good soils too
-        if (BlockTags.BAMBOO_PLANTABLE_ON.contains(worldView.getBlockState(pos.down(1)).getBlock())) {
+        if (worldView.getBlockState(pos.down(1)).isIn(BlockTags.BAMBOO_PLANTABLE_ON)) {
             favor += 3.0F;
         }
         // What they really want is camouflage

@@ -22,6 +22,7 @@ import net.minecraft.client.gui.screen.ingame.AbstractInventoryScreen;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.text.MutableText;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -44,11 +45,11 @@ public abstract class AbstractInventoryScreenMixin {
         renderedEffectsIndex = 0;
     }
 
-    @ModifyVariable(method = "drawStatusEffectDescriptions", at = @At(value = "STORE", ordinal = 0), ordinal = 0)
-    private String updateRenderedEffectName(String drawnString) {
+    @ModifyVariable(method = "getStatusEffectDescription", at = @At(value = "STORE", ordinal = 0), ordinal = 0)
+    private MutableText updateRenderedEffectName(MutableText drawnString) {
         StatusEffect renderedEffect = renderedEffects.get(renderedEffectsIndex++).getEffectType();
-        if (renderedEffect instanceof CreeperSporeEffect) {
-            return ((CreeperSporeEffect) renderedEffect).getLocalizedName();
+        if (renderedEffect instanceof CreeperSporeEffect sporeEffect) {
+            return sporeEffect.getLocalizedName().shallowCopy();
         }
         return drawnString;
     }

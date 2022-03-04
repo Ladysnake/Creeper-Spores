@@ -19,11 +19,12 @@ package io.github.ladysnake.creeperspores.common;
 
 import com.google.common.base.Suppliers;
 import io.github.ladysnake.creeperspores.CreeperEntry;
-import net.minecraft.client.resource.language.I18n;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectCategory;
+import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 
 import java.util.Objects;
 import java.util.function.Supplier;
@@ -53,8 +54,8 @@ public class CreeperSporeEffect extends StatusEffect {
         return "effect.creeperspores.creeper_spore";
     }
 
-    public String getLocalizedName() {
-        return I18n.translate("effect.creeperspores.generic_spore", I18n.translate(this.creeperType.getTranslationKey()));
+    public Text getLocalizedName() {
+        return new TranslatableText("effect.creeperspores.generic_spore", this.creeperType.getName());
     }
 
 }

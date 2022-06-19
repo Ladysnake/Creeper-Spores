@@ -20,13 +20,14 @@ package io.github.ladysnake.creeperspores.client;
 import io.github.ladysnake.creeperspores.CreeperEntry;
 import io.github.ladysnake.creeperspores.CreeperSpores;
 import io.github.ladysnake.creeperspores.common.CreeperlingEntity;
-import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
+import org.quiltmc.loader.api.ModContainer;
+import org.quiltmc.qsl.base.api.entrypoint.client.ClientModInitializer;
+import org.quiltmc.qsl.networking.api.client.ClientPlayNetworking;
 
 public class CreeperSporesClient implements ClientModInitializer {
     @Override
-    public void onInitializeClient() {
+    public void onInitializeClient(ModContainer mod) {
         EntityRendererRegistry.register(
                 CreeperEntry.getVanilla().creeperlingType(),
                 (context) -> new CreeperlingEntityRenderer(context, CreeperlingEntityRenderer.DEFAULT_SKIN)

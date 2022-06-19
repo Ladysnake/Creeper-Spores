@@ -21,7 +21,6 @@ import com.google.common.base.Suppliers;
 import io.github.ladysnake.creeperspores.common.CreeperSporeEffect;
 import io.github.ladysnake.creeperspores.common.CreeperlingEntity;
 import io.github.ladysnake.creeperspores.mixin.EntityTypeAccessor;
-import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.registry.RegistryEntryAddedCallback;
 import net.fabricmc.fabric.api.gamerule.v1.GameRuleFactory;
 import net.fabricmc.fabric.api.gamerule.v1.GameRuleRegistry;
@@ -35,7 +34,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.DefaultAttributeRegistry;
 import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.effect.StatusEffectCategory;
+import net.minecraft.entity.effect.StatusEffectType;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.item.Item;
 import net.minecraft.tag.TagKey;
@@ -47,12 +46,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
+import org.quiltmc.loader.api.ModContainer;
+import org.quiltmc.qsl.base.api.entrypoint.ModInitializer;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
@@ -67,7 +64,7 @@ public class CreeperSpores implements ModInitializer {
             new Identifier("mobz", "crip_entity")
     ));
 
-    public static final TagKey<Item> FERTILIZERS = TagKey.of(Registry.ITEM_KEY, new Identifier("fabric", "fertilizers"));
+    public static final TagKey<Item> FERTILIZERS = TagKey.of(Registry.ITEM_KEY, new Identifier("quilt", "fertilizers"));
 
     public static final Identifier CREEPERLING_FERTILIZATION_PACKET = id("creeperling-fertilization");
     public static final String GIVE_SPORES_TAG = "cspores:giveSpores";
@@ -92,7 +89,7 @@ public class CreeperSpores implements ModInitializer {
     }
 
     @Override
-    public void onInitialize() {
+    public void onInitialize(ModContainer mod) {
         visitRegistry(Registry.ENTITY_TYPE, (id, type) -> {
             if (CREEPER_LIKES.contains(id)) {
                 // can't actually check that the entity type is living, so just hope nothing goes wrong
@@ -141,7 +138,7 @@ public class CreeperSpores implements ModInitializer {
 
     @Contract(pure = true)
     private static CreeperSporeEffect createCreeperSporesEffect(EntityType<?> creeperType) {
-        return new CreeperSporeEffect(StatusEffectCategory.NEUTRAL, 0x22AA00, creeperType);
+        return new CreeperSporeEffect(StatusEffectType.NEUTRAL, 0x22AA00, creeperType);
     }
 
     @Contract(pure = true)

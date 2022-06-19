@@ -36,7 +36,7 @@ public class CreeperlingChargeFeatureRenderer extends EnergySwirlOverlayFeatureR
     }
 
     @Override
-    protected float getEnergySwirlX(float v) {
+    protected float getEnergySwirlOffsetX(float v) {
         return v * 0.01F;
     }
 

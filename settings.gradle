@@ -7,13 +7,16 @@ pluginManagement {
         }
         maven {
             name = 'Quilt'
-            url = "https://maven.quiltmc.org/repository/release"
+            url = 'https://maven.quiltmc.org/repository/release'
         }
         maven {
             name = 'Cotton'
             url = 'https://server.bbkr.space/artifactory/libs-release/'
         }
         gradlePluginPortal()
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
     }
 }
 rootProject.name = mod_name.toLowerCase(Locale.ROOT).replace(' ', '-')

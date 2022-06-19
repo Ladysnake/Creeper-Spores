@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "quilt_loader": {
+    "group": "io.github.ladysnake",
+    "id": "creeperspores",
+    "version": "${version}",
+    "metadata": {
+      "name": "Creeper Spores",
+      "description": "Creeper Spores !",
+      "contact": {
+        "sources": "https://github.com/Ladysnake/Creeper-Spores",
+        "issues": "https://github.com/Ladysnake/Creeper-Spores/issues",
+        "discord": "ladysnake.glitch.me/discord",
+        "homepage": "https://ladysnake.github.io/wiki/creeper-spores"
+      },
+      "icon": "assets/creeperspores/textures/logo.png"
+    },
+    "intermediate_mappings": "net.fabricmc:intermediary",
+    "entrypoints": {
+      "init": "io.github.ladysnake.creeperspores.CreeperSpores",
+      "client_init": "io.github.ladysnake.creeperspores.client.CreeperSporesClient"
+    },
+    "depends": [
+      {
+        "id": "quilt_loader",
+        "versions": ">=0.17.0-"
+      },
+      {
+        "id": "quilted_fabric_api",
+        "versions": ">=2.0.0-"
+      },
+      {
+        "id": "minecraft",
+        "versions": ">=1.19"
+      },
+      {
+        "id": "java",
+        "versions": ">=17"
+      }
+    ]
+  },
+  "mixin": "mixins.creeperspores.common.json"
+}

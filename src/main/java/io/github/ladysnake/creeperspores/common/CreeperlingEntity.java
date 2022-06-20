@@ -63,6 +63,7 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.random.RandomGenerator;
 import net.minecraft.util.thread.ThreadExecutor;
 import net.minecraft.world.Difficulty;
@@ -230,11 +231,11 @@ public class CreeperlingEntity extends PathAwareEntity implements ConditionalOve
         // Creeperlings like sunlight
         int skyLightLevel = worldView.getLightLevel(LightType.SKY, pos);
         // method_28516 == getBrightness
-        float skyFavor = worldView.getDimension().getSkyAngle(skyLightLevel) * 3.0F;
+        float skyFavor = computeBrightnessByLightLevel(worldView.getDimension().ambientLight())[skyLightLevel] * 3.0F;
         // But they can do with artificial light if there is not anything better
-        // One day we will get in trouble for using this method, but in the mean time it's used by everything else
-        @SuppressWarnings("deprecation") float brightnessAtPos = worldView.getBrightness(pos);
-        float favor = Math.max(brightnessAtPos - 0.5F, skyFavor);
+        // One day we will get in trouble for using this method, but in the meantime it's used by everything else
+        float brightnessAtPos = worldView.method_42309(pos);
+        float favor = Math.max(brightnessAtPos, skyFavor);
         // They like good soils too
         if (worldView.getBlockState(pos.down(1)).isIn(BlockTags.BAMBOO_PLANTABLE_ON)) {
             favor += 3.0F;
@@ -245,6 +246,16 @@ public class CreeperlingEntity extends PathAwareEntity implements ConditionalOve
             favor += 4.0F;
         }
         return favor;
+    }
+    //this existed in DimensionType, apparently
+    private static float[] computeBrightnessByLightLevel(float ambientLight) {
+        float[] fs = new float[16];
+        for (int i = 0; i <= 15; ++i) {
+            float f = (float)i / 15.0f;
+            float g = f / (4.0f - 3.0f * f);
+            fs[i] = MathHelper.lerp(ambientLight, g, 1.0f);
+        }
+        return fs;
     }
 
     public boolean isCharged() {

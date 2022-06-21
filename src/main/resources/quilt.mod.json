@@ -7,13 +7,23 @@
     "metadata": {
       "name": "Creeper Spores",
       "description": "Creeper Spores !",
+      "contributors": {
+        "Pyrofab": "Author",
+        "doctor4t": "Artist"
+      },
       "contact": {
         "sources": "https://github.com/Ladysnake/Creeper-Spores",
         "issues": "https://github.com/Ladysnake/Creeper-Spores/issues",
         "discord": "ladysnake.glitch.me/discord",
         "homepage": "https://ladysnake.github.io/wiki/creeper-spores"
       },
-      "icon": "assets/creeperspores/textures/logo.png"
+      "icon": "assets/creeperspores/textures/logo.png",
+      "license": {
+        "name": "GNU Lesser General Public License v3.0",
+        "id": "LGPL-3",
+        "url": "https://www.gnu.org/licenses/lgpl-3.0.en.html",
+        "description": "Permissions of this copyleft license are conditioned on making available complete source code of licensed works and modifications under the same license or the GNU GPLv3. Copyright and license notices must be preserved. Contributors provide an express grant of patent rights. However, a larger work using the licensed work through interfaces provided by the licensed work may be distributed under different terms and without source code for the larger work."
+      }
     },
     "intermediate_mappings": "net.fabricmc:intermediary",
     "entrypoints": {

@@ -233,7 +233,6 @@ public class CreeperlingEntity extends PathAwareEntity implements ConditionalOve
         // method_28516 == getBrightness
         float skyFavor = computeBrightnessByLightLevel(worldView.getDimension().ambientLight())[skyLightLevel] * 3.0F;
         // But they can do with artificial light if there is not anything better
-        // One day we will get in trouble for using this method, but in the meantime it's used by everything else
         float brightnessAtPos = worldView.method_42309(pos);
         float favor = Math.max(brightnessAtPos, skyFavor);
         // They like good soils too

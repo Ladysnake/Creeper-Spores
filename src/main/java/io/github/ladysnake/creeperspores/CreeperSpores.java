@@ -64,7 +64,7 @@ public class CreeperSpores implements ModInitializer {
             new Identifier("mobz", "crip_entity")
     ));
 
-    public static final TagKey<Item> FERTILIZERS = TagKey.of(Registry.ITEM_KEY, new Identifier("quilt", "fertilizers"));
+    public static final TagKey<Item> FERTILIZERS = TagKey.of(Registry.ITEM_KEY, new Identifier("c", "fertilizers"));
 
     public static final Identifier CREEPERLING_FERTILIZATION_PACKET = id("creeperling-fertilization");
     public static final String GIVE_SPORES_TAG = "cspores:giveSpores";

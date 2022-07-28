@@ -21,7 +21,6 @@ import io.github.ladysnake.creeperspores.CreeperEntry;
 import io.github.ladysnake.creeperspores.CreeperSpores;
 import io.github.ladysnake.creeperspores.mixin.EntityAccessor;
 import io.netty.buffer.Unpooled;
-import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.minecraft.block.Material;
 import net.minecraft.client.render.entity.feature.ConditionalOverlayOwner;
 import net.minecraft.entity.Entity;
@@ -41,7 +40,6 @@ import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.entity.mob.CreeperEntity;
 import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.entity.passive.CatEntity;
 import net.minecraft.entity.passive.OcelotEntity;
@@ -73,10 +71,10 @@ import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import net.minecraft.world.WorldView;
+import org.quiltmc.qsl.networking.api.PlayerLookup;
 
 import javax.annotation.Nullable;
 import java.util.Objects;
-import java.util.Random;
 import java.util.UUID;
 
 public class CreeperlingEntity extends PathAwareEntity implements ConditionalOverlayOwner {
@@ -233,7 +231,7 @@ public class CreeperlingEntity extends PathAwareEntity implements ConditionalOve
         // method_28516 == getBrightness
         float skyFavor = computeBrightnessByLightLevel(worldView.getDimension().ambientLight())[skyLightLevel] * 3.0F;
         // But they can do with artificial light if there is not anything better
-        float brightnessAtPos = worldView.method_42309(pos);
+        float brightnessAtPos = worldView.m_jwglzkvy(pos);
         float favor = Math.max(brightnessAtPos, skyFavor);
         // They like good soils too
         if (worldView.getBlockState(pos.down(1)).isIn(BlockTags.BAMBOO_PLANTABLE_ON)) {

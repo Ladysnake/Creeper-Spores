@@ -37,7 +37,7 @@ public abstract class StatusEffectSpriteManagerMixin {
     @Shadow public abstract Sprite getSprite(StatusEffect statusEffect_1);
 
     @Inject(method = "getSprite", at = @At("HEAD"), cancellable = true)
-    private void getCreeperSporesSprite(StatusEffect effect, CallbackInfoReturnable<Sprite> cir) {
+    private void creeperspores$getCreeperSporesSprite(StatusEffect effect, CallbackInfoReturnable<Sprite> cir) {
         if (effect instanceof CreeperSporeEffect && effect != BASE_CREEPER_SPORES) {
             cir.setReturnValue(getSprite(BASE_CREEPER_SPORES));
         }

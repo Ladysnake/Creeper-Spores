@@ -36,7 +36,7 @@ public abstract class EntityRendererRegistryMixin {
     }
 
     @Inject(method = "register", at = @At(value = "RETURN"))
-    private static <E extends Entity> void onRendererRegistered(EntityType<? extends E> entityType, EntityRendererFactory<E> factory, CallbackInfo ci) {
+    private static <E extends Entity> void creeperspores$onRendererRegistered(EntityType<? extends E> entityType, EntityRendererFactory<E> factory, CallbackInfo ci) {
         CreeperEntry creeperEntry = CreeperEntry.get(entityType);
         if (creeperEntry != null) {
             register(creeperEntry.creeperlingType(), (context) -> CreeperlingEntityRenderer.createRenderer(context, factory));

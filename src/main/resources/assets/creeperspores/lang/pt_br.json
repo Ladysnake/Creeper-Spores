@@ -1,0 +1,12 @@
+{
+    "effect.creeperspores.creeper_spore": "Creeper Esporos",
+    "effect.creeperspores.generic_spore": "%s Esporos",
+    "entity.creeperspores.creeperling": "Creeperling",
+    "item.creeperspores.creeperling_spawn_egg": "Ovo gerador de Creeperling",
+    "gamerule.creeper-spores:creeperGrief": "Destrutivo Creeper        explosões",
+    "gamerule.creeper-spores:creeperGrief.vanilla": "Sempre",
+    "gamerule.creeper-spores:creeperGrief.charged": "Carregado",
+    "gamerule.creeper-spores:creeperGrief.never": "Nunca",
+    "gamerule.creeper-spores:creeperGrief.description": "VANILLA = todos os creepers podem destruir o terreno; CARREGADO = apenas creepers carregados; NUNCA = nenhuma creeper destruirá",
+    "gamerule.creeper-spores:creeperReplaceChance": "Chance de substituir creepers gerados por creeperlings"
+}

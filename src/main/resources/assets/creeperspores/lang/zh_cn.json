@@ -1,11 +1,12 @@
 {
-  "effect.creeperspores.creeper_spore": "爬行者孢子",
-  "effect.creeperspores.generic_spore": "%s 孢子",
-  "entity.creeperspores.creeperling": "年幼爬行者",
-  "item.creeperspores.creeperling_spawn_egg": "年幼爬行者刷怪蛋",
-  "gamerule.creeper-spores:creeperGrief": "爬行者爆炸破坏",
-  "gamerule.creeper-spores:creeperGrief.vanilla": "总是",
-  "gamerule.creeper-spores:creeperGrief.charged": "充电",
-  "gamerule.creeper-spores:creeperGrief.never": "永不",
-  "gamerule.creeper-spores:creeperGrief.description": "总是 = 所有爬行者都能破坏地形; 充电 = 仅充电爬行者; 永不 = 爬行者无破坏性"
+  "effect.creeperspores.creeper_spore": "苦力怕孢子",
+  "effect.creeperspores.generic_spore": "%s的孢子",
+  "entity.creeperspores.creeperling": "小苦力怕",
+  "item.creeperspores.creeperling_spawn_egg": "小苦力怕刷怪蛋",
+  "gamerule.creeper-spores:creeperGrief": "苦力怕爆炸破坏",
+  "gamerule.creeper-spores:creeperGrief.vanilla": "总是破坏",
+  "gamerule.creeper-spores:creeperGrief.charged": "仅充能",
+  "gamerule.creeper-spores:creeperGrief.never": "无破坏",
+  "gamerule.creeper-spores:creeperGrief.description": "总是破坏：所有苦力怕均可破坏地形；仅充能：只有充能的苦力怕才能破坏地形；无破坏：苦力怕无法破坏地形",
+  "gamerule.creeper-spores:creeperReplaceChance": "将生成的苦力怕替换为小苦力怕的概率"
 }

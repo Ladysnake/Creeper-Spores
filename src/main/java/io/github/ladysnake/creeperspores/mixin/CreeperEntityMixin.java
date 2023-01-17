@@ -52,8 +52,6 @@ public abstract class CreeperEntityMixin extends HostileEntity implements SporeS
 
     @Unique private TriState giveSpores = TriState.DEFAULT;
 
-    @Shadow @Final private static TrackedData<Boolean> CHARGED;
-
     protected CreeperEntityMixin(EntityType<? extends HostileEntity> type, World world) {
         super(type, world);
     }
@@ -85,15 +83,6 @@ public abstract class CreeperEntityMixin extends HostileEntity implements SporeS
         if (creeperEntry != null && CreeperlingEntity.interactSpawnEgg(player, this, stack, creeperEntry)) {
             cir.setReturnValue(true);
         }
-    }
-
-    @ModifyVariable(method = "explode", ordinal = 0, at = @At(value = "STORE", ordinal = 0))
-    private Explosion.DestructionType griefLessExplosion(Explosion.DestructionType explosionType) {
-        CreeperGrief grief = world.getGameRules().get(CreeperSpores.CREEPER_GRIEF).get();
-        if (!grief.shouldGrief(this.dataTracker.get(CHARGED))) {
-            return Explosion.DestructionType.NONE;
-        }
-        return explosionType;
     }
 
     @Inject(method = "writeCustomDataToNbt", at = @At("RETURN"))

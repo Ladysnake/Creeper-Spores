@@ -22,7 +22,7 @@ import io.github.ladysnake.creeperspores.CreeperSpores;
 import io.github.ladysnake.creeperspores.mixin.EntityAccessor;
 import io.netty.buffer.Unpooled;
 import net.minecraft.block.Material;
-import net.minecraft.client.render.entity.feature.ConditionalOverlayOwner;
+import net.minecraft.client.render.entity.feature.EnergySwirlOwner;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityData;
 import net.minecraft.entity.EntityType;
@@ -52,11 +52,11 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.packet.s2c.play.CustomPayloadS2CPacket;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.recipe.Ingredient;
+import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.tag.BlockTags;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
@@ -77,7 +77,7 @@ import javax.annotation.Nullable;
 import java.util.Objects;
 import java.util.UUID;
 
-public class CreeperlingEntity extends PathAwareEntity implements ConditionalOverlayOwner {
+public class CreeperlingEntity extends PathAwareEntity implements EnergySwirlOwner {
     private static final TrackedData<Boolean> CHARGED = DataTracker.registerData(CreeperlingEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
     public static final int MATURATION_TIME = 20 * 60 * 8;
 
@@ -104,7 +104,7 @@ public class CreeperlingEntity extends PathAwareEntity implements ConditionalOve
     }
 
     @Override
-    public boolean isOverlayConditionMet() {
+    public boolean isEnergySwirlActive() {
         return this.isCharged();
     }
 

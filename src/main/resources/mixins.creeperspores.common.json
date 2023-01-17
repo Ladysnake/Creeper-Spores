@@ -12,7 +12,8 @@
     "GameRuleKeyAccessor",
     "GameRulesMixin",
     "LivingEntityMixin",
-    "SpawnHelperMixin"
+    "SpawnHelperMixin",
+    "WorldMixin"
   ],
   "client": [
     "client.AbstractInventoryScreenMixin",

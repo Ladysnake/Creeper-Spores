@@ -57,7 +57,7 @@ public final class CsTestSuite implements FabricGameTest {
         IronGolemEntity golem = ctx.spawnMob(EntityType.IRON_GOLEM, 1, 0, 1);
         // Spores Level 5 gives a 100% chance to spawn creeperlings on death
         golem.addStatusEffect(new StatusEffectInstance(CreeperEntry.getVanilla().sporeEffect(), 5, 4));
-        golem.damage(DamageSource.ANVIL, 0);
+        golem.damage(DamageSource.DRAGON_BREATH, 0);
         ctx.waitAndRun(1, () -> {
             ctx.expectEntity(CreeperEntry.getVanilla().creeperlingType());
             ctx.complete();

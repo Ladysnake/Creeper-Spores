@@ -231,7 +231,7 @@ public class CreeperlingEntity extends PathAwareEntity implements EnergySwirlOwn
         // method_28516 == getBrightness
         float skyFavor = computeBrightnessByLightLevel(worldView.getDimension().ambientLight())[skyLightLevel] * 3.0F;
         // But they can do with artificial light if there is not anything better
-        float brightnessAtPos = worldView.m_jwglzkvy(pos);
+        float brightnessAtPos = worldView.method_42309(pos);
         float favor = Math.max(brightnessAtPos, skyFavor);
         // They like good soils too
         if (worldView.getBlockState(pos.down(1)).isIn(BlockTags.BAMBOO_PLANTABLE_ON)) {

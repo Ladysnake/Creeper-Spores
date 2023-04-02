@@ -18,6 +18,7 @@
 package io.github.ladysnake.creeperspores.mixin;
 
 import io.github.ladysnake.creeperspores.CreeperEntry;
+import io.github.ladysnake.creeperspores.CreeperSpores;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -55,7 +56,7 @@ public abstract class LivingEntityMixin extends Entity {
                 if (this.getHealth() <= 0.0f) {
                     chance *= 4;
                 }
-                if (cause.isExplosive()) {
+                if (cause.isTypeIn(CreeperSpores.SPAWNS_MORE_CREEPERLINGS)) {
                     chance *= 2;
                 }
                 if (random.nextFloat() < chance) {
@@ -68,7 +69,7 @@ public abstract class LivingEntityMixin extends Entity {
     @ModifyVariable(method = "damage", at = @At("HEAD"), ordinal = 0, argsOnly = true)
     private float dealDoubleFireDamage(float damageAmount, DamageSource damage) {
         //noinspection ConstantConditions
-        if ((Entity) this instanceof CreeperEntity && damage.isFire()) {
+        if ((Entity) this instanceof CreeperEntity && damage.isTypeIn(CreeperSpores.EXTRA_CREEPER_DAMAGE)) {
             return damageAmount * 2;
         }
         return damageAmount;

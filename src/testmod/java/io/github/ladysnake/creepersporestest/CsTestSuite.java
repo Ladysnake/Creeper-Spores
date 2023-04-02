@@ -20,11 +20,9 @@ package io.github.ladysnake.creepersporestest;
 import io.github.ladysnake.creeperspores.CreeperEntry;
 import io.github.ladysnake.creeperspores.common.CreeperlingEntity;
 import io.github.ladysnake.creepersporestest.mixin.CreeperEntityAccessor;
-import net.fabricmc.fabric.api.gametest.v1.FabricGameTest;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -36,8 +34,9 @@ import net.minecraft.test.TestContext;
 import net.minecraft.text.Text;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
+import org.quiltmc.qsl.testing.api.game.QuiltGameTest;
 
-public final class CsTestSuite implements FabricGameTest {
+public final class CsTestSuite implements QuiltGameTest {
 
     @GameTest(structureName = EMPTY_STRUCTURE)
     public void explosionsTweaksWork(TestContext ctx) {
@@ -57,7 +56,7 @@ public final class CsTestSuite implements FabricGameTest {
         IronGolemEntity golem = ctx.spawnMob(EntityType.IRON_GOLEM, 1, 0, 1);
         // Spores Level 5 gives a 100% chance to spawn creeperlings on death
         golem.addStatusEffect(new StatusEffectInstance(CreeperEntry.getVanilla().sporeEffect(), 5, 4));
-        golem.damage(DamageSource.DRAGON_BREATH, 0);
+        golem.damage(golem.world.getDamageSources().dragonBreath(), 0);
         ctx.waitAndRun(1, () -> {
             ctx.expectEntity(CreeperEntry.getVanilla().creeperlingType());
             ctx.complete();
@@ -85,7 +84,7 @@ public final class CsTestSuite implements FabricGameTest {
             creeperling.interact(player, Hand.MAIN_HAND);
         }
         ctx.waitAndRun(1, () -> {
-            ctx.dontExpectEntity(CreeperEntry.getVanilla().creeperlingType());
+            ctx.expectNoEntity(CreeperEntry.getVanilla().creeperlingType());
             ctx.expectEntityWithData(new BlockPos(1, 0, 1), EntityType.CREEPER, Entity::getCustomName, Text.of("Bobby"));
             ctx.complete();
         });

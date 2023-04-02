@@ -1,6 +1,5 @@
 plugins {
-    id 'org.quiltmc.loom' version '1.+'
-    id 'io.github.ladysnake.chenille' version '0.9.0'
+    id 'io.github.ladysnake.chenille' version '0.10.1'
 }
 
 sourceCompatibility = targetCompatibility = JavaVersion.VERSION_17

@@ -32,6 +32,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.DefaultAttributeRegistry;
 import net.minecraft.entity.attribute.EntityAttributes;
+import net.minecraft.entity.damage.DamageType;
 import net.minecraft.entity.effect.StatusEffectType;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.item.Item;
@@ -70,6 +71,8 @@ public class CreeperSpores implements ModInitializer {
     ));
 
     public static final TagKey<Item> FERTILIZERS = TagKey.of(RegistryKeys.ITEM, new Identifier("c", "fertilizers"));
+    public static final TagKey<DamageType> SPAWNS_MORE_CREEPERLINGS = TagKey.of(RegistryKeys.DAMAGE_TYPE, id("spawns_more_creeperlings"));
+    public static final TagKey<DamageType> EXTRA_CREEPER_DAMAGE = TagKey.of(RegistryKeys.DAMAGE_TYPE, id("extra_creeper_damage"));
 
     public static final Identifier CREEPERLING_FERTILIZATION_PACKET = id("creeperling-fertilization");
     public static final String GIVE_SPORES_TAG = "cspores:giveSpores";
@@ -152,7 +155,7 @@ public class CreeperSpores implements ModInitializer {
                 .maxBlockTrackingRange(64)
                 .trackingTickInterval(1)
                 .alwaysUpdateVelocity(true)
-                .defaultAttributes(MobEntity.createMobAttributes()
+                .defaultAttributes(MobEntity.createAttributes()
                         .add(EntityAttributes.GENERIC_MAX_HEALTH, defaultAttributes.getBaseValue(EntityAttributes.GENERIC_MAX_HEALTH) * 0.5)
                         .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, defaultAttributes.getBaseValue(EntityAttributes.GENERIC_MOVEMENT_SPEED) * 0.8))
                 .build();

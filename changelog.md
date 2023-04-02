@@ -3,6 +3,9 @@ Version 1.11.0
 ------------------------------------------------------
 Updated to MC 1.19.4
 
+- Added Portuguese translation (thanks FITFC !)
+- Added Chinese translation (thanks Rad233 !)
+
 ------------------------------------------------------
 Version 1.10.0
 ------------------------------------------------------

@@ -70,7 +70,8 @@ public class CreeperSpores implements ModInitializer {
             new Identifier("mobz", "crip_entity")
     ));
 
-    public static final TagKey<Item> FERTILIZERS = TagKey.of(RegistryKeys.ITEM, new Identifier("c", "fertilizers"));
+    public static final TagKey<Item> FERTILIZERS = TagKey.of(RegistryKeys.ITEM, id("fertilizers"));
+    public static final TagKey<Item> SUPER_FERTILIZERS = TagKey.of(RegistryKeys.ITEM, id("super_fertilizers"));
     public static final TagKey<DamageType> SPAWNS_MORE_CREEPERLINGS = TagKey.of(RegistryKeys.DAMAGE_TYPE, id("spawns_more_creeperlings"));
     public static final TagKey<DamageType> EXTRA_CREEPER_DAMAGE = TagKey.of(RegistryKeys.DAMAGE_TYPE, id("extra_creeper_damage"));
 

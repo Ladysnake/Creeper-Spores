@@ -168,7 +168,12 @@ public class CreeperlingEntity extends PathAwareEntity implements EnergySwirlOwn
 
     public void applyFertilizer(ItemStack boneMeal) {
         if (!this.world.isClient && this.ticksInSunlight < MATURATION_TIME) {
-            this.ticksInSunlight += (20 * (60 + 120 * this.random.nextFloat()));
+            if (boneMeal.isIn(CreeperSpores.SUPER_FERTILIZERS)) {
+                this.ticksInSunlight = MATURATION_TIME;
+            } else {
+                this.ticksInSunlight += (20 * (60 + 120 * this.random.nextFloat()));
+            }
+
             boneMeal.decrement(1);
             PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
             buf.writeInt(this.getId());

@@ -80,9 +80,30 @@ public final class CsTestSuite implements QuiltGameTest {
         creeperling.setCustomName(Text.of("Bobby"));
         PlayerEntity player = ctx.createMockPlayer();
         player.setStackInHand(Hand.MAIN_HAND, new ItemStack(Items.BONE_MEAL, 64));
-        for (int i = 0; i < 8; i++) {
-            creeperling.interact(player, Hand.MAIN_HAND);
-        }
+        creeperling.interact(player, Hand.MAIN_HAND);
+
+        ctx.waitAndRun(1, () -> {
+            // A single bone meal should not cause the creeper to grow up
+            ctx.expectEntityWithData(new BlockPos(1, 0, 1), CreeperEntry.getVanilla().creeperlingType(), Entity::getCustomName, Text.of("Bobby"));
+            for (int i = 0; i < 7; i++) {
+                creeperling.interact(player, Hand.MAIN_HAND);
+            }
+
+            ctx.waitAndRun(1, () -> {
+                ctx.expectNoEntity(CreeperEntry.getVanilla().creeperlingType());
+                ctx.expectEntityWithData(new BlockPos(1, 0, 1), EntityType.CREEPER, Entity::getCustomName, Text.of("Bobby"));
+                ctx.complete();
+            });
+        });
+    }
+
+    @GameTest(structureName = EMPTY_STRUCTURE)
+    public void creeperlingsGrowInstantlyWithSuperFertilizer(TestContext ctx) {
+        CreeperlingEntity creeperling = ctx.spawnMob(CreeperEntry.getVanilla().creeperlingType(), 1, 0, 1);
+        creeperling.setCustomName(Text.of("Bobby"));
+        PlayerEntity player = ctx.createMockPlayer();
+        player.setStackInHand(Hand.MAIN_HAND, new ItemStack(Items.PORKCHOP, 1));
+        creeperling.interact(player, Hand.MAIN_HAND);
         ctx.waitAndRun(1, () -> {
             ctx.expectNoEntity(CreeperEntry.getVanilla().creeperlingType());
             ctx.expectEntityWithData(new BlockPos(1, 0, 1), EntityType.CREEPER, Entity::getCustomName, Text.of("Bobby"));

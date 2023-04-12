@@ -46,6 +46,7 @@ import net.minecraft.entity.passive.OcelotEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.item.SpawnEggItem;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
@@ -53,6 +54,7 @@ import net.minecraft.network.packet.s2c.play.CustomPayloadS2CPacket;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.registry.tag.BlockTags;
+import net.minecraft.registry.tag.ItemTags;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
@@ -138,6 +140,20 @@ public class CreeperlingEntity extends PathAwareEntity implements EnergySwirlOwn
                 this.setTrusting(true);
             }
             return ActionResult.SUCCESS;
+        } else if (held.isIn(ItemTags.CREEPER_IGNITERS)) {
+            SoundEvent soundEvent = held.isOf(Items.FIRE_CHARGE) ? SoundEvents.ITEM_FIRECHARGE_USE : SoundEvents.ITEM_FLINTANDSTEEL_USE;
+            this.world.playSound(player, this.getX(), this.getY(), this.getZ(), soundEvent, this.getSoundCategory(), 1.0F, this.random.nextFloat() * 0.4F + 0.8F);
+            if (!this.world.isClient) {
+                this.setOnFireFor(4);
+                this.damage(world.getDamageSources().inFire(), 5);
+                if (!held.isDamageable()) {
+                    held.decrement(1);
+                } else {
+                    held.damage(1, player, p -> p.sendToolBreakStatus(hand));
+                }
+            }
+
+            return ActionResult.success(this.world.isClient);
         } else {
             if (interactSpawnEgg(player, this, held, this.kind)) {
                 return ActionResult.SUCCESS;

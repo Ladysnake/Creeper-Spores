@@ -5,6 +5,7 @@ Version 1.12.0
 - The specific tag for creeperling fertilizers is now `creeperspores:fertilizers`
   - Adding entries to `c:fertilizers` will still work like before
 - Players spectating creeperlings now get the creeper vision shader
+- Creeperlings now start burning to death when ignited with a flint and steel or fire charge
 
 ------------------------------------------------------
 Version 1.11.0

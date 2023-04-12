@@ -4,6 +4,7 @@ Version 1.12.0
 - Added a `creeperspores:super_fertilizers` tag for items that make plants (and thus creeperlings) grow instantly
 - The specific tag for creeperling fertilizers is now `creeperspores:fertilizers`
   - Adding entries to `c:fertilizers` will still work like before
+- Players spectating creeperlings now get the creeper vision shader
 
 ------------------------------------------------------
 Version 1.11.0

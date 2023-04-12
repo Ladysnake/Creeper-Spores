@@ -19,6 +19,7 @@
     "client.AbstractInventoryScreenMixin",
     "client.EntityRendererAccessor",
     "client.EntityRendererRegistryMixin",
+    "client.GameRendererMixin",
     "client.StatusEffectSpriteManagerMixin"
   ],
   "injectors": {

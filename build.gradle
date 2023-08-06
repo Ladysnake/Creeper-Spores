@@ -1,5 +1,5 @@
 plugins {
-    id 'io.github.ladysnake.chenille' version '0.10.2'
+    id 'io.github.ladysnake.chenille' version '0.11.3'
 }
 
 sourceCompatibility = targetCompatibility = JavaVersion.VERSION_17
@@ -10,7 +10,7 @@ group = project.maven_group
 
 chenille {
     configurePublishing {
-        withArtifactory()
+        withLadysnakeMaven()
         withCurseforgeRelease()
         withGithubRelease()
         withModrinthRelease()
@@ -63,6 +63,7 @@ dependencies {
 
     modRuntimeOnly ("com.terraformersmc:modmenu:${modmenu_version}") {
         exclude group: 'net.fabricmc.fabric-api'
+        exclude group: 'net.fabricmc'
     }
 
 //    modRuntime "curse.maven:mobz-336554:2826831"
@@ -80,4 +81,23 @@ java {
     // if it is present.
     // If you remove this line, sources will not be generated.
     withSourcesJar()
+}
+
+publishing {
+    publications {
+        create("relocation", MavenPublication) {
+            pom {
+                // Old artifact coordinates
+                groupId = "io.github.ladysnake"
+
+                distributionManagement {
+                    relocation {
+                        // New artifact coordinates
+                        groupId = "org.ladysnake"
+                        message = "groupId has been changed"
+                    }
+                }
+            }
+        }
+    }
 }

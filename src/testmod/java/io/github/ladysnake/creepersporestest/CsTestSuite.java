@@ -58,7 +58,7 @@ public final class CsTestSuite implements QuiltGameTest {
         IronGolemEntity golem = ctx.spawnMob(EntityType.IRON_GOLEM, 1, 0, 1);
         // Spores Level 5 gives a 100% chance to spawn creeperlings on death
         golem.addStatusEffect(new StatusEffectInstance(CreeperEntry.getVanilla().sporeEffect(), 5, 4));
-        golem.damage(golem.world.getDamageSources().dragonBreath(), 0);
+        golem.damage(golem.getWorld().getDamageSources().dragonBreath(), 0);
         ctx.succeedIf(() -> ctx.expectEntity(CreeperEntry.getVanilla().creeperlingType()));
     }
 

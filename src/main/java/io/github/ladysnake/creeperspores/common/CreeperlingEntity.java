@@ -21,7 +21,6 @@ import io.github.ladysnake.creeperspores.CreeperEntry;
 import io.github.ladysnake.creeperspores.CreeperSpores;
 import io.github.ladysnake.creeperspores.mixin.EntityAccessor;
 import io.netty.buffer.Unpooled;
-import net.minecraft.block.Material;
 import net.minecraft.client.render.entity.feature.EnergySwirlOwner;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityData;
@@ -112,7 +111,7 @@ public class CreeperlingEntity extends PathAwareEntity implements EnergySwirlOwn
 
     @Override
     public boolean canSpawn(WorldAccess world, SpawnReason spawnType) {
-        return super.canSpawn(world, spawnType) && this.world.getLightLevel(LightType.SKY, this.getBlockPos()) > 0;
+        return super.canSpawn(world, spawnType) && this.getWorld().getLightLevel(LightType.SKY, this.getBlockPos()) > 0;
     }
 
     public boolean isTrusting() {
@@ -135,17 +134,17 @@ public class CreeperlingEntity extends PathAwareEntity implements EnergySwirlOwn
     protected ActionResult interactMob(PlayerEntity player, Hand hand) {
         ItemStack held = player.getStackInHand(hand);
         if (held.isIn(CreeperSpores.FERTILIZERS)) {
-            if (!world.isClient) {
+            if (!this.getWorld().isClient) {
                 this.applyFertilizer(held);
                 this.setTrusting(true);
             }
             return ActionResult.SUCCESS;
         } else if (held.isIn(ItemTags.CREEPER_IGNITERS)) {
             SoundEvent soundEvent = held.isOf(Items.FIRE_CHARGE) ? SoundEvents.ITEM_FIRECHARGE_USE : SoundEvents.ITEM_FLINTANDSTEEL_USE;
-            this.world.playSound(player, this.getX(), this.getY(), this.getZ(), soundEvent, this.getSoundCategory(), 1.0F, this.random.nextFloat() * 0.4F + 0.8F);
-            if (!this.world.isClient) {
+            this.getWorld().playSound(player, this.getX(), this.getY(), this.getZ(), soundEvent, this.getSoundCategory(), 1.0F, this.random.nextFloat() * 0.4F + 0.8F);
+            if (!this.getWorld().isClient) {
                 this.setOnFireFor(4);
-                this.damage(world.getDamageSources().inFire(), 5);
+                this.damage(this.getWorld().getDamageSources().inFire(), 5);
                 if (!held.isDamageable()) {
                     held.decrement(1);
                 } else {
@@ -153,7 +152,7 @@ public class CreeperlingEntity extends PathAwareEntity implements EnergySwirlOwn
                 }
             }
 
-            return ActionResult.success(this.world.isClient);
+            return ActionResult.success(this.getWorld().isClient);
         } else {
             if (interactSpawnEgg(player, this, held, this.kind)) {
                 return ActionResult.SUCCESS;
@@ -165,7 +164,7 @@ public class CreeperlingEntity extends PathAwareEntity implements EnergySwirlOwn
     public static boolean interactSpawnEgg(PlayerEntity player, Entity interacted, ItemStack stack, CreeperEntry kind) {
         Item item = stack.getItem();
         if (item instanceof SpawnEggItem && ((SpawnEggItem)item).getEntityType(stack.getNbt()) == EntityType.CREEPER) {
-            if (!interacted.world.isClient) {
+            if (!interacted.getWorld().isClient) {
                 CreeperlingEntity creeperling = kind.spawnCreeperling(interacted);
                 if (creeperling != null) {
                     if (stack.hasCustomName()) {
@@ -183,7 +182,7 @@ public class CreeperlingEntity extends PathAwareEntity implements EnergySwirlOwn
     }
 
     public void applyFertilizer(ItemStack boneMeal) {
-        if (!this.world.isClient && this.ticksInSunlight < MATURATION_TIME) {
+        if (!this.getWorld().isClient && this.ticksInSunlight < MATURATION_TIME) {
             if (boneMeal.isIn(CreeperSpores.SUPER_FERTILIZERS)) {
                 this.ticksInSunlight = MATURATION_TIME;
             } else {
@@ -204,14 +203,14 @@ public class CreeperlingEntity extends PathAwareEntity implements EnergySwirlOwn
     public static void createParticles(ThreadExecutor<?> ctx, PlayerEntity player, PacketByteBuf buf) {
         int entityId = buf.readInt();
         ctx.execute(() -> {
-            Entity e = player.world.getEntityById(entityId);
+            Entity e = player.getWorld().getEntityById(entityId);
             if (e instanceof CreeperlingEntity) {
                 for(int i = 0; i < 15; ++i) {
-                    RandomGenerator random = e.world.random;
+                    RandomGenerator random = e.getWorld().random;
                     double speedX = random.nextGaussian() * 0.02D;
                     double speedY = random.nextGaussian() * 0.02D;
                     double speedZ = random.nextGaussian() * 0.02D;
-                    e.world.addParticle(ParticleTypes.HAPPY_VILLAGER, e.getX() - 0.5 + random.nextFloat(), e.getY() + random.nextFloat(), e.getZ() - 0.5 + random.nextFloat(), speedX, speedY, speedZ);
+                    e.getWorld().addParticle(ParticleTypes.HAPPY_VILLAGER, e.getX() - 0.5 + random.nextFloat(), e.getY() + random.nextFloat(), e.getZ() - 0.5 + random.nextFloat(), speedX, speedY, speedZ);
                 }
             }
         });
@@ -220,10 +219,10 @@ public class CreeperlingEntity extends PathAwareEntity implements EnergySwirlOwn
     @Override
     public boolean damage(DamageSource cause, float amount) {
         if (super.damage(cause, amount)) {
-            if (!world.isClient) {
+            if (!this.getWorld().isClient) {
                 Entity attacker = cause.getAttacker();
                 if (attacker instanceof OcelotEntity || attacker instanceof CatEntity) {
-                    ((ServerWorld)this.world).spawnParticles(ParticleTypes.HEART, attacker.getX(), attacker.getY() + attacker.getStandingEyeHeight(), attacker.getZ(), 0, 0, 0.2f, 0, 0.1D);
+                    ((ServerWorld)this.getWorld()).spawnParticles(ParticleTypes.HEART, attacker.getX(), attacker.getY() + attacker.getStandingEyeHeight(), attacker.getZ(), 0, 0, 0.2f, 0, 0.1D);
                 }
             }
             return true;
@@ -242,7 +241,7 @@ public class CreeperlingEntity extends PathAwareEntity implements EnergySwirlOwn
 
     @Override
     public int getXpToDrop() {
-        return 2 + this.world.random.nextInt(3);
+        return 2 + this.getWorld().random.nextInt(3);
     }
 
     @Override
@@ -252,15 +251,14 @@ public class CreeperlingEntity extends PathAwareEntity implements EnergySwirlOwn
         // method_28516 == getBrightness
         float skyFavor = computeBrightnessByLightLevel(worldView.getDimension().ambientLight())[skyLightLevel] * 3.0F;
         // But they can do with artificial light if there is not anything better
-        float brightnessAtPos = worldView.method_42309(pos);
+        float brightnessAtPos = worldView.getPathfindingCostFromLight(pos);
         float favor = Math.max(brightnessAtPos, skyFavor);
         // They like good soils too
         if (worldView.getBlockState(pos.down(1)).isIn(BlockTags.BAMBOO_PLANTABLE_ON)) {
             favor += 3.0F;
         }
         // What they really want is camouflage
-        Material material = worldView.getBlockState(pos).getMaterial();
-        if (material == Material.PLANT || material == Material.REPLACEABLE_PLANT) {
+        if (worldView.getBlockState(pos).isIn(CreeperSpores.CREEPERLING_CAMOUFLAGE)) {
             favor += 4.0F;
         }
         return favor;
@@ -319,14 +317,14 @@ public class CreeperlingEntity extends PathAwareEntity implements EnergySwirlOwn
     @Override
     public void tickMovement() {
         super.tickMovement();
-        if (!this.world.isClient && this.world.getDifficulty() != Difficulty.PEACEFUL) {
+        if (!this.getWorld().isClient && this.getWorld().getDifficulty() != Difficulty.PEACEFUL) {
             if (this.random.nextFloat() < this.getGrowthChance()) {
                 ++this.ticksInSunlight;
             }
             if (this.ticksInSunlight >= MATURATION_TIME) {
-                LivingEntity adult = kind.creeperType().create(world);
+                LivingEntity adult = kind.creeperType().create(this.getWorld());
                 if (adult == null) {    // fallback to vanilla creeper
-                    adult = Objects.requireNonNull(CreeperEntry.getVanilla().creeperType().create(world));
+                    adult = Objects.requireNonNull(CreeperEntry.getVanilla().creeperType().create(this.getWorld()));
                 }
 
                 EntityAttributeInstance adultMaxHealthAttr = adult.getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH);
@@ -342,7 +340,7 @@ public class CreeperlingEntity extends PathAwareEntity implements EnergySwirlOwn
                 adultMaxHealthAttr.setBaseValue(defaultMaxHealth);
                 adult.setHealth(adult.getHealth() * (float)healthMultiplier);
 
-                world.spawnEntity(adult);
+                this.getWorld().spawnEntity(adult);
                 pushOutOfBlocks(adult);
                 this.remove(RemovalReason.DISCARDED);
             }
@@ -350,8 +348,8 @@ public class CreeperlingEntity extends PathAwareEntity implements EnergySwirlOwn
     }
 
     private float getGrowthChance() {
-        float skyExposition = this.world.getLightLevel(LightType.SKY, this.getBlockPos()) / 15f;
-        return this.world.isDay() ? skyExposition : skyExposition * 0.5f * this.world.getMoonSize();
+        float skyExposition = this.getWorld().getLightLevel(LightType.SKY, this.getBlockPos()) / 15f;
+        return this.getWorld().isDay() ? skyExposition : skyExposition * 0.5f * this.getWorld().getMoonSize();
     }
 
     private static void pushOutOfBlocks(Entity self) {

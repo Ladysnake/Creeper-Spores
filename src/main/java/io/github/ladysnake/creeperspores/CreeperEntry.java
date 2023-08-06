@@ -55,10 +55,10 @@ public record CreeperEntry(EntityType<? extends LivingEntity> creeperType,
      * Spawns a creeperling at an affected entity
      */
     public CreeperlingEntity spawnCreeperling(Entity affected) {
-        if (!affected.world.isClient) {
-            CreeperlingEntity spawn = Objects.requireNonNull(this.creeperlingType.create(affected.world));
+        if (!affected.getWorld().isClient) {
+            CreeperlingEntity spawn = Objects.requireNonNull(this.creeperlingType.create(affected.getWorld()));
             spawn.refreshPositionAndAngles(affected.getX(), affected.getY(), affected.getZ(), 0, 0);
-            affected.world.spawnEntity(spawn);
+            affected.getWorld().spawnEntity(spawn);
             return spawn;
         }
         return null;
@@ -68,7 +68,7 @@ public record CreeperEntry(EntityType<? extends LivingEntity> creeperType,
      * Create a creeperling for an entity, without spawning it
      */
     public CreeperlingEntity createCreeperling(LivingEntity entity) {
-        CreeperlingEntity creeperlingEntity = Objects.requireNonNull(creeperlingType.create(entity.world));
+        CreeperlingEntity creeperlingEntity = Objects.requireNonNull(creeperlingType.create(entity.getWorld()));
         creeperlingEntity.copyPositionAndRotation(entity);
         return creeperlingEntity;
     }

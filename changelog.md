@@ -1,4 +1,9 @@
 ------------------------------------------------------
+Version 1.13.0
+------------------------------------------------------
+Updated to MC 1.20
+
+------------------------------------------------------
 Version 1.12.0
 ------------------------------------------------------
 - Added a `creeperspores:super_fertilizers` tag for items that make plants (and thus creeperlings) grow instantly

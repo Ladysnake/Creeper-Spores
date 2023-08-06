@@ -18,12 +18,11 @@
 package io.github.ladysnake.creeperspores.mixin.client;
 
 import io.github.ladysnake.creeperspores.common.CreeperSporeEffect;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screen.ingame.AbstractInventoryScreen;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.text.MutableText;
-import net.minecraft.text.Text;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -41,13 +40,13 @@ public abstract class AbstractInventoryScreenMixin {
     private int renderedEffectsIndex;
 
     @Inject(method = "drawStatusEffectDescriptions", at = @At("HEAD"))
-    private void creeperspores$retrieveRenderedEffects(MatrixStack matrices, int x, int width, Iterable<StatusEffectInstance> effects, CallbackInfo ci) {
+    private void creeperspores$retrieveRenderedEffects(GuiGraphics graphics, int x, int height, Iterable<StatusEffectInstance> effects, CallbackInfo ci) {
         renderedEffects = (List<StatusEffectInstance>) effects;
         renderedEffectsIndex = 0;
     }
 
     @Inject(method = "drawStatusEffectDescriptions", at = @At("RETURN"))
-    private void creeperspores$clearRenderedEffects(MatrixStack matrices, int x, int width, Iterable<StatusEffectInstance> effects, CallbackInfo ci) {
+    private void creeperspores$clearRenderedEffects(GuiGraphics graphics, int x, int height, Iterable<StatusEffectInstance> effects, CallbackInfo ci) {
         renderedEffects = null;
     }
 

@@ -26,6 +26,7 @@ import net.fabricmc.fabric.api.gamerule.v1.GameRuleFactory;
 import net.fabricmc.fabric.api.gamerule.v1.GameRuleRegistry;
 import net.fabricmc.fabric.api.gamerule.v1.rule.DoubleRule;
 import net.fabricmc.fabric.api.gamerule.v1.rule.EnumRule;
+import net.minecraft.block.Block;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -70,6 +71,7 @@ public class CreeperSpores implements ModInitializer {
             new Identifier("mobz", "crip_entity")
     ));
 
+    public static final TagKey<Block> CREEPERLING_CAMOUFLAGE = TagKey.of(RegistryKeys.BLOCK, id("creeperling_camouflage"));
     public static final TagKey<Item> FERTILIZERS = TagKey.of(RegistryKeys.ITEM, id("fertilizers"));
     public static final TagKey<Item> SUPER_FERTILIZERS = TagKey.of(RegistryKeys.ITEM, id("super_fertilizers"));
     public static final TagKey<DamageType> SPAWNS_MORE_CREEPERLINGS = TagKey.of(RegistryKeys.DAMAGE_TYPE, id("spawns_more_creeperlings"));

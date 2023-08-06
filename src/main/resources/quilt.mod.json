@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "quilt_loader": {
-    "group": "io.github.ladysnake",
+    "group": "org.ladysnake",
     "id": "creeperspores",
     "version": "${version}",
     "metadata": {
@@ -27,8 +27,8 @@
     },
     "intermediate_mappings": "net.fabricmc:intermediary",
     "entrypoints": {
-      "init": "io.github.ladysnake.creeperspores.CreeperSpores",
-      "client_init": "io.github.ladysnake.creeperspores.client.CreeperSporesClient"
+      "init": "org.ladysnake.creeperspores.CreeperSpores",
+      "client_init": "org.ladysnake.creeperspores.client.CreeperSporesClient"
     },
     "depends": [
       {

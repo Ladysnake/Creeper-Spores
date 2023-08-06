@@ -24,8 +24,8 @@
     },
     "intermediate_mappings": "net.fabricmc:intermediary",
     "entrypoints": {
-      "init": "io.github.ladysnake.creepersporestest.CsTest",
-      "quilt:game_test": "io.github.ladysnake.creepersporestest.CsTestSuite"
+      "init": "org.ladysnake.creepersporestest.CsTest",
+      "quilt:game_test": "org.ladysnake.creepersporestest.CsTestSuite"
     },
     "depends": [
       {
